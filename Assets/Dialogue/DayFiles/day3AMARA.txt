@@ -1,0 +1,212 @@
+﻿PLAYER: I enter the café preparing myself for yet another day at work.
+PLAYER: As I prepare myself for another shift, I begin thinking about all the interactions that had happened the day before.
+PLAYER: *Would they return?* I think to myself.
+PLAYER: Eventually the bell rings, and I allow my face to present a small smile as I see Amara enter.
+(Show_AMARA)
+PLAYER: “Good morning, I’m glad to see you returned.”
+PLAYER: Amara lets out a slight smile, slightly embarrassed, probably from the position she is coming back to.
+PLAYER: “How are you doing?”
+PLAYER: I say as I start to prepare ingredients for a drink she might order.
+AMARA: “Fine, I guess.”
+PLAYER: She calmly responds.
+PLAYER: “I am assuming that you will want to discuss what we previously started to chat about yesterday.”
+PLAYER: Amara nods slightly, as if she had prepared herself for that same conversation.
+PLAYER: “Good. Then would you like a drink to go with the conversation?”
+PLAYER: She nods, her expression telling me that a drink would go really well with her mood that day.
+PLAYER: “What would you like then?”
+PLAYER: She ponders for a little bit.
+AMARA: “You can hand me a calming drink, the coziest ever, I need to relax before such a conversation.”
+PLAYER: She smiles at me, and I give the smile back to her as I start to prepare her drink.
+(DRINK_AMARA_2)
+PLAYER: After the drink is ready, I hand it to her.
+PLAYER: As I am starting to prepare myself, wondering on how to approach the subject that had brought us together to discuss, I hear the door open.
+PLAYER: I find it funny to see both Ronnie and Jasper walking in together, but my amusement disappears when I see Ronnie’s expression, it seemed like she was struggling with something.
+(Show_JASPER)
+(Show_RONNIE)
+PLAYER: Amara takes notice of their presence but rather ignores it. It seems like she doesn’t want to interact with Ronnie at the moment.
+PLAYER: “One second Amara, I’ll take their others…”
+PLAYER: I scooch over to them two, waiting to take their orders.
+PLAYER: “Good morning Jasper!”
+PLAYER: He waves slightly at me.
+PLAYER: “Are you ready to order or do you need some time to think first?”
+JASPER: “No, I thought beforehand.”
+PLAYER: He smiles, almost proud of himself. I wasn’t going to try and take that feeling away from him.
+JASPER: “Can I please have something smoky, but put something in it to make it less strong and less coffee tasting.”
+(DRINK_JASPER_2)
+PLAYER: I then turn to Ronnie.
+PLAYER: “Good morning Ronnie, what are you feeling like having today?”
+RONNIE: “Please don’t talk to me right now.”
+PLAYER: She is struggling to look at me, as if she had been in a fight, a verbal one, of course, and is finding it hard to make other people not see it.
+PLAYER: “Are you okay? You don’t have to talk about it if you don’t want to.”
+RONNIE: “Just hand me something strong, the most intense flavor you can think of.”
+(DRINK_RONNIE_2)
+PLAYER: “Here you go.”
+PLAYER: I hand them their drinks.
+PLAYER: Jasper signals me to get closer to him.
+JASPER: “I apologize on her behalf because of her attitude. She is having some family issues that I’m helping her go through right now.”
+PLAYER: I nod understandingly.
+PLAYER: “That’s okay, I’ll go back to talking to Amara. Come say hi to her when you can, I’m sure she’d like to thank you for yesterday.”
+PLAYER: Jasper nods with a slight smile, and turns again to Ronnie to resume the conversation they were previously having.
+PLAYER: As I return to Amara she seems curious about those two.
+1) (Say nothing) (+)
+2) “They’re just solving something between themselves.” (*)
+3) “Ronnie is feeling rather upset today. She’ll be fine as Jasper’s with her.” (-)
+2)
+PLAYER: Amara shrugs as if she really didn’t care about what was going on.
+3)
+AMARA: “And why would I care about her right now?”
+PLAYER: Her tone feels more defensive than aggressive.
+(BACK TO REGULAR DIALOGUE.)
+PLAYER: “Well, where were we?”
+PLAYER: I bring back the focus of the conversation to ourselves.
+PLAYER: “How would you like to start? As in, where do you feel comfortable doing so?”
+PLAYER: Amara thinks for a bit.
+PLAYER: “We don’t need to go too much back if you don’t want to, let’s just go to yesterday maybe.“
+AMARA. “Yesterday?”
+PLAYER: She’s being rather defensive again, and I decide to try to calm her down as best as I can.
+PLAYER: “Yeah… Please bare in your mind I’m not attacking you or judging you. Just trying to see where you’re coming from here.”
+AMARA: “What specifically did you want to talk about yesterday, then?”
+PLAYER: She asks me more calmly.
+PLAYER: “I know you already have taken accountability, but I can see that today you’re still not okay with talking to Ronnie.”
+AMARA: “Well that’s obvious. I mean I went out of my way to actually solve something for someone I owe nothing to.”
+AMARA: “Just to be completely ignored and shut down after.”
+PLAYER: “I know that can be frustrating. But you’ve seen her today right? It doesn’t feel like everything is going her way either right?”
+AMARA: “Well duh, but you don’t see me acting the way she did…”
+PLAYER: I just stare at her, waiting for her to come to the conclusion herself.
+AMARA: “Okay… Maybe I did do that.”
+PLAYER: “You’re more alike than you realize yourselves… you just both have your own things.”
+PLAYER: “Which brings me to my point. I’d like for you two to talk.”
+PLAYER: Amara seems to be conflicted.
+AMARA: “I mean, weren’t we going to be talking about my past first?”
+PLAYER: “We can do it as we go. I think Ronnie would also benefit from understanding you better.”
+PLAYER: “Because you can see she also has quite the strong personality. And a simple sorry won’t do unless she sees another side of you.”
+PLAYER: Amara sighs.
+AMARA: “Damn, why am I still choosing to be a decent person?”
+PLAYER: I chuckle lightly with her remark.
+1) “You think you can call Ronnie then?” (*)
+2) “Should we call Ronnie then?” (+)
+3) “Whenever you’re ready go ahead and call her then.” (-)
+1)
+PLAYER: She looks at me from the side.
+AMARA: “I mean I think I can.”
+2)
+AMARA: “You’re lucky you’re doing this with me, otherwise I wouldn’t be calling anyone, anytime soon.”
+PLAYER: I laugh at her snarky comment.
+3)
+AMARA: “I mean I will, but you don’t need to to act so nonchalant.”
+(BACK TO REGULAR DIALOGUE.)
+PLAYER: Amara turns to Ronnie.
+AMARA: “Excuse me, Ronnie, can we come over? I need to talk to you…”
+PLAYER: Ronnie, that was mid-conversation with Jasper, ponders for a moment if she should join Amara.
+PLAYER: I can see Jasper giving her a comforting smile, which gives her the courage to come talk to us.
+RONNIE: “Only if Jasper comes along.”
+PLAYER: Amara seems fine by him, which makes sense, he even kind of defended her the day before.
+AMARA: “Yeah he can come along. I was hoping to talk to him today anyway.”
+PLAYER: Jasper seems surprised by Amara’s comment, but there’s an underline of excitement in his eyes. 
+AMARA: “We need to sort things out.”
+RONNIE: “I told you yesterday we were fine, you don’t need to apologize, I don’t really feel comfortable having these kinds of conversations.”
+RONNIE: “You were rude, you clearly regret it, I know you do so let’s just let it go, we’re fine.”
+AMARA: “You can be fine but I am not.”
+PLAYER: Amara pauses for a moment.
+AMARA: “You don’t have to say anything, just hear me out okay?”
+RONNIE: “Fine, go on.”
+PLAYER: Ronnie crosses her arms, probably not feeling confident or comfortable enough to stay in a casual pose.
+AMARA: “I came in too strong yesterday, I was rude to our barista here, which I’ve apologized to him for.”
+PLAYER: I smile slightly at them, basically confirming what she was saying.
+AMARA: “But I never properly apologize to you, which now I’m taking the time to exactly do.”
+AMARA: “You were only trying to help the situation, I was too proud to admit I was having a hard time choosing and I was bluntly rude for no reason.”
+PLAYER: Ronnie seems more attentive now, as Amara really showed sincerity in her words.
+RONNIE: “I apologize too. I mean, I meant well but calling you the b-word was just not okay.”
+RONNIE: “I could’ve also handled things better, and escalating them wasn’t the answer. It could’ve gone extremely worse if the circumstances were other.”
+JASPER: “See??? That wasn’t so hard, wasn’t it?”
+PLAYER: He chuckles as the two girls look at him rather confused, but then join the laughter as well, the mood clearly lightening up.
+PLAYER: “Still Amara… I need to ask.”
+1) “What made you feel the need to be so blunt, Amara?” (+)
+2) “What was going on that led to that reaction?” (*)
+3) “What prompted the ‘blunt mode,’ Amara?” (-)
+(BACK TO REGULAR DIALOGUE.)
+PLAYER: Amara seems to close off for a moment, but decides to answer regardless.
+AMARA: “You know, I’ve always struggled to fit in. No matter how hard I tried, I always felt like an outsider.”
+PLAYER: I lean in, curious about what she’s sharing.
+AMARA: “Growing up in a wealthy family, people assumed I had it easy. But I was bullied a lot, especially because of my dark skin and curls.”
+RONNIE: “Okay, first of all, you’re rich?”
+PLAYER: Ronnie seems shocked, which makes me chuckle.
+AMARA: “Yeah, surprise! But money didn’t protect me from the kids who thought they were better than me.”
+RONNIE: “That’s always unfair… I can’t believe you had to deal with that in this day and age.”
+AMARA: “It was tough. I remember trying to change my hair or my style just to fit in. I thought maybe if I looked like them, they’d leave me alone.”
+PLAYER: “Did it ever work?”
+PLAYER: I ask, even though I already knew the answer.
+AMARA: “Not really. They’d find something else to mock. It felt like no matter what I did, I was just a target.”
+RONNIE: “That sounds exhausting.”
+AMARA: “It was. I learned to put up walls. I thought if I acted tough and didn’t let anyone in, I wouldn’t get hurt anymore.”
+RONNIE: “I mean I see you, I just didn’t want to assume that the reason you acted so bitter was because of that.”
+AMARA: “Unfortunately, it was.”
+PLAYER: We all take a moment reflecting on how, even if we are in this modern era, people still seem to believe that people with different skin tones are different for some reason.
+AMARA: “I had to fake it, honestly. I thought if I followed every trend and dressed like everyone else, maybe they’d leave me alone.””
+AMARA: “But no, it just made things worse. I felt like I was trying to erase parts of myself, and it never got me accepted. Instead, I became a target.”
+RONNIE: “That’s awful… I’m so sorry you went through that.”
+AMARA: “It was painful. Over time, I buried those feelings, but it made me bitter.”
+PLAYER: She lets out a laugh, as we three knew really well what she meant by that.
+AMARA: “I thought if I acted tough and rude, people would respect me instead of mocking me.”
+AMARA: “I pushed people away first, thinking it would shield me from more hurt. But it only made me feel more alone.”
+1) “That sounds really tough. You’re strong for sharing.” (+)
+2) “You’re not alone. We’re here for you.” (*)
+3) “They are the ones missing out, you know your truth.” (-)
+1)
+PLAYER: Surprisingly, Amara chuckles. 
+AMARA: “Honestly what am I doing? Over-sharing with a bunch of strangers over here!”
+PLAYER: “Hey! That’s the charm of Cloud Café! You get rain but also light fluffy clouds!”
+RONNIE: “That’s the cringiest thing I’ve heard from you, did not expect that at all.”
+PLAYER: Jasper laughs in the background.
+2)
+AMARA: “That’s kind of weird because I don’t know you guys that well.”
+AMARA: “I was the only one who really shared, but I guess you have time to do it yourselves.”
+JASPER: “We’ll all have time for that.”
+3)
+AMARA: “Yeah I don’t care if they’re missing out or not, I have bigger stuff to worry about.”
+JASPER: “That’s also true.”
+(BACK TO REGULAR DIALOGUE.)
+PLAYER: “Do you think you can start being more open and kinder with people? Maybe give them a chance before building walls?”
+AMARA: “Honestly, I want to. But it’s not that simple. Years of hurt don’t just disappear overnight.”
+RONNIE: “That makes sense. It takes time to change habits.”
+AMARA: “And part of me wonders if it’s even worth it. As a Black woman, I’ll always face challenges and racism. It’s not like society is going to change for me.”
+PLAYER: “That’s a fair point. It can feel overwhelming.”
+AMARA: “Exactly. Some days, I just feel tired of trying to connect when I know there will always be those barriers.”
+RONNIE: “It’s exhausting to navigate that. But maybe it starts with small steps?”
+AMARA: “Maybe. But I can’t help but think—what’s the point if I’ll still face judgment? Sometimes it feels safer to just keep my distance.”
+PLAYER: “I get that. But building connections can also bring support and strength.”
+AMARA: “True, but it’s a constant battle between wanting to open up and protecting myself from more hurt.”
+PLAYER: Amara pauses for a little bit.
+AMARA: “Honestly, I’m just tired of it all. Tired of the judgments, the constant need to prove myself. It wears you down after a while.”
+RONNIE: “I can only imagine how exhausting that must be.”
+AMARA: “Some days, I just want to retreat and not deal with any of it. It’s easier to stay closed off than to keep facing that reality.”
+PLAYER: “That’s completely understandable. It’s a lot to carry.”
+AMARA: “It really is. I want to be open and kind, but I also want to protect myself from the hurt that comes with being vulnerable. It’s just so draining.”
+PLAYER: I can see it in her eyes, how tough she has had it over the years.
+JASPER: “You don’t have to rush it, Amara. It’s okay to take a step back when you need to.”
+AMARA: “Thanks, I appreciate that. I guess I just need to find a way to balance it all without feeling so worn out.”
+1) “I get it. We all feel tired sometimes. Let’s just focus on hanging out for now.” (*)
+2) “Take your time, Amara. You have your people right here.” (+)
+3) “Even if society doesn’t change, don’t forget you’re stronger than all of this.” (-)
+(BACK TO REGULAR DIALOGUE.)
+PLAYER: Amara takes her time reflecting on what we’ve been talking about. It’s only up to her to decide what would be the best course of action for her for now.
+PLAYER: Ronnie looks at Amara for a few moments.
+RONNIE: “I’m once again sorry for being rude yesterday. You wanted resolution and I just backed out on you, and that wasn’t fair of me to do.”
+PLAYER: Amara gives a slight smile, genuinely thankful for the kind words Ronnie said to her.
+AMARA: “It’s okay. I could see you meant well today, we can burn that bridge.”
+PLAYER: After some time Ronnie gets up, getting her things.
+RONNIE: “I’ll go then. Thanks for the distraction guys, see you around.”
+PLAYER: She waves goodbye and only then I’m reminded of her state when she entered the Café today.
+(Hide_RONNIE)
+PLAYER: I’ll leave that conversation for another day.
+JASPER: “Well, I’ll get going too, want to do some more café research around the neighborhood.”
+PLAYER: Amara gets up too excited to join him.
+AMARA: “Ooooh take me too!”
+(Hide_JASPER)
+(Hide_AMARA)
+PLAYER: Jasper gladly takes her with him, and I begin to go on with my day Amara returns just to say some final words.
+(Show_AMARA)
+AMARA: “Thanks once again, I’ll give this some serious thought.”
+PLAYER: I smile as I see her once again leave the Café, just hoping everything goes well for her.
+(Hide_AMARA)
+(ENDDay_3)

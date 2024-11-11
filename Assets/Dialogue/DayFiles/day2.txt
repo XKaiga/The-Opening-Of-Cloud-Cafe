@@ -1,0 +1,408 @@
+﻿PLAYER: I return to the café the next day.
+PLAYER: I didn’t expect the opening day to be as it was, but at the same I think it gave me a taste of what would be to come the following days.
+PLAYER: As I return to my usual spot, I do my usual tasks to prep for the day to come, this time feeling more confident and less lost than the day before.
+PLAYER: After a few minutes of being opened, I start to greet and serve some customers.
+PLAYER: I can see a guy come in, and at first I don’t pay much attention to him, as he heads for a table of his own, sitting there alone.
+PLAYER: This was a café, not a restaurant, which meant I would not go up there and serve him. 
+PLAYER: Rather, he’d have to come up here for me to be able to serve him, but nonetheless, I let him be for the meantime, focusing on my current tasks before I went to talk to him.
+PLAYER: As the minutes went on I noticed how he’d be looking around, as if taking the sight of the café to himself. 
+PLAYER: *Well, might as well someone appreciate the interior design of this place, that was a workload*, I think to myself.
+PLAYER: I hear the doorbell ring once again, making myself shift my attention from the guy I was focusing on to a young woman, probably in her 20’s, more or less the same age as the first guy, entering the café.
+(Show_AMARA)
+PLAYER: For some reason, she seemed pissed, which makes me wonder if I’ll get my first Karen-like interaction, a younger one at that.
+PLAYER: She stands next to the menu I had for exhibition, as if analyzing and judging every drink recipe I had on display.
+PLAYER: *Maybe one of them would be worthy of her*, I playfully think as I try to choose ignorance over malice as I see her demeanor.
+(Hide_AMARA)
+PLAYER: Once I look back on the first guy, feeling entertained by the multiple odd people coming in so early in the morning, he now appears to be working.
+PLAYER: I decide to make my way to his table, just to let him know that if he wanted to stay, he would need to purchase something, even if it was the Wi-Fi.
+(Show_JASPER)
+PLAYER: As I approach him, he takes notice of my presence and looks at me rather nervously.
+(EMO_JASPER_Fear)
+PLAYER: Possibly he didn’t expect to be addressed so suddenly.
+PLAYER: “Hello, good morning sir. Don’t worry, take your time, but I just thought it would be for the best if I let you know that you’ll need to purchase some service to be able to spend time here.”
+PLAYER: “And for that to be made possible, you’ll need to head to the front counter and ask for your drink.”
+PLAYER: The young man faces me, his face red, possibly feeling shy.
+???: “Yes, s-sorry, I was just feeling the environment first…”
+PLAYER: I get appalled by how low this guy speaks. 
+PLAYER: That probably was what was happening. He was really shy and needed time to feel adequate, which was totally valid, I just needed to verify.
+PLAYER: “It’s okay don’t worry, this is just a really new place in town. It’s perfectly understandable for new customers to not be aware of how the establishment works.”
+PLAYER: “When you feel comfortable enough and know what you’ll order, just head to the front counter over there and place it.”
+PLAYER: I point to the location, before giving him a friendly faint smile and going back to my usual spot.
+(EMO_JASPER_None)
+(Hide_JASPER)
+PLAYER: I can’t get easily over the fact of how low the guy talks.
+PLAYER: If I wasn’t giving him my full attention I would have probably not be able to properly hear what he said.
+PLAYER: As I look in front of me again, the young woman is still wondering what to order.
+(Show_AMARA)
+PLAYER: She is taking her sweet time but, as there hasn’t been more customers entering the café, I didn’t felt the need to rush her.
+PLAYER: However, she perhaps needed some help.
+PLAYER: As I’m about to speak to her, another customer enters the café, almost announcing her presence.
+(Show_RONNIE)
+(EMO_RONNIE_Happy)
+???: “Good morning beautiful people!”
+PLAYER: Basically everyone in the coffee shop turns around to face her, owing to the fact that it wasn’t really common for people to act that way.
+PLAYER: As she heads to the front counter and gets in line after the previous girl, that was still picking on what to eat.
+PLAYER: Since there was now someone waiting for her choice, I decided to say something and offer some help.
+PLAYER: “Excuse me, would you like some help or explanation on what kind of ingredients we have here for drinks?”
+???: “Do you think I’m dumb? Don’t you know that I can also follow the coffee trends?”
+PLAYER: I get taken aback by her tone of voice, being reminded that I was expecting a Karen out of her.
+PLAYER: The girl behind her also starts to pay attention to the conversation as she was not expecting that response.
+(EMO_RONNIE_None)
+(EMO_AMARA_Angry)
+PLAYER: “Of course I don’t think you’re dumb, I was just trying to see if you had exact thoughts on what to order or maybe wanted suggestions.”
+PLAYER: “In the case you’re following drink trends, you could maybe tell me which trend it is and I can see if I have the necessary ingredients to make it.”
+???: “Can’t you see that I’m trying to think? Stop bothering me!”
+PLAYER: She returns to her pondering state.
+PLAYER: As a barista I can do only so much, and as I’m still quite inexperienced and new to the job, I begin thinking what could be the best way to deal with this situation.
+PLAYER: I look behind her, where the other girl was looking rather impatient.
+PLAYER: “Excuse me, do you know what you’ll order already?”
+PLAYER: The second girl focuses her attention on me, almost glad to be have been asked that question.
+???: “Yeah, I have.”
+PLAYER: She proceeds to make an expression behind the first girl, as if implying she could have ordered a long time ago, if the girl in front of her had already decided on what to get.
+PLAYER: “Well, excuse me.”
+PLAYER: I get the attention of the first girl’s attention again.
+PLAYER: “As you’re still thinking and the person behind you has their drink order in mind, would you mind her placing her order first?”
+???: “Of course not! Respect the line!”
+PLAYER: I can see the girl behind her roll her eyes, as if not believing what she is experiencing.
+RONNIE: “Excuse me, barista? My name is Ronnie. Can I ask you a question?”
+PLAYER: I get surprised as she suddenly addresses me.
+RONNIE: “I know Karens when I see them, and I know you might be in a weaker position to deal with entitled customers, as this is a new place.”
+RONNIE: “So would you mind if I took care of this instead?”
+PLAYER: “Ahm, by all means, just don’t get physical.”
+PLAYER: I had to be nice as I’m getting paid for this. The other customers aren’t. So if they want to manifest their problems with their café experience, they could do it.
+RONNIE: “Excuse me Miss, what’s your name?”
+PLAYER: Ronnie addresses the customer in front of her.
+AMARA: “I don’t know what my name has to do with this conversation. But it is Amara, clearly a superior name like me.”
+PLAYER: Ronnie laughs loudly, as if that had genuinely entertained her.
+RONNIE: “Oh wow at least you’re funny. Just made my wait worth it, I love putting people in their place.”
+PLAYER: I sense the tone shift by the end of the sentence.
+RONNIE: “First, your name is just needed for me to know how to address you, because “bitch” is rather rude.”
+PLAYER: My eyes widened after what was just said.
+RONNIE: “Second, I need you to hurry up because I have places to be and you’re being rude to staff and customers.”
+RONNIE: “And third, you could just had let me order because you’re taking not only the time of the world to decide but my time too.”
+AMARA: “First, you need to respect the rules whether it is convenient for you or not. And second, look who is being rude now!”
+(Show_JASPER)
+(EMO_AMARA_Tense)
+PLAYER: The guy sitting quietly until now decides to speak up.
+???: “Sorry to butt in, but you could just be more patient…”
+PLAYER: I don’t know if I should find the situation comical or worrying.
+PLAYER: Ronnie is baffled to realize the guy was talking to her.
+RONNIE: “And you are???”
+JASPER: “Jasper… Just saying, you’re causing a commotion, and if you just let her think about what she wants to order she might be faster than calling her out for it…”
+RONNIE: “You can’t be real right now. Is this a nightmare?”
+PLAYER: I sigh, still struggling to know what to do.
+1) “Ronnie has a point… This could be easily done if Amara just ordered.” (Ronnie)
+2) “Maybe let her be Ronnie… She is probably getting done thinking.” (Jasper)
+3) “Amara has a point with the rules, she is in front of the line so she can deny you passing in front of her.” (Amara)
+1)
+AMARA: ”HOW DARE YOU? I have JUST finished deciding.”
+PLAYER: Maybe I should’ve kept that one to myself, as she was already done.
+RONNIE: “Well I was struggling to see if you were actually capable of that.”
+PLAYER: “Okay now, let’s not escalate this any longer, let just Amara order, for now.”
+2)
+JASPER: “Exactly, she seems like she’s done, right Amara?”
+AMARA: “Yes I’m done. Thank you.”
+3)
+AMARA: “Exactly! So stop crying like a baby and let me order once and for all!”
+PLAYER: Ronnie seems rather frustrated but remains silent, probably just wanting to order herself too.
+(BACK TO REGULAR DIALOGUE.)
+AMARA: “I want a drink that tastes like coffee but with no caffeine, with texture, sweet, cozy and hot”
+(DRINK_AMARA_1)
+PLAYER: I hand her drink.
+PLAYER: I can see that Ronnie seems frustrated by the whole interaction, to the point she turns away to leave.
+PLAYER: Knowing how much she had waited for her drink, it doesn’t feel fair to me that she has to just walk away empty handed.
+PLAYER: “Ronnie! Come here please.”
+RONNIE: She stops walking, and reluctantly turns back around to face me.
+PLAYER: “Let’s talk, please, I can’t let you walk out of this place with this bad of an experience.”
+PLAYER: She decides to come back, heading my way.
+RONNIE: “You know things could have been better dealt behind there.”
+PLAYER: Her tone is still assertive but I can hear the hurt behind her words.
+PLAYER: “I tried my best, I really did. And still am. Don’t want to order now?”
+PLAYER: Ronnie shakes her head.
+RONNIE: “Why would I right now? I can’t just let people walk over me like that.”
+1) “Things weren’t dealt with in the best way.”(*)
+2) “And to leave now would mean letting her win.”(-)
+3) “I know your time and voice weren’t really respected.”(+)
+1)
+RONNIE: “Tell me about it, you should have been more assertive.”
+PLAYER: “Me, more assertive?”
+PLAYER: I think about it for a bit.
+PLAYER: “I am not in the best place to just try and make people act as I see fit.”
+2)
+RONNIE: “Does that sound like what’s important right now?”
+PLAYER: She had a point.
+PLAYER: Even if she felt like she was right in the situation, if she also felt hurt it would be valid for her to leave a place that made her uncomfortable.
+RONNIE: “Your attitude is what needs to be better next time.”
+3)
+PLAYER: “That’s why I’m talking to you right now.”
+PLAYER: ”You can still order, I promise I’ll work hard to give you the best drink ever.”
+RONNIE: “Still, your attitude needs improvement.”
+(BACK TO REGULAR DIALOGUE.)
+RONNIE: “This café is new, I get that… But you need to realize that these situations will happen again. And the next “Amaras” won’t always have their drink order ready when you need them to.”
+PLAYER: I think about it for a bit.
+PLAYER: “I agree that next time it’s better for me to handle it better. But I’m not sure if confronting them head on is the answer too.”
+PLAYER: Ronnie looks at me with a puzzled expression.
+RONNIE: “How so? I think it got the job done, didn’t it.”
+PLAYER: I look around, thinking how to reply.
+1) “More factors along with your answer to it was what solved it.”(+)
+2) “The simple answer is: it just didn’t.”(*)
+3) “You think her reaction meant it was dealt with?”(-)
+1)
+RONNIE: “How so?”
+RONNIE: “I mean yeah you guys also intervened in your own way but I’m struggling to see how it helped.”
+2)
+RONNIE: “It just didn’t? I mean didn’t you see that she magically knew what to order after that? I think it did.”
+3)
+RONNIE: “She’s a rude person, she’d have that reaction nontheless.”
+PLAYER: “Ignorance over malice. People rarely are just plain rude or mean, I’ll give her a chance to explain herself and then I’ll see if I’ll agree with you.”
+RONNIE: “Still, she knew what to order, didn’t she?”
+(BACK TO REGULAR DIALOGUE.)
+PLAYER: “Even if she is dealing with her own problems and shouldn’t take it out on you…”
+PLAYER: “When you started to confronted her it made her distract herself from ordering, and it ended up taking even more time than if she had just been left alone.”
+PLAYER: “And even if it still feels unfair, because things would be quicker if she let you order, she was still in front of you.“
+RONNIE: “I guess, but I don’t need to deal with dumb decisions from people.”
+PLAYER: “When it comes to ordering a drink here you do. I was glad you stood up for me.”
+PLAYER: “Because I was struggling to see how to respond, I thank you for it.”
+PLAYER: “But sometimes situations are just better left alone.”
+PLAYER: ”With that in mind, would you like to order?”
+PLAYER: Ronnie takes some time to think and then agrees to order something.
+RONNIE: “Okay… I won’t let this get to me, I’ll just order what I wanted all along.”
+RONNIE: “Give me some sweet coffee, like really sweet. And cold please, I need something refreshing and sweet after the rather heated exchange.”
+RONNIE: “Seems like my brain knew this was coming all along.”
+(DRINK_RONNIE_1)
+PLAYER: “Here you go, enjoy!”
+PLAYER: I hand her drink.
+RONNIE: ”Well, I don’t even know how to carry on with my day right now.”
+PLAYER: “Do you want me to talk to her? Maybe if I’m the one talking she’ll listen and you guys will be able to solve your differences.“
+RONNIE: “You think you can make that happen?”
+1) “Things are bad already right, can’t make it much worse…” (-)
+2) “I’ll give it my best, I can promise you that.” (+)
+3) “If I can’t, at least we tried.”(*)
+1)
+RONNIE: “I mean with that attitude you won’t achieve anything…”
+PLAYER: She rolls her eyes.
+RONNIE: “But sure, go for it.”
+2)
+PLAYER: Ronnie smiles, looking like she is feeling a little relieved by my attitude.
+RONNIE: “Okay, good luck then, I hope you can make some sense to go to her.”
+PLAYER: She gives me a comforting smile.
+3)
+RONNIE: “Yeah I guess we can’t really lose in this scenario. Hope it all works out.”
+(BACK TO REGULAR DIALOGUE.)
+PLAYER: I nod in agreement.
+PLAYER: I cautiously scooch over to where Amara is on the counter.
+PLAYER: As I approach her I can see she is focused on her drink. Really… focused…
+PLAYER: “Hey Amara. How is the drink? It looks like it’s…”
+PLAYER: I ponder on what word to say.
+PLAYER: “...impactful.”
+PLAYER: Amara looks up at me.
+AMARA: “This drink makes me a little… nostalgic. That's all.”
+PLAYER: I get a bit stunned by her change of tone. Almost like she is in her own head right now.
+PLAYER: And is only communicating with me because she has too.
+PLAYER: “Nostalgic huh? Really?”
+PLAYER: I chuckle slightly.
+PLAYER: “I suppose that regardless of the quality of the drink, that must be nice, right?”
+AMARA: “I suppose that for most people nostalgia is a good feeling to bring back good memories… not my case tho.”
+AMARA: ”But I don’t want to talk about it”
+1) “I guess there’s no need to talk about it.” (*)
+2) “C’mon… No need to feel defensive about it.” (-)
+3) “You don’t have to.” (+)
+1)
+PLAYER: “But I can always try to help.”
+AMARA: “I mean… I don’t know how you can help me…”
+AMARA: “Talking doesn’t hurt, I guess.”
+2)
+PLAYER: She doesn’t seem more comfortable after that.
+PLAYER: Maybe I downplayed it a little bit.
+AMARA: “OK! I can talk about it…You didn’t need to be so rude. It’s my business anyways!”
+PLAYER: “Yeah sorry…  that’s true. Please, continue.”
+3)
+PLAYER: “I just noticed the shift in your demeanor and decided to check up on you.”
+(BACK TO REGULAR DIALOGUE.)
+AMARA: “It’s something from my past… there’s nothing much that we can do about that.”
+(EMO_AMARA_Vulnerable)
+PLAYER: “Talk only about what you’re comfortable with, of course.”
+PLAYER: “But what would be the major issue regarding this bad nostalgia?”
+AMARA: “This drink makes me remember my childhood, when I would suffer bullying no matter what I wore, spoke or did…”
+PLAYER: I nod understandingly.
+PLAYER: Sometimes people had no choice but grow bitter from such experiences. 
+PLAYER: And in her case, she tried to overcome it by changing herself to some degree, and that never helped.
+PLAYER: “Hm, okay. I understand. Not the bullying itself, but how the drink could lead you that way.”
+PLAYER: We sit in a sort of processing silence, as I gather up the right words to say.
+PLAYER: “This would be because of how you look, I’m guessing?”
+AMARA: “Yes I think so… Just because someone is different doesn’t give people the right to do the things they did!”
+PLAYER: “I bet. Bullying can’t be justified.”
+PLAYER: “I won’t get into what you might have gone through because I think we all went through enough stressful moments today.”
+PLAYER: “I was actually hoping to talk to you about something else.”
+AMARA: “Talk about what exactly?”
+PLAYER: I can sense the nervousness behind her words.
+1) “You might have your reasons to act like that, but that doesn’t mean that…” (-)
+2) “I understand to a certain point why you acted like that before, but…” (+)
+3) “I know you’re hurt from your past, but that doesn’t give you the right to…” (*)
+1)
+PLAYER: “...you can take it out on other people.”
+PLAYER: “The way you treated me and Ronnie was not nice at all.”
+PLAYER: “And I believe you should know what nice and not nice is.”
+PLAYER: She looks at me rather hurt from how blunt I was.
+2)
+PLAYER: “... you didn’t sound pleasant either to me or Ronnie a while ago.”
+PLAYER “And I was hoping we could clear up the air from that situation.”
+PLAYER: She doesn’t feel threatened by my words, but doesn’t seem to agree with them still.
+3)
+PLAYER: “...take it out on other people.”
+PLAYER: “Me and Ronnie were quite hurt from how you acted before.”
+PLAYER: She rolls her eyes.
+(BACK TO REGULAR DIALOGUE.)
+AMARA: “I don’t believe that after being vulnerable with you you still take her side!”
+PLAYER: She looks rather upset.
+(EMO_AMARA_Angry)
+PLAYER: “To be fair I am taking my own side. You can decide if you want to talk to her or not.”
+PLAYER: “But regardless of her presence you weren’t still the nicest to me when you arrived.”
+PLAYER: I chuckle lightly.
+PLAYER: She sighs.
+AMARA: “I’m sorry, I shouldn’t have put my problem in the way of other people…”
+PLAYER: “I accept the apology. People are complex and 90% of the time things aren’t the way they seem to be.”
+PLAYER: She seems to be relieved from my answer.
+PLAYER: I decide that now would be the best time to propose talking to Ronnie.
+1) “Would you feel comfortable talking to Ronnie?” (+)
+2) “Feel like you got the confidence to face Ronnie then?” (-)
+3) “Should we let Ronnie join the conversation then?” (*)
+(BACK TO REGULAR DIALOGUE.)
+PLAYER: Amara reluctantly nods.
+PLAYER: “Ronnie, come here!”
+PLAYER: I can see her coming in a rather defensive manner.
+RONNIE: “Did she realize what she did?”
+PLAYER: “Yeah, I was hoping we could all talk and sort it out for once and for all.”
+RONNIE: “Why talk? She knows she’s wrong, that's enough. She just needs to apologize and we can move forward.”
+PLAYER: I sigh lightly.
+PLAYER: “Just because she is mostly wrong doesn’t mean she was the only one making mistakes in the whole interaction.”
+PLAYER: “I even apologized to you because I should have been more assertive and I wasn’t.”
+PLAYER: “And I didn’t say anything during the whole thing!”
+PLAYER: I point out, but it doesn’t seem that my perspective on things had changed her point of view.
+RONNIE: “Right… and what does it have to do with me?”
+PLAYER: “We talked about this, you know where you went wrong.”
+PLAYER: Ronnie huffs.
+RONNIE: “You know what, let the apology, I don’t need it. Let’s consider this done, she knows where she went wrong and so do I.”
+RONNIE: “Let it be settled.”
+PLAYER: “I mean I can’t make you do anything, but that doesn’t sound the most right thing to do right now.”
+RONNIE: “We’re gonna talk about feelings then? No, thanks. I’ll just go home.”
+RONNIE: “Thanks for the drink!”
+PLAYER: She waves and goes her way.
+(Hide_RONNIE)
+PLAYER: “Well Amara, this goes to show everyone has their own issues. Vulnerability seems to be hers.”
+PLAYER: “On a brighter note, it seems like things are settled in a way.”
+PLAYER: I look at her, trying to seem confident.
+AMARA: “Well, she can’t come for me and say I didn’t try. It’s her problem now.”
+PLAYER: I nod, she had a point.
+PLAYER: “Let me make it up for her, what about tomorrow you come back here, and then we can talk more about anything you want.”
+PLAYER: “I feel like we were about to have a conversation, a deeper one, had this incident not happened.”
+PLAYER: She doesn’t seem too excited but compiles.
+AMARA: “Sure, maybe tomorrow Ronnie shows up and is actually able to take accountability…”
+PLAYER: “We hope so, I’ll see you tomorrow then.”
+PLAYER: I wave at her, as she leaves the café as well.
+(EMO_AMARA_None)
+(Hide_AMARA)
+PLAYER: As I’m looking around, I see Jasper still sitting down. He has yet to order something, and by the looks of it he was more than ready.
+PLAYER: It could also be a good opportunity to talk to him, see his perspective on all of this, and check on him too.
+PLAYER: He too was part of the whole conflict.
+PLAYER: I call Jasper up to the counter so I could talk to him.
+PLAYER: “Hey, Jasper, could you come here for a minute?”
+PLAYER: Jasper looks at me, almost deciding whether he should take up on the offer or not.
+PLAYER: After a bit he gets up and comes my way.
+PLAYER: ”Hey man, just wanted to check on you. You were caught in that crossfire…”
+JASPER: “It’s okay. I mean, I don’t like seeing conflict and they were clearly bothering other people.”
+JASPER: “I just tried to find the best and fastest way to end the discussion.”
+PLAYER: “And with all of this, I came to the conclusion that I still have not taken your order.”
+PLAYER: I let out a small laugh. Jasper seems like he remembered that the same time I did.
+JASPER: “That is true!”
+JASPER: “Well let me order then. Give me the fruitiest coffee around. I was feeling like having juice but this is a coffee shop, so give me something fruity, with a good texture and a hint of sweetness to it.”
+(DRINK_JASPER_1)
+PLAYER: “Here you go, I hope you like it.”
+PLAYER: I hand him his drink.
+PLAYER: “So, I can’t help but comment. Why did you intervene on the conflict, besides wanting it to end.”
+PLAYER: “I believe when you say you wanted it over, but to go from that to actually do it, it’s quite the jump.”
+JASPER: “Well, I thought Amara had the same issue with decisions as I did, so I was trying to help her out.”
+PLAYER: “Trouble deciding things?”
+1) “So you saw yourself in her?” (+)
+2) “Well that would explain why you took so long to order…” (-)
+3) “That’s kind of weird, but go on.” (*)
+1)
+JASPER: “More or less.”
+2)
+JASPER: “I mean, yeah in a way.”
+PLAYER: Maybe that came off quite ironic.
+3)
+PLAYER: Jasper shrugs.
+JASPER: “We all have our own quirks, right?”
+PLAYER: “Yeah I mean, we do.”
+(BACK TO REGULAR DIALOGUE.)
+JASPER: “Sometimes I just need some time to accommodate to things, and I didn’t wanna bother anyone up front.”
+PLAYER: I now understand why he felt the need to defend Amara.
+PLAYER: “So basically you were having the same issue as Amara but decided to act the opposite way.”
+PLAYER: “Even though you didn't want to see her being shamed for acting as you considered to.”
+JASPER: “Yeah, that pretty much sums it all up.”
+PLAYER: “There’s more to it though than that… Amara wasn’t being the nicest person either…”
+JASPER: “I noticed some commotion, but couldn’t really figure out what was happening.”
+PLAYER: I give him a brief explanation of what happened, seeing his expression drop by the second.
+JASPER: “Poor Ronnie. I mean, she still acted rude too, but it must have felt like everyone ganged up on her.”
+PLAYER: It probably did.
+1) “You should’ve caught up on more details before saying anything…” (-)
+2) “Well now things are over for now, don’t worry about it.” (*)
+3) “You acted with good intentions though, I’m sure you’ll pay more attention next time.” (+)
+1)
+PLAYER: Jasper seems more caught up than usual.
+JASPER: “Yeah I probably should’ve… Damn it Jasper…”
+PLAYER: I try to comfort him.
+PLAYER: “Jasper it’s fine, you did what you could.”
+2)
+PLAYER: Jasper seems like is still thinking about it.
+JASPER: “I guess you’re right.”
+3)
+JASPER: “You’re right, I shouldn’t overthink this. I did my best.”
+PLAYER: I nod.
+(BACK TO REGULAR DIALOGUE.)
+PLAYER: “For now let’s put the subject on standby. We won’t fix things by thinking about it.”
+PLAYER: Jasper nods in agreement.
+PLAYER: “Another thing, why were you looking so much around the café when you first arrived?”
+JASPER: “O-oh that…”
+(EMO_JASPER_Tense)
+PLAYER: Jasper stutters, almost as if I had caught him red-handed.
+PLAYER: “It’s fine, I am just wondering as to why you were doing it.”
+PLAYER: I say reassuringly, trying to make him feel comfortable with it.
+JASPER: ”Well I really like coffee. The whole thing. The shops, the drinks, the environment and the vibes of it. It’s a really big interest of mine”
+PLAYER: I am taken by surprise. I won’t take him for that type. I guess it’s another lesson for me to not judge people by what they appear to be.
+PLAYER: “So you came here to check out more of the shop than to taste the drinks themselves?”
+JASPER: “Well, not really.”
+PLAYER: He ponders for a little bit.
+JASPER: “I want to taste the drinks of course, but I am interested in all aspects of it rather than just one.”
+PLAYER: “Any specific reason for that?”
+PLAYER: I ask, honestly curious as to where all his interest was coming from.
+PLAYER: He takes his time to answer once again.
+JASPER: “I kind of want to open a café myself…”
+1) “You’re not going to steal my ideas are you?” (-)
+2) “Oh that’s so cool!” (+)
+3) “Oh really? That’s interesting.”(*)
+1)
+PLAYER: I meant well but seems like he took what I said with something more like a threat.
+JASPER: “No! Not at all!”
+2)
+PLAYER: Seems like Jasper got excited by my own excitement.
+3)
+PAYER: Jasper lets out a small smile, appreciating my interest.
+(BACK TO REGULAR DIALOGUE.)
+JASPER: “Honestly, I don’t think I’m capable of doing it yet. I’m too quiet and shy for that, but a boy can dream.”
+PLAYER: He sighs, not believing he himself could actually achieve this.
+PLAYER: “You know this is not something impossible… It takes time, work and determination but you can do it if you put your mind to it.”
+JASPER: “I don’t know, I’m quite complicated when it comes to socializing. You see what you did before, making Ronnie feel bad and all…”
+PLAYER: “If you are still thinking about that, when you meet her again you talk to her about it, no need feeling like that for now.”
+JASPER: “Well I think I’ll just go home too… I’ll come back tomorrow though, don’t worry. I just feel like this was too much human interaction for today.”
+PLAYER: I chuckle.
+PLAYER: “Okay go ahead, I’ll hold you to that, please do come tomorrow!”
+(EMO_JASPER_None)
+(Hide_JASPER)
+PLAYER: *Maybe I scared him off…* I think to myself.
+PLAYER: Jasper lets out a small smile as he gets up, waving goodbye as he leaves.
+PLAYER: As the day comes to an end, I look around the empty coffee.
+PLAYER: “I did well… Or, at least, the best I could.”
+PLAYER: “Tomorrow is a new day.”
+(ENDDay_2)

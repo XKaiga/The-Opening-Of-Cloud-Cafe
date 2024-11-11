@@ -1,0 +1,216 @@
+﻿PLAYER: I enter the café preparing myself for yet another day at work.
+PLAYER: As I prepare myself for another shift, I begin thinking about all the interactions that had happened the day before.
+PLAYER: *Would they return?* I think to myself.
+PLAYER: Eventually the bell rings, and I allow my face to present a small smile as I see Amara enter.
+(Show_AMARA)
+PLAYER: “Good morning, I’m glad to see you returned.”
+PLAYER: Amara lets out a slight smile, slightly embarrassed, probably from the position she is coming back to.
+PLAYER: “How are you doing?”
+PLAYER: I say as I start to prepare ingredients for a drink she might order.
+AMARA: “Fine, I guess.”
+PLAYER: She calmly responds.
+PLAYER: “I am assuming that you will want to discuss what we previously started to chat about yesterday.”
+PLAYER: Amara nods slightly, as if she had prepared herself for that same conversation.
+PLAYER: “Good. Then would you like a drink to go with the conversation?”
+PLAYER: She nods, her expression telling me that a drink would go really well with her mood that day.
+PLAYER: “What would you like then?”
+PLAYER: She ponders for a little bit.
+AMARA: “You can hand me a calming drink, the coziest ever, I need to relax before such a conversation.”
+(DRINK_AMARA_2)
+PLAYER: She smiles at me, and I give the smile back to her as I start to prepare her drink.
+PLAYER: After the drink is ready, I hand it to her.
+PLAYER: As I am starting to prepare myself, wondering on how to approach the subject that had brought us together to discuss, I hear the door open.
+PLAYER: Jasper enters the café looking rather busy.
+(Show_JASPER)
+PLAYER: He sits down in the same table as the day before. Amara also looks at where I’m facing and recognizes Jasper.
+AMARA: “That’s the boy that defended me yesterday, right?”
+PLAYER: “Yeah it is, would you like to go there and talk to him?”
+AMARA: “Yeah, I think I’ll go talk to him about it. I know I was wrongs in some parts but I know he tried his best to defuse the situation.”
+PLAYER: I smile recognising her words, agreeing with them.
+PLAYER: “Bring him here instead then, please. I want to know what he’ll order too.”
+PLAYER: Amara nods, calling Jasper over to the front counter where we were.
+AMARA: “Jasper! Hey!”
+PLAYER: Jasper looks at us rather confused by the sudden mention of his name.
+AMARA: “Come here, I want to talk to you.”
+PLAYER: Jasper freezes for a few seconds, before grabbing his stuff and making his way over to me and Amara.
+PLAYER: “Good morning Jasper!”
+PLAYER: He waves slightly at me.
+PLAYER: “Are you ready to order or do you need some time to think first?”
+JASPER: “No, I thought beforehand.”
+PLAYER: He smiles, almost proud of himself. I wasn’t going to try and take that feeling away from him.
+JASPER: “Can I please have something smoky, but put something in it to make it less strong and less coffee tasting.”
+(DRINK_JASPER_2)
+PLAYER: I hand him his drink.
+AMARA: “So, Jasper I need to talk to you. It’s nothing serious so you don’t need to worry or anything.”
+PLAYER: Jasper seems to relax. Maybe he was nervous before his encounter with Amara, I mean, she was rather rude the very day before.
+Jasper: “Oh okay, what is it then?”
+PLAYER: Jasper takes a sip of his drink.
+AMARA: “Just wanted to say thank you because of yesterday. I know I didn’t act the best I could but you tried your best to calm both of us down.”
+AMARA: “And I really appreciate it, it’s not everyone who would help out on a situation like that.”
+PLAYER: It feels like there is more to dig there, but for now I won’t say anything for now, I’ll let her open up in due time.
+PLAYER: Meanwhile, Jasper looks rather perplexed, like he wasn’t expecting that coming at all.
+PLAYER: Amara seems to take notice of that too, but decides not to comment on it either.
+PLAYER: Maybe actually this would be the time to actually try and talk to Amara, that being the subject that brought her to the Café.
+PLAYER: As I am starting to prepare myself, wondering on how to approach the subject that had brought us together to discuss, I hear the door open.
+PLAYER: Ronnie enters, almost slamming the door in the process. She doesn’t look very happy.
+PLAYER: As I look at Amara, she doesn’t seem to be very excited to have Ronnie’s presence in the café again. I mean, it made sense.
+PLAYER: We were about to talk about her past, and Ronnie probably triggered her the day before, so it’s only natural to be uncomfortable.
+PLAYER: But something tells me something is more urgent with Ronnie today, and even if Amara’s expression doesn’t seem really pleased, I know she agrees with me.
+PLAYER: I give Amara an apologetic smile. She gives me an understanding look as I watch Ronnie come our way.
+(Show_RONNIE)
+PLAYER: “Good morning Ronnie, what are you feeling like having today?”
+RONNIE: “Please don’t talk to me right now.”
+PLAYER: She is struggling to look at me, as if she had been in a fight, a verbal one, of course, and is finding it hard to make other people not see it.
+PLAYER: “Are you okay? You don’t have to talk about it if you don’t want to.”
+RONNIE: “Just hand me something strong, the most intense flavor you can think of.”
+(DRINK_RONNIE_2)
+PLAYER: “Here you go.”
+RONNIE: “Anyways…”
+RONNIE: “Please go on with your day, I need some time to think about some stuff.”
+PLAYER: I nod, not planning on disturbing her more than necessary.
+PLAYER: As I turn to face Amara and Jasper, I can see Jasper excitedly talk about my café, complimenting it a lot, which makes me smile in appreciation.
+JASPER: “It’s really decorated and it’s fun to be here. Like the mood makes me almost more loose from myself.”
+AMARA: ”Okay chill.”
+PLAYER: Jasper seems taken aback by Amara’s remark but returns to being calm after she chuckles, probably finding him rather funny.
+AMARA: “You’re talking like you’ll get drunk or something, but yeah, I get what you mean.”
+PLAYER: Jasper chuckles too, clearly the interaction they are having with each other.
+JASPER: “I’m sorry if I’m being too much though, I just thought I could talk freely with you.”
+PLAYER: Amara is surprised by his sentence, as am I, it was some insecurity surfacing behind the smile and light manner of his way of speaking.
+1) “And where did this come from? It’s okay Jasper.” (-)
+2) “You can talk freely, nobody said otherwise.” (*)
+3) “You’re not being too much, you’re just talking to us.” (+)
+1)
+PLAYER: Jasper is taken aback, but with a few moments he can understand what I meant.
+2)
+PLAYER: Jasper nods, but takes some time to talk again.
+3)
+PLAYER: Jasper nods, as if he got reminded of something that was obvious.
+JASPER: “I guess it’s true.”
+(BACK TO REGULAR DIALOGUE.)
+JASPER: “It’s just some people would tell me the opposite.”
+AMARA: ”Why? Only now you became more interesting as you started to get excited over something.”
+AMARA: “Go on, talk about the Café, we’re all listening.”
+PLAYER: As Amara says that, she makes a head movement indicating someone else was listening to the conversation.
+PLAYER: As I turn around I see that Ronnie was also listening to the conversation.
+RONNIE: “Sorry, I just found his remark weird as well, just trying to to figure that out as well, but I can leave if you wan-”
+AMARA: “Calm down nobody told you to do that.”
+PLAYER: Amara interrupts Ronnie, leaving her a bit speechless.
+AMARA: “Just pull a chair and join the conversation, don’t be standing over there like a weirdo.”
+RONNIE: “Ugh…”
+PLAYER: Ronnie rolls her eyes but complies with Amara’s slightly rudely-toned suggestion.
+RONNIE: “Now, back to you Jasper, who’s been telling you that you’re not allowed to speak your mind as you want to?”
+PLAYER: Jasper stays silent for a while.
+JASPER: “Just some guys at college, they basically make it really hard to express myself.”
+AMARA: “Express yourself? How so?”
+PLAYER: I am quite confused by his statement too. Jasper barely expresses himself as it is, it’s almost like him acting as open as he is right now is a big exception.
+PLAYER: How can he express himself less as he already does?
+JASPER: “Like they don’t say anything bad per se. Just ignore it when I talk, give me bad looks when I try to get some attention. It must be me overthinking it though.”
+RONNIE: “And why don’t you tell those same guys to piss off?”
+PLAYER: Amara chuckles with Ronnie’s remark.
+PLAYER: “I mean I wouldn’t rule that off but I believe there could be better ways to go about it.”
+PLAYER: I say with a slight smile on my face.
+JASPER: “But they are not being directly rude with me or anything, I just sometimes feel like I am bothering them as I talk.”
+JASPER: “It’s more my problem than theirs. And it’s not like I speak really loud or anything, it’s hard to hear me.”
+1) “I can hear you just fine if I’m paying attention.” (+)
+2) “You could try to sound more assertive, you know?” (-)
+3) “Well it’s your way of talking, what else can you do?” (*)
+1)
+PLAYER: “So that’s no excuse for them to ignore you if that’s what they’re doing.”
+JASPER: “I guess you’re right…”
+PLAYER: Jasper seems reflective of his peers’ behavior.
+2)
+JASPER: “I tried that, it’s not enough.”
+PLAYER: Jasper seems really sad about that.
+3)
+JASPER: “Well I did try to change it, but it’s just not me you know?”
+(BACK TO REGULAR DIALOGUE.)
+JASPER: “I’ve always been more quiet than the average person, it’s not something I like but that just happens to be my tone of voice.”
+PLAYER: I nod in understanding.
+JASPER: “When I was a kid I was made fun of for that, but with time my parents were able to make me aware that I could not control that.”
+JASPER: “And because I can’t control some features of mine, I shouldn’t feel shame for those traits.”
+RONNIE: “Well, at least someone has receptive parents.”
+PLAYER: Ronnie’s remark seems really specific, but I don’t feel like right now is the right time to address that.
+AMARA: “So basically your whole thing is that you’re made fun of things you can’t control and got all insecure about it?”
+PLAYER:
+1) “I’m sure there’s more to it…” (+)
+2) “I see your point, but I’m struggling to understand what we should to as well.” (*)
+3) “It doesn’t seem like much when you put it that way.” (-)
+1)
+PLAYER: Jasper smiles softly, but seems troubled by Amara’s remark.
+2)
+PLAYER: Jasper rolls his eyes with our remarks.
+3)
+PLAYER: Jasper seems upset by our remarks.
+(BACK TO REGULAR DIALOGUE.)
+PLAYER: It’s like he is having trouble formulating his thoughts himself, like he has so much bottled up and the previous remarks, made by both me and Amara were triggering.
+RONNIE: “Okay guys let’s calm down now, if you put it that way Amara you’re diminishing his feelings.”
+PLAYER: Amara doesn’t seem pleased to be talked that way.
+AMARA: “But please are you hearing him??? I mean that sucks but that sounds like nothing, at least compared to what I went through, and you’re not seeing me complaining.”
+RONNIE: “That was such a disgusting thing you said just there.”
+PLAYER: “Okay guys, maybe let’s settle this for now-”
+AMARA: “Like you know what I’ve been through! Like sorry to Jasper, but he’s insecure of how he expresses himself, if he talks loud enough, or too much or too little.”
+AMARA: “When there are so many bigger things a person could be worried about!”
+AMARA: “And the way he’s complaining about it makes him sound like he is just wanting attention! Which is fine, but damn, just ask for it.”
+AMARA: “Don’t go around dropping sad little comments about your insecurities like you’re some sad puppy.”
+RONNIE: “And who are YOU to decide what he is doing wrong or not?”
+PLAYER: Ronnie seems furious after everything that came out of Amara’s mouth.
+RONNIE: “I don’t know what you’ve been through but I do know you’ve grown bitter and are taking it out on other people.”
+RONNIE: “You did that yesterday to me and are doing it today to Jasper and I just won’t stand by it!”
+RONNIE: “We don’t know the full story yet and you’re already ranting about it!”
+PLAYER: I can hear Amara’s laugh.
+AMARA: “What more could there even be!-”
+JASPER: “GUYS STOP!”
+PLAYER: Everyone freezes, we weren’t even aware that Jasper could speak that high.
+JASPER: “You don’t know how hard it is to me to even express myself when i’ve spent all my life being invalidated and diminished.”
+JASPER: “Because yes, I know it seems silly but once every word that comes out of your mouth becomes background noise you grow insecurities.”
+JASPER: “Make it last a long time and those insecurities grow, make them grow big enough and then you’re questioning your whole self-worth all together.”
+PLAYER: Jasper pauses, but none of us have the guts to even let a word escape our mouths right now.
+JASPER: “So yes maybe it was my self expression only that was mocked. But it was my voice, tone, volume, register and words.”
+JASPER: “And it gets to a point that everyone seems to believe that I am the one being dramatic so I start to think that too!”
+PLAYER: I can see that Amara is regretting every word she said right now without the need to look at her.
+1) “That must be a really hard thing to experience.” (-)
+2) “You have every right to be upset…” (*)
+3) “These issues always come with more to them than it originally seems.” (+)
+1)
+JASPER: “Well duh, of course it is!”
+PLAYER: That was kind of the obvious statement right there…
+2)
+JASPER: “Of course I do, and when I’m opening up about it the last thing I need is to be invalidated again!”
+PLAYER: I understandingly nod.
+3)
+JASPER: “It just takes me more time than regular people to gather my thoughts.”
+(BACK TO REGULAR DIALOGUE.)
+AMARA: “I’m sorry, Jasper, I really am. After what I’ve been through myself I should have been the first to understand your point of view.”
+JASPER: “It’s okay Amara, I know you mean well, just don’t assume quickly. Ignorance over malice…”
+RONNIE: “I’m sorry too, I should have let you speak up for yourself.”
+JASPER: “Now, I’m working on myself. I know those comments aren’t ideal, but I’m still healing. I need time.”
+JASPER: “Even if I have trouble with how I speak, I have a worse time with how my view of myself has turned out to be because of this.”
+JASPER: “I told our barista here that I am really into café’s, and I really want to have my own. I just struggle to realize if I can manage it, given my difficulties with communication.”
+1) “You have your head in the right space. Go for it.” (+)
+2) “You yourself know better than anyone else that you are able to do it.” (-)
+3) “You can always take your time. When you’re ready, that dream is waiting for you.” (*)
+(BACK TO REGULAR DIALOGUE.)
+PLAYER: Jasper takes his time taking in what I said, as the girls are agreeing with me and giving him support as well.
+PLAYER: “In any case, I’m always here to teach you the basics that I’ve only now I’ve started to grasp.”
+PLAYER: “But the most important part of this… I’m now realizing it’s being able to deal with customers… and you did that not once, but twice with these two.”
+PLAYER: Amara and Ronnie look around rather shy.
+PLAYER: “I know you can do it Jasper.”
+PLAYER: Jasper looks around seemingly rather confident.
+JASPER: “Thanks, I’ll give that a thought as I go on with my day. Thanks for the conversation guys.”
+(Hide_JASPER)
+PLAYER: Jasper says his goodbyes and leaves the Café.
+PLAYER: Ronnie looks at Amara for a few moments 
+RONNIE: “I’m sorry for being rude yesterday. You wanted resolution and I just backed out on you, and that wasn’t fair of me to do.”
+PLAYER: Amara gives a slight smile, genuinely thankful for the kind words Ronnie said to her.
+AMARA: “It’s okay. I could see you meant well with Jasper today.”
+PLAYER: After some time Ronnie gets up, getting her things.
+RONNIE: “I’ll go then. Thanks for the distraction guys, see you around.”
+PLAYER: She waves goodbye and only then I’m reminded of her state when she entered the Café today.
+(Hide_RONNIE)
+PLAYER: I’ll leave that conversation for another day.
+AMARA: “I think this was too much for the day already, so I’ll get back and talk to you about my stuff another time.”
+PLAYER: Amara directs those words to me, and I smile back at her.
+PLAYER: “No problem, I’ll be here when the time comes.”
+PLAYER: After a few minutes of small-talk, Amara goes on with her own day, leaving me hopeful and excited, wishing that everything goes well with Jasper. 
+(Hide_AMARA)
+(ENDDay_3)

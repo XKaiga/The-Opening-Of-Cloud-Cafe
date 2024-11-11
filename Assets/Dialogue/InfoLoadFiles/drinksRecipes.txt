@@ -1,0 +1,17 @@
+Day1
+(DRINK_ALYIA_1)
+Tea_HotMilk_Honey 
+Day2
+(DRINK_AMARA_1)
+Decaf_Chantilly_Chocolate
+(DRINK_RONNIE_1)
+Abisca_Vic_Sugar
+(DRINK_JASPER_1)
+Excelsa_Foam_Strawberry
+Day3
+(DRINK_JASPER_2)
+Liberica_HotMilk_Vanilla
+(DRINK_RONNIE_2)
+Robusta_Water_Chocolate
+(DRINK_AMARA_2)
+Tea_Water_Honey

@@ -1,0 +1,98 @@
+PLAYER: I walk down the street, feeling the cool morning air. My hands are tucked deep into my pockets as I look around at the bustling world around me.
+PLAYER: “Can I really run this café on my own?” 
+PLAYER: I mutter to myself, a quiet question that feels heavier with each step.
+PLAYER: My thoughts drift to my past, to the path my parents had paved for me.
+PLAYER: The life they’d carefully planned, making sure every piece was set in place. Everything was decided… until now.
+PLAYER: But that wasn’t what I wanted. I wanted something different, something that felt like my own.
+PLAYER: I stop in front of the café, gazing at the sign above.
+PLAYER: It’s small, a little weathered, but it’s mine. This place represents my choice, my risk, and the chance to follow my own dream.
+PLAYER: I pause, my hand resting on the door as I take a deep breath. 
+PLAYER: "What if I’m not cut out for this?” 
+PLAYER: The thought lingers, itching the back of my mind.
+PLAYER: I’ve never done anything like this before. 
+PLAYER: Every step I’ve taken until now was guided by others, by plans made for me, expectations I never questioned. This café, this choice… it’s all unfamiliar.
+PLAYER: A bit of doubt crosses my mind as I think about all the things that could go wrong. 
+PLAYER: “What if I don’t have what it takes? What if I fail?”
+PLAYER: The word “fail” echoes, sharp and unsettling.
+PLAUER: I can feel my stomach twist, my hands fidgeting as I push through my nerves.
+PLAYER: “This is my dream, isn’t it?” 
+PLAYER: I say, almost trying to convince myself. But in the silence that follows, my insecurities feel louder.
+PLAYER: I think about all the people who have their lives figured out, people who seem so sure of who they are and what they want. 
+PLAYER: But here I am, wondering if I made the wrong choice, if I’ll be able to handle everything that lies ahead.
+PLAYER: And yet, there’s a small spark inside me, something that tells me to keep going, to take this one step forward. Because if I don’t try… I’ll never know.
+PLAYER: I take another deep breath, steadying myself, and push open the door, stepping into the warmth of the café that’s now mine.
+PLAYER: I step into the café, slowly, letting the door swing shut behind me.
+PLAYER: The familiar scent of coffee and warm wood welcomes me, a small comfort in the sea of doubts that still lingers.
+PLAYER: My eyes drift around the room, taking in each little detail.
+PLAYER: The comfy seats, the light filtering through the windows, the shiny reflection of the machines, all pieces of a place that somehow feels… right.
+PLAYER: I run my fingers along the counter, feeling its texture, its history, as if each corner and scratch tells a story. 
+PLAYER: And despite my worries, I can’t help but feel an odd sense of calm settle over me.
+PLAYER: "This is where I'm supposed to be." 
+PLAYER: I say to myself, almost without realizing. The thought is there, quiet but steady, like a gentle anchor grounding me to this moment.
+PLAYER: It doesn’t make sense, not entirely. 
+PLAYER: I can’t explain why this space, this small corner of the world, feels like it fits me. 
+PLAYER: But as I take it all in, piece by piece, I can feel my worries loosen, just a little.
+PLAYER: I close my eyes for a moment, breathing in deeply. 
+PLAYER: The doubts are still there, lingering, but so is something else.
+PLAYER: A quiet reassurance, a sense that maybe, just maybe, I made the right choice after all.
+PLAYER: My quiet moment is interrupted by the soft jingle of the door opening, and I jump a little, startled back into reality.
+PLAYER: Lost in my own head, I hadn’t noticed someone stepping in.
+PLAYER: I turn to see a man, probably in his late forties, with warm eyes and a smile that seems like it’s seen many long days and early mornings in a place like this.
+???: “Sorry to barge in unannounced. Didn’t mean to startle you.” 
+PLAYER: He says, chuckling softly. 
+ETHAN: “Name’s Ethan, Ethan Miller. I was the previous owner of this place.”
+PLAYER: He extends a hand, and I shake it, still a bit surprised but grateful to see a friendly face.
+PLAYER: “Oh, I’ve heard a lot about you!” 
+PLAYER: I say, finding my voice. 
+PLAYER: “I’m still just getting used to… well, all of this.”
+PLAYER: He nods knowingly.
+ETHAN: “I remember the feeling. Took me a while to believe this place was really mine, back when I started out.”
+ETHAN: “But life has a funny way of making you wander in new directions, doesn’t it?”
+PLAYER: I agree with a smile, glad to be able to relate to his experience, feeling more confident as I keep on talking with him.
+PLAYER: “So what are you doing now?”
+PLAYER: I ask, genuinely curious.
+PLAYER: He leans against the counter, glancing around the café as if reminiscing. 
+ETHAN: “I’m working with a nonprofit now. We’re focused on creating green spaces in the city, little pockets where people can just… take a break.”
+ETHAN: “After spending years in here, I guess I realized how much people need places that help them breathe.”
+PLAYER: “That sounds… perfect.” 
+PLAYER: I say, surprised at how easily I can imagine him doing exactly that.
+PLAYER: He smiles, a little proud, a little nostalgic. 
+ETHAN: “It’s a different kind of satisfaction, seeing something grow that isn’t just a business but a real place for people to find peace.”
+PLAYER: I nod, feeling the warmth of his words settle around us. 
+PLAYER: “It sounds like this café was the start of something bigger for you.”
+ETHAN: “It was. And I have a feeling it’ll be the same for you. You’ll find your rhythm.”
+ETHAN: “This place… It has a way of bringing things into focus.” 
+PLAYER: He gives me a reassuring pat on the shoulder, and I feel a bit of my own tension ease.
+ETHAN: “To be honest, I was just curious.”
+PLAYER: He admits, a grin spreading across his face. 
+ETHAN: “Wanted to see who’d be looking after the place. This café’s been like a second home to me… hard to let go without knowing it’s in good hands.”
+PLAYER: I smile, feeling a little flattered. 
+PLAYER: “Well, I hope I can live up to it. It must’ve been hard to leave after all this time.”
+ETHAN: “It was.” 
+PLAYER:  He nods, his gaze drifting around the room again. 
+ETHAN: “But you’ll find your way here, just like I did. Took me a bit to get comfortable with this place, but I eventually realized the café has a rhythm of its own.” 
+ETHAN: “You just have to let yourself fall into it.”
+PLAYER: I nod, taking in his words, wondering if I'll feel that same sense of belonging someday.
+ETHAN: “If I can give you one piece of advice, it’d be this.” 
+PLAYER: He says, looking back at me with a serious expression. 
+ETHAN: “Listen to every person who walks through that door. Truly listen.”
+PLAYER: I tilt my head, curious. 
+PLAYER: “I’d imagine so, but seems like there’s more to it, why’s that?”
+ETHAN: “Because everyone’s got a story worth hearing.” 
+PLAYER: He replies simply. 
+ETHAN: “Some are carrying burdens you’d never guess; some are celebrating small victories they don’t even realize matter to them.”
+ETHAN: “And the thing is, this place can be a safe space if you let it. All it takes is a listening ear.”
+PLAYER: I nod thoughtfully, his words settling into my mind. 
+PLAYER: “That sounds… like a lot to take in.”
+PLAYER: He chuckles, giving me a reassuring smile. 
+ETHAN: “It can be. But you’ll be amazed at what people are willing to share when they feel seen, heard.”
+ETHAN: “This café has a way of drawing stories out of people. Maybe even a few you need to hear yourself.”
+PLAYER: “Thanks, Ethan.” 
+PLAYER: I say, feeling a surge of gratitude. 
+PLAYER: “I’ll do my best to make this place feel like it did for you.”
+ETHAN: “I’m sure you will.” 
+PLAYER: He claps a hand on my shoulder, his gaze warm and encouraging. 
+ETHAN: “Just remember, you’re here for more than serving coffee. Listen, and let them tell their stories. That’s the heart of this place.”
+PLAYER: He gives me a final nod and heads out the door, leaving me alone in the café once more, but somehow, I don’t feel quite as alone as before.
+PLAYER: After a deep sigh, I start to work on preparing for the day, waiting for the first customer to come in.
+(ENDDay_0)

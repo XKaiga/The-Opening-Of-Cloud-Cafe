@@ -1,0 +1,195 @@
+﻿PLAYER: I enter the café preparing myself for yet another day at work.
+PLAYER: As I prepare myself for another shift, I begin thinking about all the interactions that had happened the day before.
+PLAYER: *Would they return?* I think to myself.
+PLAYER: Eventually the bell rings, and I allow my face to present a small smile as I see Amara enter.
+(Show_AMARA)
+PLAYER: “Good morning, I’m glad to see you returned.”
+PLAYER: Amara lets out a slight smile, slightly embarrassed, probably from the position she is coming back to.
+PLAYER: “How are you doing?”
+PLAYER: I say as I start to prepare ingredients for a drink she might order.
+AMARA: “Fine, I guess.”
+PLAYER: She calmly responds.
+PLAYER: “I am assuming that you will want to discuss what we previously started to chat about yesterday.”
+PLAYER: Amara nods slightly, as if she had prepared herself for that same conversation.
+PLAYER: “Good. Then would you like a drink to go with the conversation?”
+PLAYER: She nods, her expression telling me that a drink would go really well with her mood that day.
+PLAYER: “What would you like then?”
+PLAYER: She ponders for a little bit.
+AMARA: “You can hand me a calming drink, the coziest ever, I need to relax before such a conversation.”
+(DRINK_AMARA_2)
+PLAYER: She smiles at me, and I give the smile back to her as I start to prepare her drink.
+PLAYER: After the drink is ready, I hand it to her.
+PLAYER: As I am starting to prepare myself, wondering on how to approach the subject that had brought us together to discuss, I hear the door open.
+(Show_RONNIE)
+PLAYER: Ronnie enters, almost slamming the door in the process. She doesn’t look very happy.
+PLAYER: As I look at Amara, she doesn’t seem to be very excited to have Ronnie’s presence in the café again. I mean, it made sense.
+PLAYER: We were about to talk about her past, and Ronnie probably triggered her the day before, so it’s only natural to be uncomfortable.
+PLAYER: But something tells me something is more urgent with Ronnie today, and even if Amara’s expression doesn’t seem really pleased, I know she agrees with me.
+PLAYER: I give Amara an apologetic smile. She gives me an understanding look as I watch Ronnie come our way.
+PLAYER: “Good morning Ronnie, what are you feeling like having today?”
+RONNIE: “Please don’t talk to me right now.”
+PLAYER: She is struggling to look at me, as if she had been crying and is finding it hard to make other people see it.
+PLAYER: “Are you okay? You don’t have to talk about it if you don’t want to.”
+RONNIE: “Just hand me something strong, the most intense flavor you can think of.”
+(DRINK_RONNIE_2)
+PLAYER: “Here you go.”
+RONNIE: “Anyways…”
+PLAYER: After some time, Ronnie takes notice of Amara’s presence.
+RONNIE: “Well great. I’m sure you’re enjoying it a lot, seeing me like this.”
+PLAYER: Amara looks rather offended by Ronnie’s comment.
+AMARA: “I’m not, jeez. I might have unresolved stuff with you but it doesn’t make me not have empathy for people.”
+PLAYER: Amara rolls her eyes, as Ronnie takes another sip of her drink.
+1) “Feels like someone is trying really hard to annoy you, huh?” (+)
+2) “Why are you crying? Do you need something?” (-)
+3) “I’m here if you need anything, take your time.” (*)
+1)
+PLAYER: Ronnie can’t avoid but laugh at my comment.
+RONNIE: “Oh you have no idea.”
+PLAYER: “Well that’s up to you honestly.”
+2)
+PLAYER: Ronnie faces me with a not so pleased expression.
+RONNIE: “I don’t recall telling you I needed anything.”
+PLAYER: I take a step back, not wanting to pressure her into saying anything she didn’t feel comfortable with.
+3)
+PLAYER: I know Ronnie heard me, but she decides to take a sip of her drink instead.
+(BACK TO REGULAR DIALOGUE.)
+RONNIE: “It’s just… Some family members are really pissing me off with things and I needed a drink to cool off.”
+PLAYER: “Makes sense. Sometimes a drink is all someone needs to cool off.”
+PLAYER: I see the door open once more, smiling slightly as a way to greet Jasper, who’s entering with his attire, computer and all.
+(Show_JASPER)
+PLAYER: “Good morning Jasper!”
+PLAYER: He waves slightly at me.
+PLAYER: After giving a few steps in my direction, probably to order, he takes notice at Ronnie’s distressed figure in a corner.
+PLAYER: He looks at me asking if he should probably about the situation, but I just shake my head, as I know it’s best for Ronnie to be left alone for a while.
+PLAYER: “Are you ready to order or do you need some time to think first?”
+JASPER: “No, I thought beforehand.”
+PLAYER: He smiles, almost proud of himself. I wasn’t going to try and take that feeling away from him.
+JASPER: “Can I please have something smoky, but put something in it to make it less strong and less coffee tasting.”
+(DRINK_JASPER_2)
+PLAYER: I hand him his drink.
+PLAYER: I scooch over to Ronnie that is deep thinking about her issues. I want to help her but I’m still trying to figure out how to best approach her.
+PLAYER: “So, you said it was a family matter, huh?”
+PLAYER: I ask her, seeing her focus shift to me, looking a bit defensive.
+RONNIE: “Yeah…”
+PLAYER: She sighs, still reflecting on the subject.
+1) “Your family doesn’t seem like the best one…” (-)
+2) “Seems like they are giving you a hard time…” (+)
+3) “Family can be a hard subject indeed.” (*)
+1)
+PLAYER: Ronnie looks at me like I’ve committed a crime.
+RONNIE: “Don’t trash talk my family… You don’t know them.”
+PLAYER: I regret saying such words immediately.
+PLAYER: “Sorry, it really wasn’t my place.”
+2)
+RONNIE: “Tell me about it.”
+PLAYER: Ronnie rolls her eyes.
+PLAYER: “I am not asking for you to tell me about what happened specifically but… You can talk about it if you want to.”
+3)
+RONNIE: “Every family has their own problems, it’s not something that’s exclusive to mine…”
+PLAYER: “Yeah I know, but you can tell me about yours, doesn’t have to be something related to the issue, just something you feel like sharing that might help you.”
+(BACK TO REGULAR DIALOGUE.)
+RONNIE: “My family is amazing to be honest… My dad is a successful business man and my mom a famous attorney.”
+RONNIE: “And all my brothers are in the medical, business, and administration field. They are like, my role models.”
+PLAYER: “You’re the youngest out of all of them?”
+PLAYER: Ronnie nods, almost feeling nostalgic about her childhood or some early memories  that are going through her mind.
+RONNIE: “I’m the girl too. So you know, need to prove myself sometimes.”
+PLAYER: She chuckles, but I have the underlying feeling that there’s more to that feeling that she is currently portraying.
+JASPER: “I have always wanted siblings…”
+PLAYER: I hear Jasper butting in the conversation. I get quite surprised to see him taking the initiative to start some sort of socialization.
+PLAYER: But I decide not to comment on it. Instead, I try to see where this conversation would lead to. 
+RONNIE: “You’re an only child?”
+JASPER: “Yeah, I asked my parents for siblings ever since I realized what it actually learned the meaning of that word.”
+PLAYER: “I’m assuming they wouldn’t give in on that.”
+PLAYER: I chuckle, trying to lighten the mood between them, and glad that Ronnie was starting to calm down.        
+RONNIE: “Well, I have three older brothers. I always looked up to them as I grew up, they were like me heroes in a way.”
+AMARA: “Why were you so stressed walking in then? They can’t be all that if they’re causing you to feel that way.“
+PLAYER: While Jasper’s interjection was more welcomed by Ronnie, Amara’s had the opposite effect.
+RONNIE: “And why are you saying anything about this?”
+AMARA: “Because you’re talking out loud so we can hear. So at least, we’re going to comment on it.”
+PLAYER: Ronnie remains with her mouth shut. She couldn’t really clap back, it was a public space and everyone had freedom of speech.
+AMARA: “Still, my question remains, why are you stressed then, if everyone in that family is perfect.”
+PLAYER: Ronnie takes her time answering back.
+RONNIE: “They are pressuring me into taking this internship at my dad’s company that I don’t wanna do.”
+JASPER: “Is there any specific reason for you to not wanna do it?”
+PLAYER: Jasper inquired, feeling quite invested in the conversation.
+RONNIE: “I don’t really know… I mean it’s a great opportunity and all that, but it just doesn’t peak my interest…”
+1) “But it could probably be used for your work experience, that’s useful…” (-)
+2) “It’s not your dream job I bet.” (+)
+3) “You still have the choice to not do it if you don’t want to.”(*)
+1)
+RONNIE: “Yeah but how is that useful if I’ll be miserable doing it?”
+PLAYER: “Oh…”
+PLAYER: “Yeah, that makes sense, I won’t talk more.”
+2)
+PLAYER: She gives me a faint smile, confirming it.
+3)
+RONNIE: “I mean that’s debatable.”
+AMARA: “Debatable?”
+(BACK TO REGULAR DIALOGUE.)
+RONNIE: “In this case, it’s something that I have really no interest in doing with my life. I want to pursue something different from what my family does.”
+JASPER: “What are you into?”
+RONNIE: “I really would like to be in the fashion business.”
+PLAYER: Amara seems more interested in the conversation than she probably would like to admit that she is.
+JASPER: “Then why don’t you just go for it?”
+PLAYER: The question Jasper asks makes the mood shift again.
+RONNIE: “It’s like…”
+PLAYER: Ronnie pauses for a moment.
+RONNIE: “No job is better than another job, don’t get me wrong, but reputation wise I’d be seen like the misplaced one in my family.”
+PLAYER: “And why don’t you talk to your family about what you want to do with you life.”
+PLAYER: Ronnie shakes her head rapidly, like that wasn’t even a matter.
+RONNIE: “NO WAY. I mean, I love my family but we don’t really… Talk. You know?”
+JASPER: “So what do you expect to do? Just go with the flow? That doesn’t seem to be the most life-fulfilling thing to do.”
+AMARA: “Yeah, I mean, it’s not like they’ll work for you. You’ll be the one stuck on a job that you despise, not them.”
+RONNIE: “I know that! I just can’t bring myself to actually come up with that conversation myself… I’ll seem like the weak one, that can’t carry the family name.”
+PLAYER: “So you’re basically struggling to be open and honest with your family, and it’s not that they are annoying, rather the position you’re in.”
+PLAYER: Ronnie nods. It seems that we have figured out the situation.
+AMARA: “What do you think it’s stopping you?”
+PLAYER: It feels like, for now, Amara and Ronnie have set their differences aside to be actually able to sort this out.
+RONNIE: “Lack of habit? I don’t know, we just never had these kinds of problems. I could just do whatever I was told and didn’t mind.”
+1) “That doesn’t seem really healthy…” (-)
+2) “And now you mind…” (*)
+3) “It’s not too late to change that.” (+)
+1)
+PLAYER: Ronnie looks at me unfazed.
+RONNIE: “Oh really? I hadn’t noticed.”
+PLAYER: I can feel Ronnie’s irony pierce through my ears.
+2)
+PLAYER: Ronnie looks at like I had just said the most obvious thing ever. And she wasn’t really wrong.
+3)
+RONNIE: “That’s what I’m thinking right now, if I’m actually able to pull that off. I mean, it will be weird, not only for me, but for them too.”
+PLAYER: “I can see how that could feel awkward at first, but it will be more natural as you go on with the conversation.”
+(BACK TO REGULAR DIALOGUE.)
+RONNIE: “Nonetheless, what if they make fun of me?”
+JASPER: “Who? Your family?”
+AMARA: “That doesn’t make much sense.”
+PLAYER: “Well let’s hold on, I want to see why she’d think something like this.”
+PLAYER: However, Ronnie is too lost in thought to actually say something.
+PLAYER: And then, just like that, as I look at Ronnie I can understand where this comes from. This wasn’t some problem, recurrent event or anything of the sort.
+PLAYER: She was simply insecure. As any human being would be. But in her case that wasn’t normal.
+PLAYER: Coming from a family that really didn’t encourage talking about feelings would lead to anyone feeling hesitant on doing so.
+PLAYER: Even more when everyone followed the pattern of the blueprint her parents set for her and her brothers.
+PLAYER: To question all that would be absolutely terrifying.
+PLAYER: I need to give her some really good advice…
+1) “You’re strong from all that your family gave you. Use that in your favor.” (-)
+2) ”If you want to do it, but you’re scared. Do it scared.” (+)
+3) “You already have the no, you can only go uphill from where you are.” (*)
+(BACK TO REGULAR DIALOGUE.)
+PLAYER: Ronnie looks at me as if deep thinking about what I told her.
+PLAYER: Jasper and Amara are also taken aback from my words, processing them as well in their own way.
+PLAYER: After some time Ronnie gets up, getting her things.
+RONNIE: “I think what to do now guys. Thanks.”
+PLAYER: Ronnie looks at Amara for a few moments 
+RONNIE: “I’m sorry for being rude yesterday. You wanted resolution and I just backed out on you, and that wasn’t fair of me to do.”
+PLAYER: Amara gives a slight smile, genuinely thankful for the kind words Ronnie said to her.
+RONNIE: “I’ll go home to talk this out.”
+PLAYER: With that, she says her goodbyes and leaves the café.
+(Hide_RONNIE)
+JASPER: “I hope that all goes well… She deserves it, without all the additional pressure of course.”
+PLAYER: Jasper chuckles lightly as Amara gives an agreeing head nod.
+AMARA: “I think this was too much for the day already, so I’ll get back and talk to you about my stuff another time.”
+PLAYER: Amara directs those words to me, and I smile back at her.
+PLAYER: “No problem, I’ll be here when the time comes.”
+PLAYER: After a few minutes of small-talk, Jasper and Amara go on with their own days, leaving me hopeful and excited, wishing that everything goes well with Ronnie.
+(Hide_AMARA)
+(Hide_JASPER)
+(ENDDay_3)

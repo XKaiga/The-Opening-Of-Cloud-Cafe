@@ -1,25 +1,20 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Timer : MonoBehaviour
 {
-    [SerializeField] private Text timerText;
+    [SerializeField] private GameObject timerTextGameObject;
+    private Text timerText;
+    private TaskType taskType;
+
     public float timeRemaining = 0;
-    public static int timeStart = 0;
+    public bool timerIsRunning = false;
 
-    public static bool timerIsRunning = false;
-
-    private void Start()
+    private void Awake()
     {
-        timerText.gameObject.SetActive(false);
-
-        timeRemaining = timeStart;
-
-        if (timeRemaining != 0)
-        {
-            timerText.gameObject.SetActive(true);
-            timerIsRunning = true;
-        }
+        timerText = timerTextGameObject.GetComponent<Text>();
+        timerTextGameObject.SetActive(false);
     }
 
     void Update()
@@ -32,12 +27,24 @@ public class Timer : MonoBehaviour
                 UpdateTimerDisplay(timeRemaining);
             }
             else
-            {
-                timeRemaining = 0;
-                timerIsRunning = false;
-                UpdateTimerDisplay(timeRemaining);
-            }
+                StopTimer();
         }
+    }
+
+    public void StartTimer(float seconds)
+    {
+        timeRemaining = seconds;
+        timerTextGameObject.SetActive(true);
+        timerIsRunning = true;
+    }
+
+    public void StopTimer(float stopAt = 0)
+    {
+        timeRemaining = stopAt;
+        timerIsRunning = false;
+        UpdateTimerDisplay(timeRemaining);
+
+        MainCoffeeManager.RemoveTask(taskType);
     }
 
     void UpdateTimerDisplay(float timeToDisplay)
@@ -47,5 +54,16 @@ public class Timer : MonoBehaviour
         int seconds = Mathf.FloorToInt(timeToDisplay);
 
         timerText.text = seconds.ToString();
+
+        if (!timerIsRunning)
+            StartCoroutine(HideTimerAfterDelay());
+    }
+
+    private IEnumerator HideTimerAfterDelay()
+    {
+        yield return new WaitForSeconds(2);
+
+        timerTextGameObject.SetActive(false);
+        timeRemaining = 0;
     }
 }

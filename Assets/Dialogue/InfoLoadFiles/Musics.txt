@@ -1,0 +1,7 @@
+(DuskDelight_Happy)
+(BlackSilent_Fear)
+(Monarch_Disgust)
+(Nekozou_Sad)
+(Metaphonk_Angry)
+(Lights_Vulnerable)
+(RisingDanger_Tense)

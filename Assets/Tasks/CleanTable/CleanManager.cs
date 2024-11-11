@@ -1,13 +1,11 @@
-using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class CleanManager : MonoBehaviour
 {
+    [SerializeField] private Timer timer;
+
     public Coroutine drawing;
     [SerializeField] private GameObject linePrefab;
     public static float widthMultiplier = 0.3f;
@@ -23,7 +21,7 @@ public class CleanManager : MonoBehaviour
 
     public static int taskTimer = 20;
 
-    private void Awake(){ linePrefab.GetComponent<LineRenderer>().widthMultiplier = widthMultiplier; }
+    private void Awake() { linePrefab.GetComponent<LineRenderer>().widthMultiplier = widthMultiplier; }
 
     void Update()
     {
@@ -50,12 +48,18 @@ public class CleanManager : MonoBehaviour
 
         blobManager.CaptureBlobState();
         clean = blobManager.IsBoardClean();
-        if (clean)
+
+        if (clean && timer.timerIsRunning)
+        {
+            timer.StopTimer(timer.timeRemaining);
+            Money.AddTaskScore();
+        }
+        
+        if (clean || !timer.timerIsRunning)
         {
             blobManager.RemoveBlobs();
             ClearLines();
-
-            Money.AddTaskScore();
+            MainCoffeeManager.RemoveTask(TaskType.Clean);
         }
     }
 
@@ -109,5 +113,6 @@ public class CleanManager : MonoBehaviour
         foreach (var line in drawnLineRenderers)
             Destroy(line.gameObject);
         drawnLineRenderers = null;
+        clean = true;
     }
 }

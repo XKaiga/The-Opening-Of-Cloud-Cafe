@@ -1,0 +1,36 @@
+(JASPER_GOOD)
+“This is surprisingly good. I didn't expect such a deep flavor profile… it’s comforting, like a well-worn book.”
+“Wow, you’ve really captured the essence of this drink. It’s... calming. Thank you for this.”
+“Mmm, this is perfect for focusing. I can already feel my ideas flowing better. Great job.”
+(JASPER_AVERAGE)
+“It’s… okay. I mean, it’s drinkable. Just not really what I had in mind, but I appreciate the effort.”
+“This is fine, I guess. A bit too different for my taste, but it’s not terrible. I’ll finish it.”
+“Not bad, but it feels a bit off. Maybe a little more depth would help? Still, thanks for making it.”
+(JASPER_BAD)
+“Um, this is... different. I didn’t expect it. It’s kind of overwhelming, actually.”
+“I don’t think this really works for me. The flavors are clashing a bit. Sorry, but I can’t drink this.”
+“I appreciate the attempt, but this is… not what I was hoping for. It’s a bit harsh. I think I’ll stick to water.”
+(AMARA_GOOD)
+“This is incredible! It feels like a warm embrace. You really understand how to make someone feel special with a drink.”
+“Wow, this is just what I needed. It’s so soothing and rich—thank you for making it just right.”
+“I can’t believe how good this tastes! It’s like you captured my favorite memories in a cup. I feel so at ease.”
+(AMARA_AVERAGE)
+“It’s nice, I guess. A bit too off for me, but I can still enjoy it. Thanks for making it.”
+“This is… okay. I wish it had a bit more depth, but it’s drinkable. I appreciate the effort.”
+“It’s not bad. Just a little bland for my taste, but it’s comforting enough. I’ll take it.”
+(AMARA_BAD)
+“Um, I’m not really sure about this one. The flavors are all over the place. I can’t quite enjoy it.”
+“I really wanted to like this, but feels too bitter for me. It reminds me of some not-so-great memories. I’m sorry, but I can’t drink it.”
+“This… isn’t really working for me. I thought it would be different. It feels a bit heavy and overwhelming.”
+(RONNIE_GOOD)
+“This is fantastic! Exactly how I like my coffee. You really know how to make a strong impression!”
+“Wow, this drink is amazing! You’ve outdone yourself. I could get used to this level of quality around here.”
+“This is exactly what I needed to fuel my day! It’s got just the right kick. Well done!”
+(RONNIE_AVERAGE)
+“It’s pretty good, though I think it could use a little more flavor. Not bad, but I’ve had better.”
+“This is okay. A little too mild for my taste, but it’s not terrible. I’ll take it for now.”
+“Not quite what I expected, but it’s drinkable. Just a bit lacking in personality, if you know what I mean.”
+(RONNIE_BAD)
+“Hmm, this isn’t really cutting it for me. The flavors don’t quite match up.”
+“Oh no, this is not what I was hoping for. It’s a bit off-balance. I don’t think I can finish it.”
+“Yikes, this just isn’t working for me. It feels kind of bland and unexciting. Sorry, but I’m not impressed.”

@@ -1,29 +1,36 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public static class Money
 {
-    public static int playerScore = 0;
+    public static float playerScore = 0;
     public static float playerMoney = 0;
 
-    private static Upgrade trashUpg = new Upgrade(7,10,"trash");
-    private static Upgrade cleanUpg = new Upgrade(13, 0.1f, "clean");
+    public static float tipModifier = 0f;
 
-    public static void ReceiveTip(int drinkScore, bool npcSecundario)
+    public static List<Upgrade> upgrades = new() {
+        new(1, 7, 10, "Bigger Bin"), new(1, 13, 0.1f, "Larger Cloth"),
+        new(1, 4, 3, "Extended Timer"), new(1, 10, 0.05f, "Tip Boost")
+    };
+
+    public static void ReceiveTip(int drinkScore, bool npcSecundario, TextMeshProUGUI tipText)
     {
-        playerMoney = npcSecundario? drinkScore * 0.05f : drinkScore * 0.1f;
-    }
-    public static void ReceiveTip(bool npcSecundario)
-    {
-        playerMoney = npcSecundario ? playerScore * 0.05f : playerScore * 0.1f;
+        float tip = npcSecundario ? drinkScore * 0.05f + drinkScore * tipModifier : drinkScore * (0.1f + tipModifier);
+        tip = (float)Math.Round(tip, 2);
+        
+        playerMoney += tip;
+        
+        tipText.text = tip + "$";
     }
 
     public static void AddTaskScore()
     {
-        if (Timer.timerIsRunning)
-            playerScore += 10;
+        playerScore += 10;
     }
 
     //private int GetTasksScore(int tarefasCumpridas, int totalTarefas)
@@ -33,19 +40,23 @@ public static class Money
     //}
 }
 
-
+[System.Serializable]
 public class Upgrade
 {
+    public int level;
     public float price;
     public float valueAdded;
     public string name;
 
-    public Upgrade(float price = 0, float valueAdded = 0, string name = "")
+    public Upgrade(int level = 1, float price = 0, float valueAdded = 0, string name = "")
     {
+        this.level = level;
         this.price = price;
         this.valueAdded = valueAdded;
         this.name = name;
     }
+
+    public static Upgrade FindUpgradeByName(string upgName) => Money.upgrades.First(upg => upgName.ToLower().Contains(upg.name.ToLower()));
 
     public bool Buy()
     {
@@ -53,8 +64,10 @@ public class Upgrade
         {
             Money.playerMoney -= this.price;
 
-            ExecuteUpg();
-            return true;
+            bool upgDone = ExecuteUpg();
+            if (upgDone)
+                this.level++;
+            return upgDone;
         }
         return false;
     }
@@ -63,13 +76,26 @@ public class Upgrade
     {
         switch (this.name)
         {
-            case "trash":
+            case "Bigger Bin":
                 TrashManager.trashMaxQty += (int)this.valueAdded;
                 break;
-            case "clean":
+
+            case "Larger Cloth":
                 CleanManager.widthMultiplier += this.valueAdded;
                 break;
+
+            case "Extended Timer":
+                TrashManager.taskTimer += (int)this.valueAdded;
+                CleanManager.taskTimer += (int)this.valueAdded;
+                break;
+
+            case "Tip Boost":
+                Money.tipModifier += this.valueAdded;
+                break;
+
+            default:
+                return false;
         }
-        return false;
+        return true;
     }
 }

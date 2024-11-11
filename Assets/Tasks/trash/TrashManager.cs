@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class TrashManager : MonoBehaviour
 {
+    [SerializeField] private Timer trashTimer;
+    [SerializeField] private TableManager tableManager;
+
     [SerializeField] private TrashDrag trash;
     private Vector2 initTrashPos = Vector2.zero;
-    public static int trashMaxQty = 5;
-    private int currTrashQty = 2;
+    public static int trashMaxQty = 3; //30
+    public static int currTrashQty = 0;
 
-    public static int taskTimer = 5;
+    public static int taskTimer = 50;
 
     private void Start()
     {
@@ -26,8 +29,9 @@ public class TrashManager : MonoBehaviour
 
         currTrashQty += quantity;
 
-        if (currTrashQty >= trashMaxQty)
+        if (currTrashQty >= trashMaxQty && !TrashDrag.readyToRemoveTrash)
         {
+            MainCoffeeManager.activeTasks.Add(new(TrashManager.taskTimer, TaskType.Trash));
             currTrashQty = trashMaxQty;
             TrashDrag.readyToRemoveTrash = true;
         }
@@ -49,8 +53,13 @@ public class TrashManager : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
+        if (TableManager.isChangingScene)
+            return;
+
+        if (trashTimer.timerIsRunning)
+            Money.AddTaskScore();
+
         TrashRemoved();
-        Money.AddTaskScore();
     }
 
     private void TrashRemoved()
@@ -60,5 +69,9 @@ public class TrashManager : MonoBehaviour
         trash.gameObject.SetActive(false);
 
         TrashDrag.readyToRemoveTrash = false;
+
+        MainCoffeeManager.RemoveTask(TaskType.Trash);
+
+        tableManager.RemoveTrashTimer();
     }
 }

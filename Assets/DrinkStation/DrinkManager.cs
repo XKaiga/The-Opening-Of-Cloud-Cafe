@@ -1,7 +1,10 @@
 using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -14,10 +17,16 @@ public class DrinkManager : MonoBehaviour
     [SerializeField] private GameObject flavours;
     [SerializeField] private GameObject flavoursInfo;
 
-    private Drink drink = new Drink();
-    private int indexClientsDrinks = 0;
-    public Drink[] clientsDrinks = { new Drink("tea", "hotMilk", "honey") };
-    public static bool clientWaiting = false;
+    private static Drink drinkServing = new();
+
+    public static List<Drink> mainDrinks = new() { };
+    public static List<Drink> mainDrinksToServe = new();
+    public static bool mainClientWaiting => mainDrinksToServe.Count != 0;
+
+    public static List<Drink> secondariesDrinks = new() { }; //!!!: strings with the text to write and to convert to drinks? or drinks and general text/s ?
+    public static List<Drink> secondariesDrinksToServe = new();
+
+    public TextMeshProUGUI tipText;
 
     private void Awake()
     {
@@ -48,7 +57,8 @@ public class DrinkManager : MonoBehaviour
                 return;
             }
 
-            flavours.SetActive(!flavours.activeSelf);
+            TougleFlavours();
+
             return;
         }
 
@@ -63,37 +73,92 @@ public class DrinkManager : MonoBehaviour
         if (colliderParent != null && colliderParent.parent != null)
         {
             var flavourClicked = colliderParent.parent.name.ToLower().Contains("flavours");
-            if (flavourClicked && clientWaiting)
+            if (flavourClicked && (mainDrinksToServe.Count != 0 || secondariesDrinksToServe.Count != 0) && !drinkServing.IsReady())
             {
-                AddFlavour(colliderParent.name.ToLower(), colliderName);
-                if (drink.IsReady())
-                    Serve(drink, clientsDrinks[indexClientsDrinks]);
+                AddFlavour(colliderName);
+                if (drinkServing.IsReady()) //!!! eliminar este if por completo
+                {
+                    Serve(drinkServing, true);
+
+                    TougleFlavours();
+                }
                 return;
             }
         }
+
+        /*
+        click in campainha && drinkServing.IsReady()
+            play sound effect
+            string client = choosse who to serve from a list //example: client = "Sara3", when clicking in Sara or Client2 when clicking client #6, (6th client but drink = drink2)
+            
+            string name = new string(client.Where(char.IsLetter).ToArray());
+            string numberString = new string(client.Where(char.IsDigit).ToArray());
+            int drinkNumber = int.TryParse(numberString, out int num) ? num : 0; 
+            if (drinkNumber == 0)
+                return;
+
+            bool clientIsSecondary = name.toLower().contains("client");
+            if (clientIsSecondary)
+                Serve(drinkServing, FindOrder(name, drinkNumber, secondariesDrinksToServe), false)
+            else
+                Serve(drinkServing, FindOrder(name, drinkNumber, mainDrinksToServe), true)
+        */
     }
 
-    private void AddFlavour(string flavourType, string flavourName)
+    private void TougleFlavours()
     {
-        switch (flavourType)
-        {
-            case "base":
-                if (drink.baseFlavour == "")
-                    drink.baseFlavour = flavourName;
-                break;
-            case "toppings":
-                if (drink.topFlavour == "")
-                    drink.topFlavour = flavourName;
-                break;
-            case "syrups":
-                if (drink.syrupFlavour == "")
-                    drink.syrupFlavour = flavourName;
-                break;
-        }
+        flavours.SetActive(!flavours.activeSelf);
+
+        var tipTextParentGO = tipText.gameObject.transform.parent.gameObject;
+        tipTextParentGO.SetActive(!flavours.activeSelf);
+        if (tipText.text == "")
+            tipTextParentGO.SetActive(false);
     }
 
-    private void Serve(Drink drinkServing, Drink correctOrder)
+    public static void AddFlavour(string flavour, Drink drink = null)
     {
+        var flavourDetermined = DetermineFlavour(flavour);
+
+        if (flavourDetermined == null)
+            return;
+
+        if (flavourDetermined is BaseFlavour baseFlavour && drinkServing.baseFlavour == BaseFlavour.None)
+            if (drink != null)
+                drink.baseFlavour = baseFlavour;
+            else
+                drinkServing.baseFlavour = baseFlavour;
+
+        else if (flavourDetermined is TopFlavour topFlavour && drinkServing.topFlavour == TopFlavour.None)
+            if (drink != null)
+                drink.topFlavour = topFlavour;
+            else
+                drinkServing.topFlavour = topFlavour;
+
+        else if (flavourDetermined is SyrupFlavour syrupFlavour && drinkServing.syrupFlavour == SyrupFlavour.None)
+            if (drink != null)
+                drink.syrupFlavour = syrupFlavour;
+            else
+                drinkServing.syrupFlavour = syrupFlavour;
+    }
+
+    public static object DetermineFlavour(string flavourName)
+    {
+        if (Enum.TryParse(flavourName, true, out BaseFlavour baseFlavour) && baseFlavour != BaseFlavour.None)
+            return baseFlavour;
+
+        if (Enum.TryParse(flavourName, true, out TopFlavour topFlavour) && topFlavour != TopFlavour.None)
+            return topFlavour;
+
+        if (Enum.TryParse(flavourName, true, out SyrupFlavour syrupFlavour) && syrupFlavour != SyrupFlavour.None)
+            return syrupFlavour;
+
+        return null;
+    }
+
+    private void Serve(Drink drinkServing, bool servingMainNPCs)
+    {
+        Drink correctOrder = mainDrinksToServe[0];//!!! enquanto não temos a campainha vai assim
+
         int differences = drinkServing.CompareDrinks(correctOrder);
         int gainXPoints = 0;
         switch (differences)
@@ -108,52 +173,81 @@ public class DrinkManager : MonoBehaviour
                 gainXPoints = 83;
                 break;
         }
+
         Money.playerScore += gainXPoints;
-        Money.ReceiveTip(gainXPoints, false);
 
-        indexClientsDrinks++;
-        clientWaiting = false;
-        drink = new Drink();
+        
+        if (!flavours.activeSelf)
+            tipText.gameObject.transform.parent.gameObject.SetActive(true);
 
-        Dialogue.lineIndex++;
+        Money.ReceiveTip(gainXPoints, false, tipText);
+        
 
-        int num = Random.Range(1, 2);
+        //if (servingMainNPCs)
+        //{
+        //    mainDrinksToServe.Remove(correctOrder);
+        //    mainDrinks.Remove(correctOrder);
+        //}
+        //else
+        //{
+        //    secondariesDrinksToServe.Remove(correctOrder);
+        //    secondariesDrinks.Remove(correctOrder);
+        //}
+        mainDrinks.Remove(correctOrder);
+        mainDrinksToServe.Remove(correctOrder);
+
+        drinkServing.baseFlavour = BaseFlavour.None;
+        drinkServing.topFlavour = TopFlavour.None;
+        drinkServing.syrupFlavour = SyrupFlavour.None;
+
+        if (mainDrinksToServe.Count == 0)
+            Dialogue.lineIndex++;
+
+        int num = UnityEngine.Random.Range(1, 3);
         CleanManager.clean = num == 1;
+        MainCoffeeManager.activeTasks.Add(new(CleanManager.taskTimer, TaskType.Clean));
     }
-    private void Update()
+
+    public static Drink FindOrder(string name, int drinkNumber, List<Drink> listToFindFrom)
     {
-        Debug.Log("client Waiting: " + clientWaiting);
+        Drink drink = listToFindFrom.FirstOrDefault(d => d.client.ToLower() == name.ToLower() && d.drinkNumberOfClient == drinkNumber);
+        return drink;
     }
 }
 
+[System.Serializable]
 public class Drink
 {
-    public string baseFlavour;
-    public string topFlavour;
-    public string syrupFlavour;
+    public BaseFlavour baseFlavour;
+    public TopFlavour topFlavour;
+    public SyrupFlavour syrupFlavour;
     public string client;
+    public int drinkNumberOfClient;
+    public int dayOfTheDrink;
 
-    public Drink(string baseFlavour = "", string topFlavour = "", string syrupFlavour = "", string client = null)
+    public Drink(BaseFlavour baseFlavour = BaseFlavour.None, TopFlavour topFlavour = TopFlavour.None, SyrupFlavour syrupFlavour = SyrupFlavour.None, string client = null, int drinkNumberOfClient = 0, int dayOfTheDrink = 0)
     {
         this.baseFlavour = baseFlavour;
         this.topFlavour = topFlavour;
         this.syrupFlavour = syrupFlavour;
         this.client = client;
+        this.drinkNumberOfClient = drinkNumberOfClient;
+        this.dayOfTheDrink = dayOfTheDrink;
     }
 
-    public bool IsReady() => syrupFlavour != "" && topFlavour != "" && baseFlavour != "";
+    public bool IsReady() => syrupFlavour != SyrupFlavour.None && topFlavour != TopFlavour.None && baseFlavour != BaseFlavour.None;
 
     public int CompareDrinks(Drink other)
     {
         int differences = 0;
 
-        if (this.baseFlavour.ToLower() != other.baseFlavour.ToLower())
+        if (this.baseFlavour != other.baseFlavour)
             differences++;
 
-        if (this.topFlavour.ToLower() != other.topFlavour.ToLower())
+        if (this.topFlavour != other.topFlavour)
             differences++;
 
-        if (this.syrupFlavour.ToLower() != other.syrupFlavour.ToLower())
+        if (this.syrupFlavour != other.syrupFlavour)
             differences++;
 
         return differences;
@@ -175,4 +269,57 @@ public class Drink
     public override bool Equals(object obj) => this == (Drink)obj;
 
     public override int GetHashCode() => baseFlavour.GetHashCode() ^ topFlavour.GetHashCode() ^ syrupFlavour.GetHashCode();
+}
+
+public enum BaseFlavour
+{
+    None,
+    Abisca,
+    Robusta,
+    Liberica,
+    Excelsa,
+    Decaf,
+    Tea
+}
+public enum TopFlavour
+{
+    None,
+    Water,
+    VIC,
+    Foam,
+    HotMilk,
+    Chantilly,
+    ColdMilk
+}
+public enum SyrupFlavour
+{
+    None,
+    Vanilla,
+    Strawberry,
+    Sugar,
+    Caramel,
+    Chocolate,
+    Honey
+}
+
+
+public class Feedback
+{
+    public string clientName;
+    public ReactionType reactionType;
+    public List<string> reactionsTxt;
+
+    public Feedback(string clientName, ReactionType reactionType, List<string> reactionsTxt)
+    {
+        this.clientName = clientName;
+        this.reactionType = reactionType;
+        this.reactionsTxt = reactionsTxt;
+    }
+}
+
+public enum ReactionType
+{
+    Good,
+    Average,
+    Bad
 }
