@@ -46,6 +46,7 @@ public class SaveSystem : MonoBehaviour
         }
     }
 
+
     public void OnClickNewGameBtn() { SceneManager.LoadScene("Tutorial"); }
 
     private bool GetSlotNumberInput(out int result)
@@ -224,5 +225,49 @@ public class SaveSystem : MonoBehaviour
             File.Delete(path);
             Debug.Log("Deleted save in slot " + slotNumber);
         }
+    }
+
+    public static void LoadLatestSaveSlot()
+    {
+        int latestSlot = GetLatestSaveSlot();
+        if (latestSlot != -1)
+        {
+            SaveData saveData = LoadDataFromSlot(latestSlot);
+            if (saveData != null)
+            {
+                LoadSaveData(saveData);
+                SceneManager.LoadScene("Dialogue");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("No save files found.");
+        }
+    }
+
+    private static int GetLatestSaveSlot()
+    {
+        int latestSlot = -1;
+        DateTime latestDate = DateTime.MinValue;
+
+        int totalSlots = 10;
+
+        for (int i = 0; i < totalSlots; i++)
+        {
+            string path = GetSaveFilePath(i);
+            if (File.Exists(path))
+            {
+                string json = File.ReadAllText(path);
+                SaveData data = JsonUtility.FromJson<SaveData>(json);
+
+                if (data.saveDate > latestDate)
+                {
+                    latestDate = data.saveDate;
+                    latestSlot = i;
+                }
+            }
+        }
+
+        return latestSlot;
     }
 }

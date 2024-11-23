@@ -19,6 +19,7 @@ public class CleanManager : MonoBehaviour
     [SerializeField] private BlobManager blobManager;
     public static bool clean = true;
 
+
     public static int taskTimer = 20;
 
     private void Awake() { linePrefab.GetComponent<LineRenderer>().widthMultiplier = widthMultiplier; }
@@ -70,8 +71,13 @@ public class CleanManager : MonoBehaviour
         line.startColor = Color.white;
         drawnLineRenderers.Add(line);
         line.positionCount = 0;
+
         while (true)
         {
+            //play pano sound
+            AudioClip soundEffect = Resources.Load<AudioClip>("SoundEffects/" + "sfx_pano");
+            AudioSource.PlayClipAtPoint(soundEffect, Vector3.zero, Music.vfxVolume);
+
             Vector3 position = mainCam.ScreenToWorldPoint(Input.mousePosition);
             position.z = 0;
             line.positionCount++;

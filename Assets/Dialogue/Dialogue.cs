@@ -39,7 +39,7 @@ public class Dialogue : MonoBehaviour
     private string lineDialogue;
 
     private string filePath;
-    private int fileDayNumRead = -1;
+    private static int fileDayNumRead = -1;
     private static string[] lines;
     public static int lineIndex = -1;
 
@@ -53,7 +53,7 @@ public class Dialogue : MonoBehaviour
     private void Start()
     {
         UpdateCharacters();
-        
+
         if (fileDayNumRead != GameManager.startDayNum)
         {
             filePath = Application.dataPath + "/Dialogue/DayFiles/day" + GameManager.startDayNum;
@@ -136,7 +136,10 @@ public class Dialogue : MonoBehaviour
         {
             List<Character> charsHateCurrMusic = Music.WhoHatesMusic();
             foreach (var character in charsHateCurrMusic)
-                InsertAtIndex(character.name + ": " + character.hateMusicTxt, lineIndex + 1);
+            {
+                if (!lines[lineIndex + 1].Contains(character.hateMusicTxt))
+                    InsertAtIndex(character.name + ": " + character.hateMusicTxt, lineIndex + 1);
+            }
 
             if (charsHateCurrMusic.Count > 0)
                 hatingcurrMusic = true;
@@ -145,7 +148,7 @@ public class Dialogue : MonoBehaviour
         }
     }
 
-    private void InsertAtIndex(string newElement, int index)
+    public static void InsertAtIndex(string newElement, int index)
     {
         List<string> linesList = new List<string>(lines);
 
@@ -372,6 +375,12 @@ public class Dialogue : MonoBehaviour
                     break;
 
                 character.active = ShowHideParts[0].ToLower().Contains("show");
+                if (character.active)
+                {
+                    //play andar sound
+                    AudioClip soundEffect = Resources.Load<AudioClip>("SoundEffects/" + "sfx_andar");
+                    AudioSource.PlayClipAtPoint(soundEffect, Vector3.zero, Music.vfxVolume);
+                }
 
                 UpdateCharacters();
 

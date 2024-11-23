@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Mail;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class FileReader : MonoBehaviour
 {
@@ -92,48 +93,54 @@ public class FileReader : MonoBehaviour
 
     public static void ReadFeedbackFile()
     {
-        if (isDrinkFileRead)
+        if (isFeedbacksFileRead)
             return;
 
-        string filePath = Application.dataPath + "/Dialogue/InfoLoadFiles/drinksRecipes.txt";
+        string filePath = Application.dataPath + "/Dialogue/InfoLoadFiles/Feedbacks.txt";
 
         if (File.Exists(filePath))
         {
             string[] lines = File.ReadAllLines(filePath);
-            isDrinkFileRead = true;
+            isFeedbacksFileRead = true;
 
-            int dayNumber = 100;
             int index = -1;
+            Feedback temp = new();
+            temp.reactionsTxt = new();
             while (index < lines.Length - 1)
             {
                 index++;
 
-                if (lines[index].StartsWith("DAY", System.StringComparison.OrdinalIgnoreCase))
+                string line = lines[index];
+                if (lines[index].StartsWith('('))
                 {
-                    int.TryParse(lines[index].Substring(3), out dayNumber);
-                    continue;
+                    if (temp.reactionsTxt.Count != 0)
+                    {
+                        Feedback.feedbacksList.Add(temp);
+                        temp = new();
+                        temp.reactionsTxt = new();
+                    }
+
+                    string[] feedbackCodeParts = Dialogue.TrimSplitDialogueCode(lines[index]);
+
+                    string name = feedbackCodeParts[0];
+                    string type = feedbackCodeParts[1];
+
+                    var feedbackTypeDetermined = Feedback.DetermineType(feedbackCodeParts[1]);
+                    if (feedbackTypeDetermined == null)
+                        continue;
+
+
+                    if (feedbackTypeDetermined is FeedbackType feedbackType)
+                    {
+
+                        temp.clientName = name;
+                        temp.reactionType = feedbackType;
+                    }
                 }
-
-                if (dayNumber < GameManager.startDayNum)
-                {
-                    index++;
-                    continue;
-                }
-
-                if (lines[index].Contains("(DRINK") && Dialogue.ExtractClientNameAndDrinkNumber(lines[index], out string name, out int drinkNumber))
-                {
-                    index++;
-
-                    string[] recipeIgredients = lines[index].Split('_');
-
-                    Drink drink = new(client: name, drinkNumberOfClient: drinkNumber, dayOfTheDrink: dayNumber);
-                    foreach (string igredient in recipeIgredients)
-                        DrinkManager.AddFlavour(igredient, drink);
-
-                    DrinkManager.mainDrinks.Add(drink);
-                }
+                else
+                    temp.reactionsTxt.Add(temp.clientName.ToUpper() + ": " + lines[index]);
             }
+            Feedback.feedbacksList.Add(temp);
         }
     }
-
 }

@@ -83,6 +83,12 @@ public class MainCoffeeManager : MonoBehaviour
             CreateNewTask(activeTasksGameObjs.Count, "Take out the trash", TaskType.Trash, TrashManager.taskTimer);
         if (!CleanManager.clean)
             CreateNewTask(activeTasksGameObjs.Count, "Clean Table!", TaskType.Clean, CleanManager.taskTimer);
+
+        var image = tasksOpenMenuBtn.GetComponent<RawImage>();
+        if (activeTasksGameObjs.Count > 0)
+            image.color = Color.red;
+        else
+            image.color = Color.white;
     }
 
     private bool ContainsTaskWithType(TaskType taskType)

@@ -157,31 +157,56 @@ public class DrinkManager : MonoBehaviour
 
     private void Serve(Drink drinkServing, bool servingMainNPCs)
     {
+        //play sound maquina
+        AudioClip soundEffect = Resources.Load<AudioClip>("SoundEffects/" + "sfx_coffe_machine");
+        AudioSource.PlayClipAtPoint(soundEffect, Vector3.zero, Music.vfxVolume);
+
         Drink correctOrder = mainDrinksToServe[0];//!!! enquanto não temos a campainha vai assim
 
+        int rndFeedback = UnityEngine.Random.Range(0, 3);
+        FeedbackType feedbackType = FeedbackType.None;
         int differences = drinkServing.CompareDrinks(correctOrder);
         int gainXPoints = 0;
         switch (differences)
         {
             case 0:
                 gainXPoints = 250;
+                feedbackType = FeedbackType.Good;
+                //play nice effect
+                AudioClip soundEffect1 = Resources.Load<AudioClip>("SoundEffects/" + "sfx_good_drink");
+                AudioSource.PlayClipAtPoint(soundEffect1, Vector3.zero, Music.vfxVolume);
                 break;
             case 1:
                 gainXPoints = 166;
+                feedbackType = FeedbackType.Average;
+                //play avg effect
+                AudioClip soundEffect2 = Resources.Load<AudioClip>("SoundEffects/" + "sfx_average_drink");
+                AudioSource.PlayClipAtPoint(soundEffect2, Vector3.zero, Music.vfxVolume);
                 break;
             case 2:
                 gainXPoints = 83;
+                feedbackType = FeedbackType.Average;
+                AudioClip soundEffect3 = Resources.Load<AudioClip>("SoundEffects/" + "sfx_average_drink");
+                AudioSource.PlayClipAtPoint(soundEffect3, Vector3.zero, Music.vfxVolume);
+                break;
+            case 3:
+                feedbackType = FeedbackType.Bad;
+                //play bad effect
+                AudioClip soundEffect4 = Resources.Load<AudioClip>("SoundEffects/" + "sfx_bad_drink");
+                AudioSource.PlayClipAtPoint(soundEffect4, Vector3.zero, Music.vfxVolume);
                 break;
         }
 
         Money.playerScore += gainXPoints;
 
-        
+        Feedback feedback = Feedback.feedbacksList.Find(f => f.clientName == correctOrder.client && f.reactionType == feedbackType);
+        Dialogue.InsertAtIndex(feedback.reactionsTxt[rndFeedback], Dialogue.lineIndex + 3);
+
         if (!flavours.activeSelf)
             tipText.gameObject.transform.parent.gameObject.SetActive(true);
 
         Money.ReceiveTip(gainXPoints, false, tipText);
-        
+
 
         //if (servingMainNPCs)
         //{
@@ -300,26 +325,4 @@ public enum SyrupFlavour
     Caramel,
     Chocolate,
     Honey
-}
-
-
-public class Feedback
-{
-    public string clientName;
-    public ReactionType reactionType;
-    public List<string> reactionsTxt;
-
-    public Feedback(string clientName, ReactionType reactionType, List<string> reactionsTxt)
-    {
-        this.clientName = clientName;
-        this.reactionType = reactionType;
-        this.reactionsTxt = reactionsTxt;
-    }
-}
-
-public enum ReactionType
-{
-    Good,
-    Average,
-    Bad
 }
