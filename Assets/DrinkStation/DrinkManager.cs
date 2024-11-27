@@ -2,20 +2,40 @@ using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Windows;
+using static UnityEditor.Progress;
+using Debug = UnityEngine.Debug;
+using Random = UnityEngine.Random;
 
 public class DrinkManager : MonoBehaviour
 {
     private Camera mainCam;
+    [SerializeField] private TextMeshProUGUI namePanelTxt;
+    [SerializeField] private TextMeshProUGUI dialoguePanelTxt;
 
-    [SerializeField] private GameObject flavours;
+    [SerializeField] private Dialogue dialogueManager;
+
+    [SerializeField] private GameObject GODrinkMachine;
+    [SerializeField] private GameObject GODrinkScreen;
+
+    [SerializeField] private GameObject GOCup;
+    [SerializeField] private GameObject GOSyrups;
+    [SerializeField] private GameObject GOBase;
+    [SerializeField] private GameObject GOToppings;
     [SerializeField] private GameObject flavoursInfo;
+
+    [SerializeField] private GameObject GOQuantitiesParent;
+    [SerializeField] private GameObject GOPricesParent;
+    private IngredientType currTabType = IngredientType.Syrup;
 
     private static Drink drinkServing = new();
 
@@ -25,8 +45,10 @@ public class DrinkManager : MonoBehaviour
 
     public static List<Drink> secondariesDrinks = new() { }; //!!!: strings with the text to write and to convert to drinks? or drinks and general text/s ?
     public static List<Drink> secondariesDrinksToServe = new();
+    public static bool secndClientWaiting => secondariesDrinksToServe.Count != 0;
 
     public TextMeshProUGUI tipText;
+    private bool tipShowing = false;
 
     private void Awake()
     {
@@ -35,8 +57,13 @@ public class DrinkManager : MonoBehaviour
 
     private void Start()
     {
-        flavours.SetActive(false);
+        TrashDrink();
+
         flavoursInfo.SetActive(false);
+
+        GOCup.SetActive(true);
+
+        UpdateIngredientsInfo();
     }
 
     public void OnClick(InputAction.CallbackContext context)
@@ -49,96 +76,319 @@ public class DrinkManager : MonoBehaviour
         Collider2D collider = rayHit.collider;
         string colliderName = collider.name.ToLower();
 
-        if (colliderName.Contains("machine"))
+        if (colliderName.Contains("btn"))
         {
-            if (colliderName.Contains("backbtn"))
+            if (colliderName.Contains("back"))
             {
-                SceneManager.LoadScene("Dialogue");
-                return;
+                Dialogue.pauseBetweenSkips = 0.2f;
+                Dialogue.skip = false;
+                Dialogue.nameTxt = namePanelTxt.text;
+                Dialogue.dialogueTxt = dialoguePanelTxt.text;
+                if (!Dialogue.isChoosing)
+                    SceneManager.LoadScene("Dialogue");
             }
 
-            TougleFlavours();
+            else if (colliderName.Contains("tab"))
+            {
+                if (colliderName.Contains(currTabType.ToString().ToLower()))
+                    return;
+
+                GOBase.SetActive(false);
+                GOSyrups.SetActive(false);
+                GOToppings.SetActive(false);
+
+                if (colliderName.Contains("syrups"))
+                {
+                    GOSyrups.SetActive(true);
+                    currTabType = IngredientType.Syrup;
+                }
+                else if (colliderName.Contains("base"))
+                {
+                    GOBase.SetActive(true);
+                    currTabType = IngredientType.Base;
+                }
+                else
+                {
+                    GOToppings.SetActive(true);
+                    currTabType = IngredientType.Toppings;
+                }
+
+                UpdateIngredientsInfo();
+            }
+
+            else if (colliderName.Contains("info"))
+            {
+                GODrinkMachine.SetActive(!GODrinkMachine.activeSelf);
+                flavoursInfo.SetActive(!flavoursInfo.activeSelf);
+
+                if (tipShowing)
+                    tipText.gameObject.transform.parent.gameObject.SetActive(!flavoursInfo.activeSelf);
+            }
+
+            else if (colliderName.Contains("pour"))
+            {
+                if (GODrinkScreen.GetComponent<SpriteRenderer>().sprite != null && !drinkServing.IsReady())
+                {
+                    string flavourName = GODrinkScreen.GetComponent<SpriteRenderer>().sprite.name.ToLower();
+                    bool flavourAdded = AddFlavour(flavourName);
+
+                    if (flavourAdded)
+                    {
+                        GODrinkScreen.GetComponent<SpriteRenderer>().sprite = null;
+                        UpdateIngredientsInfo();
+                    }
+                }
+            }
+
+            else if (colliderName.Contains("serve"))
+            {
+                bool anyoneWaiting = mainClientWaiting || secndClientWaiting;
+                if (anyoneWaiting && drinkServing.IsReady())
+                {
+                    Serve();
+                    RemoveDrink();
+                }
+            }
+
+            else if (colliderName.Contains("remove"))
+                TrashDrink();
 
             return;
         }
 
-        if (colliderName.Contains("nextbtn") || colliderName.Contains("infobackbtn"))
+        if (colliderName.Contains("cart"))
         {
-            flavours.SetActive(!flavours.activeSelf);
-            flavoursInfo.SetActive(!flavoursInfo.activeSelf);
+            if (colliderName.Contains("ingredient"))
+            {
+                bool posNumberParsed = int.TryParse(colliderName[0].ToString(), out int posNumber);
+                if (!posNumberParsed)
+                    return;
+                posNumber--;
+
+                List<Ingredient> ingredientsFromCurrType = Ingredient.ingredientsList.FindAll(ingrd => ingrd.ingrdType == currTabType);
+                if (ingredientsFromCurrType.Count > 0)
+                {
+                    //!!!vfx: animation of ingredient going to the cart
+                    Money.ingredientsToBuy.Add(ingredientsFromCurrType[posNumber]);
+                }
+            }
+            else
+            {
+                if (Money.ingredientsToBuy.Count <= 0)
+                    return;
+
+                float totalCost = 0f;
+                List<Ingredient> ingrdsChecked = new();
+                List<int> qtyBuyingIngrdsChecked = new();
+                foreach (var ingrd in Money.ingredientsToBuy)
+                {
+                    if (!ingrdsChecked.Contains(ingrd))
+                    {
+                        int qtyBuying = Money.ingredientsToBuy.Count(ingrdToBuy => ingrdToBuy == ingrd);
+                        if (ingrd.currQty + qtyBuying > ingrd.maxQty)
+                            continue;
+
+                        totalCost += ingrd.price;
+                        ingrdsChecked.Add(ingrd);
+                        qtyBuyingIngrdsChecked.Add(qtyBuying);
+                    }
+                }
+
+                if (Money.playerMoney < totalCost)
+                {
+                    //!!!vfx: red warning in the cart btn
+                    return;
+                }
+                Money.playerMoney -= totalCost;
+
+                foreach (var ingrd in ingrdsChecked)
+                {
+                    int qtyBuying = qtyBuyingIngrdsChecked[ingrdsChecked.IndexOf(ingrd)];
+                    ingrd.currQty += qtyBuying;
+                }
+
+                UpdateIngredientsInfo();
+
+                Money.ingredientsToBuy.Clear();
+            }
             return;
         }
 
         var colliderParent = collider.transform.parent;
-        if (colliderParent != null && colliderParent.parent != null)
+        if (colliderParent != null)
         {
-            var flavourClicked = colliderParent.parent.name.ToLower().Contains("flavours");
-            if (flavourClicked && (mainDrinksToServe.Count != 0 || secondariesDrinksToServe.Count != 0) && !drinkServing.IsReady())
+            var flavourBtn = colliderParent.parent;
+            if (flavourBtn != null && flavourBtn.parent != null)
             {
-                AddFlavour(colliderName);
-                if (drinkServing.IsReady()) //!!! eliminar este if por completo
+                bool flavourClicked = flavourBtn.parent.name.ToLower().Contains("flavours");
+                if (flavourClicked && !drinkServing.IsReady())
                 {
-                    Serve(drinkServing, true);
-
-                    TougleFlavours();
+                    Sprite flavourSprite = Resources.Load<Sprite>("drinkMachine/Ingredients/" + colliderParent.name.ToLower() + "/" + colliderName.ToLower());
+                    GODrinkScreen.GetComponent<SpriteRenderer>().sprite = flavourSprite;
+                    return;
                 }
-                return;
             }
         }
-
-        /*
-        click in campainha && drinkServing.IsReady()
-            play sound effect
-            string client = choosse who to serve from a list //example: client = "Sara3", when clicking in Sara or Client2 when clicking client #6, (6th client but drink = drink2)
-            
-            string name = new string(client.Where(char.IsLetter).ToArray());
-            string numberString = new string(client.Where(char.IsDigit).ToArray());
-            int drinkNumber = int.TryParse(numberString, out int num) ? num : 0; 
-            if (drinkNumber == 0)
-                return;
-
-            bool clientIsSecondary = name.toLower().contains("client");
-            if (clientIsSecondary)
-                Serve(drinkServing, FindOrder(name, drinkNumber, secondariesDrinksToServe), false)
-            else
-                Serve(drinkServing, FindOrder(name, drinkNumber, mainDrinksToServe), true)
-        */
     }
 
-    private void TougleFlavours()
+    private void TrashDrink()
     {
-        flavours.SetActive(!flavours.activeSelf);
+        Drink emptyDrink = new Drink();
+        int qtyIngrdToTrash = emptyDrink.CompareDrinks(drinkServing);
+        if (qtyIngrdToTrash == 0)
+            return;
+        int numberOfTrash = qtyIngrdToTrash switch
+        {
+            1 => new[] { 3, 4, 5 }[Random.Range(0, 3)],
+            2 => new[] { 6, 7, 8 }[Random.Range(0, 3)],
+            3 => new[] { 9, 10, 11 }[Random.Range(0, 3)],
+            _ => throw new ArgumentOutOfRangeException(nameof(qtyIngrdToTrash), "qtyIngrdToTrash must be between 1 and 3.")
+        };
+        TrashManager.FillTrash(numberOfTrash);
 
-        var tipTextParentGO = tipText.gameObject.transform.parent.gameObject;
-        tipTextParentGO.SetActive(!flavours.activeSelf);
-        if (tipText.text == "")
-            tipTextParentGO.SetActive(false);
+        RemoveDrink();
     }
 
-    public static void AddFlavour(string flavour, Drink drink = null)
+    private void RemoveDrink()
     {
+        drinkServing = new Drink();
+
+        GameObject GOCupSyrp = GameObject.Find("cup" + "Syrups");
+        Sprite spriteCup = Resources.Load<Sprite>("drinkMachine/cup/cupSprite");
+        GOCupSyrp.GetComponent<SpriteRenderer>().sprite = spriteCup;
+
+        GameObject GOCupBase = GameObject.Find("cup" + "Base");
+        GOCupBase.GetComponent<SpriteRenderer>().sprite = null;
+        GameObject GOCupTopp = GameObject.Find("cup" + "Toppings");
+        GOCupTopp.GetComponent<SpriteRenderer>().sprite = null;
+    }
+
+    private void UpdateIngredientsInfo()
+    {
+        List<Ingredient> ingredientsFromCurrType = Ingredient.ingredientsList.FindAll(ingrd => ingrd.ingrdType == currTabType);
+
+        int i = 0;
+        foreach (Transform TransQuantitie in GOQuantitiesParent.transform)
+        {
+            GameObject GOQuantitie = TransQuantitie.gameObject;
+            TextMeshPro QtyText = GOQuantitie.GetComponent<TextMeshPro>();
+            QtyText.text = ingredientsFromCurrType[i].currQty + "/" + ingredientsFromCurrType[i].maxQty;
+            i++;
+        }
+
+        i = 0;
+        foreach (Transform TransPrices in GOPricesParent.transform)
+        {
+            GameObject GOPrice = TransPrices.gameObject;
+            TextMeshPro PriceText = GOPrice.GetComponent<TextMeshPro>();
+            PriceText.text = ingredientsFromCurrType[i].price + "€";
+            i++;
+        }
+    }
+
+    public static bool AddFlavour(string flavour, Drink drink = null)
+    {
+        bool flavourAdded = false;
+
         var flavourDetermined = DetermineFlavour(flavour);
 
         if (flavourDetermined == null)
-            return;
+            return false;
 
+        string flavourType = "";
         if (flavourDetermined is BaseFlavour baseFlavour && drinkServing.baseFlavour == BaseFlavour.None)
+        {
+            flavourType = "Base";
             if (drink != null)
                 drink.baseFlavour = baseFlavour;
             else
-                drinkServing.baseFlavour = baseFlavour;
+            {
+                var ingrdFound = Ingredient.ingredientsList.Find(i => i.name.ToLower().Contains(baseFlavour.ToString().ToLower()) && i.currQty > 0);
+                if (ingrdFound != null)
+                {
+                    ingrdFound.currQty--;
+                    drinkServing.baseFlavour = baseFlavour;
+                    flavourAdded = true;
+                }
+                else
+                    return false;
+            }
+        }
 
         else if (flavourDetermined is TopFlavour topFlavour && drinkServing.topFlavour == TopFlavour.None)
+        {
+            flavourType = "Toppings";
             if (drink != null)
                 drink.topFlavour = topFlavour;
             else
-                drinkServing.topFlavour = topFlavour;
+            {
+                var ingrdFound = Ingredient.ingredientsList.Find(i => i.name.ToLower().Contains(topFlavour.ToString().ToLower()) && i.currQty > 0);
+                if (ingrdFound != null)
+                {
+                    ingrdFound.currQty--;
+                    drinkServing.topFlavour = topFlavour;
+                    flavourAdded = true;
+                }
+                else
+                    return false;
+            }
+        }
 
         else if (flavourDetermined is SyrupFlavour syrupFlavour && drinkServing.syrupFlavour == SyrupFlavour.None)
+        {
+            flavourType = "Syrups";
             if (drink != null)
                 drink.syrupFlavour = syrupFlavour;
             else
-                drinkServing.syrupFlavour = syrupFlavour;
+            {
+                var ingrdFound = Ingredient.ingredientsList.Find(i => i.name.ToLower().Contains(syrupFlavour.ToString().ToLower()) && i.currQty > 0);
+                if (ingrdFound != null)
+                {
+                    ingrdFound.currQty--;
+                    drinkServing.syrupFlavour = syrupFlavour;
+                    flavourAdded = true;
+                }
+                else
+                    return false;
+            }
+        }
+
+        if (drink == null && flavourType != "")
+        {
+            GameObject GOCupFlavour = GameObject.Find("cup" + flavourType);
+
+            flavour = flavour.ToLower();
+
+            string spriteCupFlavourPath = "drinkMachine/cup/" + flavourType + "/";
+
+            bool topping = flavourType.Contains("Top");
+            bool topNeedsBase = false;
+            if (topping)
+            {
+                if (drinkServing.baseFlavour == BaseFlavour.None)
+                    return false;
+
+                if (flavour == "water")
+                {
+                    topNeedsBase = true;
+                    spriteCupFlavourPath += "Water/water_";
+                }
+                else if (flavour.Contains("milk"))
+                {
+                    topNeedsBase = true;
+                    if (flavour.Contains("hot"))
+                        spriteCupFlavourPath += "HotMilk/hotMilk_";
+                    else
+                        spriteCupFlavourPath += "ColdMilk/coldMilk_";
+                }
+            }
+
+            Sprite spriteCupFlavour = Resources.Load<Sprite>(spriteCupFlavourPath + (topping && topNeedsBase ? drinkServing.baseFlavour.ToString().ToLower() : flavour));
+
+            GOCupFlavour.GetComponent<SpriteRenderer>().sprite = spriteCupFlavour;
+        }
+
+        return flavourAdded;
     }
 
     public static object DetermineFlavour(string flavourName)
@@ -155,9 +405,13 @@ public class DrinkManager : MonoBehaviour
         return null;
     }
 
-    private void Serve(Drink drinkServing, bool servingMainNPCs)
+    private void Serve()
     {
-        Drink correctOrder = mainDrinksToServe[0];//!!! enquanto não temos a campainha vai assim
+        Drink correctOrder;
+        if (secndClientWaiting)
+            correctOrder = secondariesDrinksToServe[0];
+        else
+            correctOrder = mainDrinksToServe[0];
 
         int differences = drinkServing.CompareDrinks(correctOrder);
         int gainXPoints = 0;
@@ -176,36 +430,28 @@ public class DrinkManager : MonoBehaviour
 
         Money.playerScore += gainXPoints;
 
-        
-        if (!flavours.activeSelf)
-            tipText.gameObject.transform.parent.gameObject.SetActive(true);
+        tipText.gameObject.transform.parent.gameObject.SetActive(true);
+        tipShowing = true;
+        Money.ReceiveTip(gainXPoints, secndClientWaiting, tipText);
 
-        Money.ReceiveTip(gainXPoints, false, tipText);
-        
+        if (secndClientWaiting)
+        {
+            secondariesDrinksToServe.Remove(correctOrder);
+            secondariesDrinks.Remove(correctOrder);
+        }
+        else
+        {
+            mainDrinksToServe.Remove(correctOrder);
+            mainDrinks.Remove(correctOrder);
+        }
 
-        //if (servingMainNPCs)
-        //{
-        //    mainDrinksToServe.Remove(correctOrder);
-        //    mainDrinks.Remove(correctOrder);
-        //}
-        //else
-        //{
-        //    secondariesDrinksToServe.Remove(correctOrder);
-        //    secondariesDrinks.Remove(correctOrder);
-        //}
-        mainDrinks.Remove(correctOrder);
-        mainDrinksToServe.Remove(correctOrder);
+        drinkServing = new Drink();
 
-        drinkServing.baseFlavour = BaseFlavour.None;
-        drinkServing.topFlavour = TopFlavour.None;
-        drinkServing.syrupFlavour = SyrupFlavour.None;
-
-        if (mainDrinksToServe.Count == 0)
+        if (secndClientWaiting)
             Dialogue.lineIndex++;
 
-        int num = UnityEngine.Random.Range(1, 3);
-        CleanManager.clean = num == 1;
-        MainCoffeeManager.activeTasks.Add(new(CleanManager.taskTimer, TaskType.Clean));
+        int num = UnityEngine.Random.Range(0, 3); //1 in 3 chance
+        CleanManager.clean = num == 0;
     }
 
     public static Drink FindOrder(string name, int drinkNumber, List<Drink> listToFindFrom)

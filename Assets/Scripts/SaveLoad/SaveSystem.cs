@@ -46,7 +46,10 @@ public class SaveSystem : MonoBehaviour
         }
     }
 
-    public void OnClickNewGameBtn() { SceneManager.LoadScene("Tutorial"); }
+    public void OnClickNewGameBtn() { 
+        LoadNewGameData(); 
+        SceneManager.LoadScene("Tutorial");
+    }
 
     private bool GetSlotNumberInput(out int result)
     {

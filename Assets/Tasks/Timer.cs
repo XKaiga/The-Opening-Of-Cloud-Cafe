@@ -33,6 +33,9 @@ public class Timer : MonoBehaviour
 
     public void StartTimer(float seconds)
     {
+        if (timerIsRunning)
+            return;
+
         timeRemaining = seconds;
         timerTextGameObject.SetActive(true);
         timerIsRunning = true;

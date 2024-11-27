@@ -13,6 +13,8 @@ public static class Money
 
     public static float tipModifier = 0f;
 
+    public static List<Ingredient> ingredientsToBuy = new();
+    
     public static List<Upgrade> upgrades = new() {
         new(1, 7, 10, "Bigger Bin"), new(1, 13, 0.1f, "Larger Cloth"),
         new(1, 4, 3, "Extended Timer"), new(1, 10, 0.05f, "Tip Boost")
@@ -25,7 +27,7 @@ public static class Money
         
         playerMoney += tip;
         
-        tipText.text = tip + "$";
+        tipText.text = tip + "€";
     }
 
     public static void AddTaskScore()

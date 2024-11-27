@@ -15,9 +15,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Dialogue.unity
     guid: 2fe458f1a8eadae428a32d4ac0094cf2
   - enabled: 1
-    path: Assets/Scenes/DrinkStation.unity
-    guid: e8574fd868e144343adb090fcaf2698c
-  - enabled: 1
     path: Assets/Scenes/Tables.unity
     guid: 4e790efdd0d47d14290c7f671bb49126
+  - enabled: 1
+    path: Assets/Scenes/DrinkStation.unity
+    guid: 6274cd49dc90c8748968b69cad03ca48
   m_configObjects: {}

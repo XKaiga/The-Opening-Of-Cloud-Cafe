@@ -11,7 +11,7 @@ public class CleanManager : MonoBehaviour
     public static float widthMultiplier = 0.3f;
 
     public Camera mainCam;
-    public static List<LineRenderer> drawnLineRenderers = new List<LineRenderer>();
+    public static List<LineRenderer> drawnLineRenderers = new();
 
     [SerializeField] private SpriteMask spriteMask;
     [SerializeField] private Camera spriteCam;
@@ -112,7 +112,7 @@ public class CleanManager : MonoBehaviour
     {
         foreach (var line in drawnLineRenderers)
             Destroy(line.gameObject);
-        drawnLineRenderers = null;
+        drawnLineRenderers.Clear();
         clean = true;
     }
 }
