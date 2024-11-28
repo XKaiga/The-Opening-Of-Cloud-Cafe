@@ -19,7 +19,7 @@ public class CleanManager : MonoBehaviour
     [SerializeField] private BlobManager blobManager;
     public static bool clean = true;
 
-    [SerializeField] private GameObject clothSprite; // Prefab do pano
+    [SerializeField] private GameObject clothPrefab; // Prefab do pano
     private GameObject activeCloth; // Instância ativa do pano
 
 
@@ -29,7 +29,7 @@ public class CleanManager : MonoBehaviour
 
     void Update()
     {
-        if (!clean || clean)
+        if (!clean)
         {
             if (Input.GetMouseButtonDown(0))
                 StartLine();
@@ -38,16 +38,17 @@ public class CleanManager : MonoBehaviour
         }
     }
 
-        private void StartLine()
+    private void StartLine()
     {
         if (drawing != null)
             StopCoroutine(drawing);
 
-            // Instanciar o pano
-            if (activeCloth == null)
-            {
-                activeCloth = Instantiate(clothSprite, Vector3.zero, Quaternion.identity);
-            }
+        // Instanciar o pano
+        if (activeCloth == null)
+        {
+            activeCloth = Instantiate(clothPrefab, Vector3.zero, Quaternion.identity);
+            activeCloth.GetComponent<AudioSource>().volume = Music.vfxVolume; 
+        }
 
         drawing = StartCoroutine(DrawLine());
     }
@@ -66,14 +67,12 @@ public class CleanManager : MonoBehaviour
             activeCloth = null;
         }
 
-
-
         if (clean && timer.timerIsRunning)
         {
             timer.StopTimer(timer.timeRemaining);
             Money.AddTaskScore();
         }
-        
+
         if (clean || !timer.timerIsRunning)
         {
             blobManager.RemoveBlobs();
@@ -92,16 +91,12 @@ public class CleanManager : MonoBehaviour
 
         while (true)
         {
-            //play pano sound
-            AudioClip soundEffect = Resources.Load<AudioClip>("SoundEffects/" + "sfx_pano");
-            AudioSource.PlayClipAtPoint(soundEffect, Vector3.zero, Music.vfxVolume);
-
             Vector3 position = mainCam.ScreenToWorldPoint(Input.mousePosition);
             position.z = 0;
             line.positionCount++;
             line.SetPosition(line.positionCount - 1, position);
 
-                // Atualizar a posição do pano
+            // Atualizar a posição do pano
             if (activeCloth != null)
             {
                 activeCloth.transform.position = position;

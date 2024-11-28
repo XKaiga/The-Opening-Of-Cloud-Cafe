@@ -80,14 +80,16 @@ public class DrinkManager : MonoBehaviour
         {
             if (colliderName.Contains("back"))
             {
-                Dialogue.pauseBetweenSkips = 0.2f;
-                Dialogue.skip = false;
-                Dialogue.nameTxt = namePanelTxt.text;
-                Dialogue.dialogueTxt = dialoguePanelTxt.text;
                 if (!Dialogue.isChoosing)
-                    SceneManager.LoadScene("Dialogue");
-            }
+                {
+                    Dialogue.pauseBetweenSkips = 0.2f;
+                    Dialogue.skip = false;
+                    Dialogue.nameTxt = namePanelTxt.text;
+                    Dialogue.dialogueTxt = dialoguePanelTxt.text;
 
+                    SceneManager.LoadScene("Dialogue");
+                }
+            }
             else if (colliderName.Contains("tab"))
             {
                 if (colliderName.Contains(currTabType.ToString().ToLower()))
@@ -454,10 +456,11 @@ public class DrinkManager : MonoBehaviour
         Money.playerScore += gainXPoints;
 
         Feedback feedback = Feedback.feedbacksList.Find(f => f.clientName == correctOrder.client && f.reactionType == feedbackType);
-        Dialogue.InsertAtIndex(feedback.reactionsTxt[rndFeedback], Dialogue.lineIndex + 3);
+        if (feedback != null)
+            Dialogue.InsertAtIndex(feedback.reactionsTxt[rndFeedback], Dialogue.lineIndex + 3);
 
-        tipText.gameObject.transform.parent.gameObject.SetActive(!flavours.activeSelf);
-        tipShowing = !flavours.activeSelf;
+        tipText.gameObject.transform.parent.gameObject.SetActive(!flavoursInfo.activeSelf);
+        tipShowing = !flavoursInfo.activeSelf;
         Money.ReceiveTip(gainXPoints, secndClientWaiting, tipText);
 
         if (secndClientWaiting)

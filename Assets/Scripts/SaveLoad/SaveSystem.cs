@@ -31,6 +31,7 @@ public class SaveSystem : MonoBehaviour
             SaveDataToSlot(slotNumber, saveData);
         }
     }
+
     public void OnClickLoadBtn()
     {
         bool isValid = GetSlotNumberInput(out int slotNumber);
@@ -46,9 +47,9 @@ public class SaveSystem : MonoBehaviour
         }
     }
 
-    public void OnClickNewGameBtn() { 
-        LoadNewGameData(); 
-        SceneManager.LoadScene("Tutorial");
+    public void OnClickMainMenuBtn()
+    {
+        SceneManager.LoadScene("StartMenu");
     }
 
     private bool GetSlotNumberInput(out int result)
@@ -95,7 +96,7 @@ public class SaveSystem : MonoBehaviour
 
         // Collect characters data
         List<Character> saveCharactersData = Dialogue.characters
-            .Select(character => new Character(character))  
+            .Select(character => new Character(character))
             .ToList();
         saveData.characters = saveCharactersData;
         foreach (var character in saveData.characters)
@@ -122,8 +123,8 @@ public class SaveSystem : MonoBehaviour
 
         // Load current music name
         Music foundCurrMusic = Music.FindMusicByName(saveData.currMusicName);
-        Music.currMusic = foundCurrMusic != null ? foundCurrMusic : null;
-        Music.ChangeMusic(Music.musicList[0].AudioClip);
+        Music.currMusic = foundCurrMusic ?? Music.musicList[0];
+        Music.ChangeMusic(Music.currMusic.AudioClip);
 
         // Load active tasks
         MainCoffeeManager.activeTasks = saveData.activeTasks;
@@ -207,7 +208,6 @@ public class SaveSystem : MonoBehaviour
         {
             string json = File.ReadAllText(path);
             SaveData data = JsonUtility.FromJson<SaveData>(json);
-            Debug.Log($"Game loaded from slot {slotNumber}");
             return data;
         }
         Debug.LogWarning("Save file not found");
@@ -229,7 +229,7 @@ public class SaveSystem : MonoBehaviour
         }
     }
 
-    public static void LoadLatestSaveSlot()
+    public static bool LoadLatestSaveSlot()
     {
         int latestSlot = GetLatestSaveSlot();
         if (latestSlot != -1)
@@ -238,13 +238,10 @@ public class SaveSystem : MonoBehaviour
             if (saveData != null)
             {
                 LoadSaveData(saveData);
-                SceneManager.LoadScene("Dialogue");
+                return true;
             }
         }
-        else
-        {
-            Debug.LogWarning("No save files found.");
-        }
+        return false;
     }
 
     private static int GetLatestSaveSlot()

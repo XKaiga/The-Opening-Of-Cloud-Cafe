@@ -182,6 +182,11 @@ public class MainCoffeeManager : MonoBehaviour
 
     public void ToggleTaskMenu()
     {
+        RawImage upgOpenMenuBtnImg = upgOpenMenuBtn.GetComponent<RawImage>();
+        upgOpenMenuBtnImg.enabled = !upgOpenMenuBtnImg.IsActive();
+        RawImage musicOpenMenuBtnImg = musicOpenMenuBtn.GetComponent<RawImage>();
+        musicOpenMenuBtnImg.enabled = !musicOpenMenuBtnImg.IsActive();
+
         RawImage tasksOpenMenuBtnImg = tasksOpenMenuBtn.GetComponent<RawImage>();
         tasksOpenMenuBtnImg.enabled = !tasksOpenMenuBtnImg.IsActive();
 
@@ -203,6 +208,11 @@ public class MainCoffeeManager : MonoBehaviour
 
     public void ToggleMusicMenu()
     {
+        RawImage upgOpenMenuBtnImg = upgOpenMenuBtn.GetComponent<RawImage>();
+        upgOpenMenuBtnImg.enabled = !upgOpenMenuBtnImg.IsActive();
+        RawImage tasksOpenMenuBtnImg = tasksOpenMenuBtn.GetComponent<RawImage>();
+        tasksOpenMenuBtnImg.enabled = !tasksOpenMenuBtnImg.IsActive();
+
         RawImage musicOpenMenuBtnImg = musicOpenMenuBtn.GetComponent<RawImage>();
         musicOpenMenuBtnImg.enabled = !musicOpenMenuBtnImg.IsActive();
 
@@ -232,6 +242,11 @@ public class MainCoffeeManager : MonoBehaviour
 
     public void ToggleUpgradeMenu()
     {
+        RawImage tasksOpenMenuBtnImg = tasksOpenMenuBtn.GetComponent<RawImage>();
+        tasksOpenMenuBtnImg.enabled = !tasksOpenMenuBtnImg.IsActive();
+        RawImage musicOpenMenuBtnImg = musicOpenMenuBtn.GetComponent<RawImage>();
+        musicOpenMenuBtnImg.enabled = !musicOpenMenuBtnImg.IsActive();
+
         RawImage upgOpenMenuBtnImg = upgOpenMenuBtn.GetComponent<RawImage>();
         upgOpenMenuBtnImg.enabled = !upgOpenMenuBtnImg.IsActive();
 
@@ -344,6 +359,7 @@ public class MainCoffeeManager : MonoBehaviour
             //!!! juntar a função LoadDrinkStationScene e LoadTablesScene, para fazer o -- e recebendo uma string ou enum com o nome das scenes mudar para essa tal
             Dialogue.skip = true;
             Dialogue.pauseBetweenSkips = -2f;
+
             Dialogue.nameTxt = namePanelTxt.text;
             Dialogue.dialogueTxt = dialoguePanelTxt.text;
 
@@ -356,6 +372,10 @@ public class MainCoffeeManager : MonoBehaviour
         {
             Dialogue.skip = true;
             Dialogue.pauseBetweenSkips = -2f;
+            
+            Dialogue.nameTxt = namePanelTxt.text;
+            Dialogue.dialogueTxt = dialoguePanelTxt.text;
+
             SceneManager.LoadScene("Tables");
         }
     }
@@ -364,6 +384,7 @@ public class MainCoffeeManager : MonoBehaviour
 [System.Serializable]
 public enum TaskType
 {
+    None,
     Trash,
     Clean,
     Music,

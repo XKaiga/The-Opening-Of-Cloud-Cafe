@@ -8,7 +8,7 @@ public class TrashManager : MonoBehaviour
     [SerializeField] private TableManager tableManager;
 
     [SerializeField] private TrashDrag trash;
-    private Vector2 initTrashPos = Vector2.zero;
+    private Vector2 initTrashPos = new Vector2(-3.17f, -0.59f); 
     public static int trashMaxQty = 10;
     public static int currTrashQty = 0;
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -10,6 +11,9 @@ using Random = UnityEngine.Random;
 public class TableManager : MonoBehaviour
 {
     private Camera mainCam;
+    [SerializeField] private TextMeshProUGUI namePanelTxt;
+    [SerializeField] private TextMeshProUGUI dialoguePanelTxt;
+
     public static bool inAnotherView = false;
 
     [SerializeField] private Timer cleanTimer;
@@ -105,7 +109,14 @@ public class TableManager : MonoBehaviour
 
                 inAnotherView = true;
                 if (!Dialogue.isChoosing)
+                {
+                    Dialogue.pauseBetweenSkips = 0.2f;
+                    Dialogue.skip = false;
+                    Dialogue.nameTxt = namePanelTxt.text;
+                    Dialogue.dialogueTxt = dialoguePanelTxt.text;
+             
                     SceneManager.LoadScene("Dialogue");
+                }
             }
             else
             {

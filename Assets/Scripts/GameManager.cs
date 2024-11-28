@@ -19,10 +19,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
 
-    private void Start()
-    {
         FileReader.ReadDrinkFile();
 
         FileReader.ReadMusicFile();
@@ -35,7 +32,6 @@ public class GameManager : MonoBehaviour
 
         LoadIngredientsInfo();
     }
-
     private void LoadIngredientsInfo()
     {
         List<String> ingredientsNameList = new() { "Caramel", "Sugar", "Strawberry", "Honey", "Vanilla", "Chocolate", //syrup

@@ -5,14 +5,23 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
-    public void OnClickStartOption()
+    public void OnClickNewGameBtn()
     {
+        SaveSystem.LoadNewGameData();
         SceneManager.LoadScene("Tutorial");
     }
 
+    public void OnClickLoadBtn()
+    {
+        SceneManager.LoadScene("SaveLoadData");
+    }
+
+
     public void OnClickContinueOption()
     {
-        SaveSystem.LoadLatestSaveSlot();
+        bool loaded = SaveSystem.LoadLatestSaveSlot();
+        if (loaded)
+            SceneManager.LoadScene("Dialogue");
     }
 
     public void OnClickOptionsOption()
@@ -23,6 +32,5 @@ public class MenuManager : MonoBehaviour
     public void OnClickExitOption()
     {
         Application.Quit();
-
     }
 }

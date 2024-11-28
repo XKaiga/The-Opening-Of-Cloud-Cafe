@@ -11,7 +11,7 @@ public class Music
     public static Music currMusic = new();
     public static List<Music> musicList = new();
 
-    public static int vfxVolume = 50;
+    public static float vfxVolume = 50;
 
     public string Name { get; set; }
     public EmotionEnum Emotion { get; set; }

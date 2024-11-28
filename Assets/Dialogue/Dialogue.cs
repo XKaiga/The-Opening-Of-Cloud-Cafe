@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 using Random = UnityEngine.Random;
 using Input = UnityEngine.Input;
+using UnityEngine.Windows;
 
 public class Dialogue : MonoBehaviour
 {
@@ -51,7 +52,7 @@ public class Dialogue : MonoBehaviour
     public static bool startingNewDay = false;
     private static int dialoguePauseSecs = 3;
 
-    private const float resetTimerToHateMusic = 10;//!!!100
+    private const float resetTimerToHateMusic = 100;
     private static float timerToHateMusicSec = resetTimerToHateMusic;
     private static bool hatingcurrMusic = false;
 
@@ -64,7 +65,8 @@ public class Dialogue : MonoBehaviour
             filePath = Application.dataPath + "/Dialogue/DayFiles/day" + GameManager.startDayNum;
             if (GameManager.startDayNum == 3)
             {
-                filePath += "RONNIE";//GetMostFavoredCharacter().ToUpper();
+                string charName = GetMostFavoredCharacter() ?? "RONNIE";
+                filePath += charName.ToUpper();
             }
             filePath += ".txt";
 
@@ -97,6 +99,8 @@ public class Dialogue : MonoBehaviour
         if (isChoosing)
         {
             this.GetComponent<RawImage>().enabled = false;
+            namePanelTxt.text = "";
+            dialoguePanelTxt.text = "";
             ShowOptions();
         }
     }
@@ -346,6 +350,11 @@ public class Dialogue : MonoBehaviour
             namePanelTxt.text = nameTxt;
             dialoguePanelTxt.text = dialogueTxt;
         }
+        else
+        {
+            namePanelTxt.text = "";
+            dialoguePanelTxt.text = "";
+        }
 
         IdentifyAndExecuteTypeOfText(line);
     }
@@ -380,6 +389,8 @@ public class Dialogue : MonoBehaviour
 
             case "options":
                 this.GetComponent<RawImage>().enabled = false;
+                namePanelTxt.text = "";
+                dialoguePanelTxt.text = "";
 
                 dialogueOptions.Clear();
                 isChoosing = true;
@@ -467,6 +478,8 @@ public class Dialogue : MonoBehaviour
                 startingNewDay = true;
 
                 this.GetComponent<RawImage>().enabled = false;
+                namePanelTxt.text = "";
+                dialoguePanelTxt.text = "";
 
                 if (GameManager.startDayNum > 3)
                 {

@@ -6,7 +6,7 @@ public class Timer : MonoBehaviour
 {
     [SerializeField] private GameObject timerTextGameObject;
     private Text timerText;
-    private TaskType taskType;
+    private TaskType taskType = TaskType.None;
 
     public float timeRemaining = 0;
     public bool timerIsRunning = false;
