@@ -114,7 +114,7 @@ public class Upgrade
                 Money.tipModifier += this.valueAdded;
                 break;
 
-            case "Music Unlock":
+            case "Unlock Music":
                 musicToUnlockExists = true;
                 return false; //skips bying the upg, because this upg is only bought when a music is chosen, see BuyMusicUpg()
 

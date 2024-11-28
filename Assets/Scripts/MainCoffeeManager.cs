@@ -99,11 +99,18 @@ public class MainCoffeeManager : MonoBehaviour
         if (!CleanManager.clean)
             CreateNewTask(activeTasksGameObjs.Count, "Clean Table!", TaskType.Clean, CleanManager.taskTimer);
 
-        var image = tasksOpenMenuBtn.GetComponent<RawImage>();
+        var openImg = tasksOpenMenuBtn.GetComponent<RawImage>();
+        var closeImg = tasksCloseMenuBtn.GetComponent<RawImage>();
         if (activeTasksGameObjs.Count > 0)
-            image.color = Color.red;
+        {
+            openImg.color = Color.red;
+            closeImg.color = Color.red;
+        }
         else
-            image.color = Color.white;
+        {
+            openImg.color = Color.white;
+            closeImg.color = Color.white;
+        }
     }
 
     private bool ContainsTaskWithType(TaskType taskType)
@@ -309,8 +316,12 @@ public class MainCoffeeManager : MonoBehaviour
             {
                 upgFound.Buy();
                 TextMeshProUGUI menuItemInstanceText = upg.GetComponentInChildren<TextMeshProUGUI>();
-                menuItemInstanceText.text = upgFound.name + " Lvl" + upgFound.level + "\n";
-                menuItemInstanceText.text += "Price: " + upgFound.price + "$";
+                if (upgFound.name.Contains("Music"))
+                    menuItemInstanceText.text = upgFound.name + "\n";
+                else
+                    menuItemInstanceText.text = upgFound.name + " Lvl" + upgFound.level + "\n";
+
+                menuItemInstanceText.text += "Price: " + upgFound.price + "€";
             }
         }
     }
@@ -350,15 +361,26 @@ public class MainCoffeeManager : MonoBehaviour
             Music musicFound = Music.FindMusicByName(musicName);
             if (musicFound != null)
             {
-                Music.ChangeMusic(musicFound.AudioClip);
-                Music.currMusic = musicFound;
-
-                if (Upgrade.musicUnlocking)
+                if (Upgrade.musicUnlocking && Upgrade.musicToUnlockExists)
                 {
-                    Upgrade.BuyMusicUpg();
+                    if (!musicFound.IsDiscovered)
+                    {
+                        Upgrade.BuyMusicUpg();
 
-                    musicFound.IsDiscovered = true;
-                    ToggleMusicMenu();
+                        Music m = Music.musicList.First(m => m.Name == musicFound.Name);
+                        musicFound.IsDiscovered = true;
+
+                        TextMeshProUGUI menuItemInstanceText = music.GetComponentInChildren<TextMeshProUGUI>();
+                        menuItemInstanceText.text = musicFound.Name + "\n";
+                        menuItemInstanceText.text += "Type: " + (musicFound.IsDiscovered ? musicFound.Emotion.ToString() : "Unknown");
+
+                        ToggleMusicMenu();
+                    }
+                }
+                else
+                {
+                    Music.ChangeMusic(musicFound.AudioClip);
+                    Music.currMusic = musicFound;
                 }
             }
         }
@@ -405,7 +427,7 @@ public class MainCoffeeManager : MonoBehaviour
         {
             Dialogue.skip = true;
             Dialogue.pauseBetweenSkips = -2f;
-            
+
             Dialogue.nameTxt = namePanelTxt.text;
             Dialogue.dialogueTxt = dialoguePanelTxt.text;
 

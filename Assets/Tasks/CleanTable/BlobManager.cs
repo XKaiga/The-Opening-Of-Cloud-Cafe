@@ -14,8 +14,8 @@ public class BlobManager : MonoBehaviour
     [SerializeField] private GameObject blobPrefab = null;
     [SerializeField] private Sprite[] blobsSprites = null;
     private SpriteRenderer[] blobs = null;
-    private Vector2 positionMin = new Vector2(-3.85f, -0.4f);
-    private Vector2 positionMax = new Vector2(3.75f, 1.75f);
+    private Vector2 positionMin = new Vector2(-2.19f, -1.06f); //left bottom
+    private Vector2 positionMax = new Vector2(2.27f, -0.08f); //right top
     private float scaleMin = 0.15f;
     private float scaleMax = 0.3f;
 

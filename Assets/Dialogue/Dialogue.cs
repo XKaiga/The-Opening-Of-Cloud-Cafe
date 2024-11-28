@@ -358,10 +358,9 @@ public class Dialogue : MonoBehaviour
             namePanelTxt.text = nameTxt;
             dialoguePanelTxt.text = dialogueTxt;
         }
-        else
+        if (namePanelTxt.text == nameTxt)
         {
-            namePanelTxt.text = "";
-            dialoguePanelTxt.text = "";
+            namePanelTxt.text = nameTxt = "";
         }
 
         IdentifyAndExecuteTypeOfText(line);
@@ -408,6 +407,14 @@ public class Dialogue : MonoBehaviour
                 break;
 
             case "drink":
+                if (DrinkManager.isDrinkTutorialDone == false)
+                {
+                    DrinkManager.isDrinkTutorialDone = true;
+                    lineIndex--;
+                    DrinkManager.LoadDrinkTutorial();
+                    return;
+                }
+
                 List<String> drinkTexts = new() { line };
                 int indexDrinks = 1;
                 while (lineIndex + indexDrinks < lines.Length && GetTypeOfText(lines[lineIndex + indexDrinks]) == "drink")
@@ -636,6 +643,8 @@ public class Dialogue : MonoBehaviour
 
     private void ExecuteOption()
     {
+        waitingForDialogue = false;
+
         charAnswering = true;
         isChoosing = false;
      
@@ -699,15 +708,15 @@ public class Dialogue : MonoBehaviour
     public static void LoadMusicTutorial()
     {
         List<string> txtMusic = new List<string>();
-        txtMusic.Add("\"\": (Like any Café, Cloud Café has background music playing.)");
-        txtMusic.Add("\"\": (However, as conversations with customers shift and mood changes," +
-            " the music has to be changed as well. No one likes to hear happy music while having" +
-            " a sad conversation, or, at the very least, your customers don’t.)");
-        txtMusic.Add("\"\": (Go on the music tab to change your café’s tune when the " +
+        txtMusic.Add("Tutorial : (Upgrades can be bought at the upgrades store so you’re able to see which emotion songs portray.)");
+        txtMusic.Add("Tutorial : (Feel the music and try to figure out if it better fits the mood.)");
+        txtMusic.Add("Tutorial : (Go on the music tab to change your café’s tune when the " +
             "customers complain, and find a better fitting choice so you can carry out " +
             "the conversation without losing points. )");
-        txtMusic.Add("\"\": (Feel the music and try to figure out if it better fits the mood.)");
-        txtMusic.Add("\"\": (Upgrades can be bought at the upgrades store so you’re able to see which emotion songs portray.)");
+        txtMusic.Add("Tutorial : (However, as conversations with customers shift and mood changes," +
+            " the music has to be changed as well. No one likes to hear happy music while having" +
+            " a sad conversation, or, at the very least, your customers don’t.)");
+        txtMusic.Add("Tutorial : (Like any Café, Cloud Café has background music playing.)");
         foreach (var txt in txtMusic)
         {
             InsertAtIndex(txt, lineIndex + 1);

@@ -55,6 +55,7 @@ public class DrinkManager : MonoBehaviour
         mainCam = Camera.main;
     }
 
+    public static bool isDrinkTutorialDone = false;
     private void Start()
     {
         TrashDrink();
@@ -487,6 +488,24 @@ public class DrinkManager : MonoBehaviour
     {
         Drink drink = listToFindFrom.FirstOrDefault(d => d.client.ToLower() == name.ToLower() && d.drinkNumberOfClient == drinkNumber);
         return drink;
+    }
+
+    public static void LoadDrinkTutorial()
+    {
+        List<string> txtDrink = new();
+        txtDrink.Add("Tutorial : (If you make a mistake in the process, just press the red button on the left side of the drink machine. Be careful " +
+            "because all the already poured ingredients will be going to the trash!!!)");
+        txtDrink.Add("Tutorial : (Repeat the process to the other categories, and then press the green button on the left side of the drink machine to serve it.)");
+        txtDrink.Add("Tutorial : (Then, when you are ready to pour the ingredient onto the cup press the yellow button on the left side of the drink machine.)");
+        txtDrink.Add("Tutorial : (To make a drink, select the desired category and then choose the ingredient by clicking its respective icon.)");
+        txtDrink.Add("Tutorial : (In the top right corner of the machine, you’re able to select what category of what part of the drink you want to " +
+            "add. It should be made in a sweetener-base-topping order.)");
+        txtDrink.Add("Tutorial : (To make a drink, you’ll need to choose one sweetener/syrup, one base and one topping.)");
+
+        foreach (var txt in txtDrink)
+        {
+            Dialogue.InsertAtIndex(txt, Dialogue.lineIndex + 1);
+        }
     }
 }
 
