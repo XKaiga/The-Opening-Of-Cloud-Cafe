@@ -14,6 +14,7 @@ public class EndGameManager : MonoBehaviour
     [SerializeField] private Text pointsTxt;
     [SerializeField] private GameObject ending;
     [SerializeField] private Text endingTxt;
+    [SerializeField] private GameObject finalParent;
     [SerializeField] private GameObject txtExt;
 
     private RawImage image;
@@ -54,9 +55,10 @@ public class EndGameManager : MonoBehaviour
 
         if (finalTypeDetermined is FinalType finalType)
         {
+            finalParent.SetActive(true);
             txtExt.SetActive(true);
-            string name = GameManager.startDayNum == 2? "ALYIA" : Dialogue.GetMostFavoredCharacter().ToUpper();
-            txtExt.GetComponent<TextMeshPro>().text = Finals.finalsList.First(f => f.finalType == finalType && f.clientName == "").finalTxt;
+            string name = GameManager.startDayNum == 2? "ALYIA" : Dialogue.GetMostFavoredCharacter().ToUpper() ?? "RONNIE";
+            txtExt.GetComponent<TextMeshProUGUI>().text = Finals.finalsList.First(f => f.finalType == finalType && f.clientName == name).finalTxt;
         }
 
         //fade in
