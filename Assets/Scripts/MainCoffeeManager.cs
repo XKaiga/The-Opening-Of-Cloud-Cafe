@@ -50,6 +50,17 @@ public class MainCoffeeManager : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Escape))
             SceneManager.LoadScene("SaveLoadData");
 
+        if (Upgrade.musicToUnlockExists && !Upgrade.musicUnlocking)
+        {
+            Upgrade.musicUnlocking = true;
+
+            //fecha update tab
+            ToggleUpgradeMenu();
+
+            //abre music tab
+            ToggleMusicMenu();
+        }
+
         //UpdateShowNpcTimer();
     }
 
@@ -75,7 +86,6 @@ public class MainCoffeeManager : MonoBehaviour
             }
         }
     }
-
 
     private void UpdateTasks()
     {
@@ -198,6 +208,12 @@ public class MainCoffeeManager : MonoBehaviour
 
     public void ToggleMusicMenu()
     {
+        if (Dialogue.isMusicDoneVar == false)
+        {
+            Dialogue.isMusicDoneVar = true;
+            Dialogue.LoadMusicTutorial();
+        }
+
         RawImage musicOpenMenuBtnImg = musicOpenMenuBtn.GetComponent<RawImage>();
         musicOpenMenuBtnImg.enabled = !musicOpenMenuBtnImg.IsActive();
 
@@ -206,6 +222,12 @@ public class MainCoffeeManager : MonoBehaviour
 
         RawImage musicCloseMenuBtnImg = musicCloseMenuBtn.GetComponent<RawImage>();
         musicCloseMenuBtnImg.enabled = !musicCloseMenuBtnImg.IsActive();
+
+        if (Upgrade.musicUnlocking && !musicMenuImg.IsActive())
+        {
+            Upgrade.musicToUnlockExists = false;
+            Upgrade.musicUnlocking = false;
+        }
 
         foreach (Transform music in musicMenu.transform)
         {
@@ -278,7 +300,7 @@ public class MainCoffeeManager : MonoBehaviour
         int upgNum = -1;
         int marginBetweenTasks = 5;
 
-        foreach (var upg in Money.upgrades)
+        foreach (var upg in Upgrade.upgradesList)
         {
             upgNum++;
 
@@ -289,7 +311,10 @@ public class MainCoffeeManager : MonoBehaviour
             menuItemInstance.transform.localPosition = position;
 
             TextMeshProUGUI menuItemInstanceText = menuItemInstance.GetComponentInChildren<TextMeshProUGUI>();
-            menuItemInstanceText.text = upg.name + " Lvl" + upg.level + "\n";
+            if (upg.name == "Unlock Music")
+                menuItemInstanceText.text = upg.name + "\n";
+            else
+                menuItemInstanceText.text = upg.name + " Lvl" + upg.level + "\n";
             menuItemInstanceText.text += "Price: " + upg.price + "$";
         }
     }
@@ -307,6 +332,14 @@ public class MainCoffeeManager : MonoBehaviour
             {
                 Music.ChangeMusic(musicFound.AudioClip);
                 Music.currMusic = musicFound;
+
+                if (Upgrade.musicUnlocking)
+                {
+                    Upgrade.BuyMusicUpg();
+
+                    musicFound.IsDiscovered = true;
+                    ToggleMusicMenu();
+                }
             }
         }
     }

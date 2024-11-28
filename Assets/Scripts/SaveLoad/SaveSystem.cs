@@ -69,7 +69,7 @@ public class SaveSystem : MonoBehaviour
 
         saveData.playerScore = Money.playerScore;
         saveData.playerMoney = Money.playerMoney;
-        saveData.upgrades = Money.upgrades;
+        saveData.upgrades = Upgrade.upgradesList;
 
         // Collect trash data
         saveData.currTrashQty = TrashManager.currTrashQty;
@@ -109,7 +109,7 @@ public class SaveSystem : MonoBehaviour
     {
         Money.playerScore = saveData.playerScore;
         Money.playerMoney = saveData.playerMoney;
-        Money.upgrades = saveData.upgrades;
+        Upgrade.upgradesList = saveData.upgrades;
 
         // Load trash data
         TrashManager.currTrashQty = saveData.currTrashQty;
@@ -147,10 +147,11 @@ public class SaveSystem : MonoBehaviour
         Money.playerMoney = 0;
 
         List<Upgrade> upgrades = new() {
-        new(1, 7, 10, "Bigger Trash Bin"), new(1, 13, 0.1f, "Larger Cloth"),
-        new(1, 4, 3, "Extended Task Time"), new(1, 10, 0.05f, "Tip Boost")
+            new(1, 7, 10, "Bigger Bin"), new(1, 13, 0.1f, "Larger Cloth"),
+            new(1, 4, 3, "Extended Timer"), new(1, 10, 0.05f, "Tip Boost"),
+            new(1,10,0,"Unlock Music")
         };
-        Money.upgrades = upgrades;
+        Upgrade.upgradesList = upgrades;
 
         // Load trash data
         TrashManager.currTrashQty = 0;

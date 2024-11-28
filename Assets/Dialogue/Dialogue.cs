@@ -23,6 +23,7 @@ public class Dialogue : MonoBehaviour
     private List<DialogueOption> dialogueOptions = new();
     private int optionIndex = 0;
     public static bool isChoosing = false;
+    public static bool isMusicDoneVar=false;
 
     public static List<Character> characters = new() {
         new Character(name: "ALYIA", hateMusicTxt: "\"Can you put another music plz, i don't really vibe with this one.\""),
@@ -138,7 +139,14 @@ public class Dialogue : MonoBehaviour
             foreach (var character in charsHateCurrMusic)
             {
                 if (!lines[lineIndex + 1].Contains(character.hateMusicTxt))
+                {
+                    if (isMusicDoneVar == false)
+                    {
+                        isMusicDoneVar = true;
+                        LoadMusicTutorial();
+                    }
                     InsertAtIndex(character.name + ": " + character.hateMusicTxt, lineIndex + 1);
+                }
             }
 
             if (charsHateCurrMusic.Count > 0)
@@ -394,16 +402,19 @@ public class Dialogue : MonoBehaviour
 
                 this.GetComponent<RawImage>().enabled = false;
 
-                if (GameManager.startDayNum > 3)
-                {
-                    EndGameManager.instance.gameObject.SetActive(true);
-                    EndGameManager.instance.StartEndGame();
-                    return;
-                }
-
-                Start();
                 StartCoroutine(WaitXSeconds(-1, () =>
                 {
+                    if (GameManager.startDayNum > 3 || GameManager.startDayNum == 2)
+                    {
+                        EndGameManager.instance.gameObject.SetActive(true);
+                        EndGameManager.instance.StartEndGame();
+
+                        if (GameManager.startDayNum > 3)
+                            return;
+                    }
+
+                    //começar dia
+                    Start();
                     this.GetComponent<RawImage>().enabled = true;
 
                     startingNewDay = false;
@@ -491,7 +502,7 @@ public class Dialogue : MonoBehaviour
 
                 int promptIndex = -1;
 
-                while (lineIndex < lines.Length && !lines[lineIndex].StartsWith("1)") && !lines[lineIndex].StartsWith("2)") && !lines[lineIndex].StartsWith("3)") && !lines[lineIndex].StartsWith("("))
+                while (lineIndex < lines.Length && !lines[lineIndex].StartsWith("1)") && !lines[lineIndex].StartsWith("2)") && !lines[lineIndex].StartsWith("3)") && !lines[lineIndex].StartsWith("(BACK"))
                 {
                     int number = 1;
                     while (number <= 3)
@@ -583,7 +594,7 @@ public class Dialogue : MonoBehaviour
         NextLine();
     }
 
-    private string GetMostFavoredCharacter()
+    public static string GetMostFavoredCharacter()
     {
         if (characters == null || characters.Count == 0)
             return null;
@@ -614,6 +625,24 @@ public class Dialogue : MonoBehaviour
         string pattern = @"(?<!\()\*(.*?)\*(?!\))";
         return Regex.Replace(line, pattern, "<i>$1</i>");
     }
+
+    public static void LoadMusicTutorial()
+    {
+        List<string> txtMusic = new List<string>();
+        txtMusic.Add("\"\": (Like any Café, Cloud Café has background music playing.)");
+        txtMusic.Add("\"\": (However, as conversations with customers shift and mood changes," +
+            " the music has to be changed as well. No one likes to hear happy music while having" +
+            " a sad conversation, or, at the very least, your customers don’t.)");
+        txtMusic.Add("\"\": (Go on the music tab to change your café’s tune when the " +
+            "customers complain, and find a better fitting choice so you can carry out " +
+            "the conversation without losing points. )");
+        txtMusic.Add("\"\": (Feel the music and try to figure out if it better fits the mood.)");
+        txtMusic.Add("\"\": (Upgrades can be bought at the upgrades store so you’re able to see which emotion songs portray.)");
+        foreach (var txt in txtMusic)
+        {
+            InsertAtIndex(txt, lineIndex + 1);
+        }
+    }
 }
 
 [System.Serializable]
@@ -622,3 +651,5 @@ public class DialogueOption
     public string Prompt;
     public List<string> Responses = new List<string>();
 }
+
+

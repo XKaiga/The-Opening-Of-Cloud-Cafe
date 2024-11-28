@@ -7,10 +7,8 @@ using UnityEngine.UIElements;
 
 public class FileReader : MonoBehaviour
 {
-    private static bool isDrinkFileRead = false;
-    private static bool isMusicFileRead = false;
-    private static bool isFeedbacksFileRead = false;
 
+    private static bool isDrinkFileRead = false;
     public static void ReadDrinkFile()
     {
         if (isDrinkFileRead)
@@ -57,6 +55,7 @@ public class FileReader : MonoBehaviour
         }
     }
 
+    private static bool isMusicFileRead = false;
     public static void ReadMusicFile()
     {
         if (isMusicFileRead)
@@ -91,6 +90,7 @@ public class FileReader : MonoBehaviour
         }
     }
 
+    private static bool isFeedbacksFileRead = false;
     public static void ReadFeedbackFile()
     {
         if (isFeedbacksFileRead)
@@ -141,6 +141,56 @@ public class FileReader : MonoBehaviour
                     temp.reactionsTxt.Add(temp.clientName.ToUpper() + ": " + lines[index]);
             }
             Feedback.feedbacksList.Add(temp);
+        }
+    }
+
+    private static bool isFinalsFileRead = false;
+    public static void ReadFinalsFile()
+    {
+        if (isFinalsFileRead)
+            return;
+
+        string filePath = Application.dataPath + "/Dialogue/InfoLoadFiles/finais.txt";
+
+        Finals temp = new();
+        if (File.Exists(filePath))
+        {
+            string[] lines = File.ReadAllLines(filePath);
+            isFinalsFileRead = true;
+
+            int index = -1;
+            while (index < lines.Length - 1)
+            {
+                index++;
+
+                string line = lines[index];
+                if (lines[index].StartsWith('('))
+                {
+                    if (temp.finalTxt != "")
+                    {
+                        Finals.finalsList.Add(temp);
+                        temp = new();
+                    }
+
+                    string[] finalCodeParts = Dialogue.TrimSplitDialogueCode(lines[index]);
+
+                    string name = finalCodeParts[0];
+                    string type = finalCodeParts[1];
+
+                    var finalTypeDetermined = Finals.DetermineType(finalCodeParts[1]);
+                    if (finalTypeDetermined == null)
+                        continue;
+
+                    if (finalTypeDetermined is FinalType finalType)
+                    {
+                        temp.clientName = name;
+                        temp.finalType = finalType;
+                    }
+                }
+                else
+                    temp.finalTxt += lines[index];
+            }
+            Finals.finalsList.Add(temp);
         }
     }
 }

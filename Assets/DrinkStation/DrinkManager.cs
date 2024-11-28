@@ -199,8 +199,8 @@ public class DrinkManager : MonoBehaviour
 
         Money.playerScore += gainXPoints;
 
-        Feedback feedback = Feedback.feedbacksList.Find(f => f.clientName == correctOrder.client && f.reactionType == feedbackType);
-        Dialogue.InsertAtIndex(feedback.reactionsTxt[rndFeedback], Dialogue.lineIndex + 3);
+        //Feedback feedback = Feedback.feedbacksList.Find(f => f.clientName == correctOrder.client && f.reactionType == feedbackType);
+        //Dialogue.InsertAtIndex(feedback.reactionsTxt[rndFeedback], Dialogue.lineIndex + 3);
 
         if (!flavours.activeSelf)
             tipText.gameObject.transform.parent.gameObject.SetActive(true);

@@ -9,6 +9,7 @@ public class TrashDrag : MonoBehaviour
 
     private Vector3 offset;
     private Camera mainCamera;
+    public AudioClip soundEffect;
 
     private void Start()
     {
@@ -32,6 +33,7 @@ public class TrashDrag : MonoBehaviour
         {
             Vector3 mousePosition = GetMouseWorldPosition();
             transform.position = mousePosition + offset;
+            AudioSource.PlayClipAtPoint(soundEffect, transform.position);
         }
     }
 
