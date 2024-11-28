@@ -1,9 +1,5 @@
-using JetBrains.Annotations;
-using System.Collections.Generic;
 using System.IO;
-using System.Net.Mail;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class FileReader : MonoBehaviour
 {

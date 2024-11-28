@@ -7,8 +7,6 @@ using UnityEngine.UI;
 using System;
 using System.Linq;
 using Random = UnityEngine.Random;
-using Input = UnityEngine.Input;
-using UnityEngine.Windows;
 
 public class Dialogue : MonoBehaviour
 {

@@ -1,19 +1,10 @@
-using JetBrains.Annotations;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using UnityEngine.Windows;
-using static UnityEditor.Progress;
-using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
 public class DrinkManager : MonoBehaviour
