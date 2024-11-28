@@ -19,13 +19,17 @@ public class CleanManager : MonoBehaviour
     [SerializeField] private BlobManager blobManager;
     public static bool clean = true;
 
+    [SerializeField] private GameObject clothSprite; // Prefab do pano
+    private GameObject activeCloth; // Instância ativa do pano
+
+
     public static int taskTimer = 20;
 
     private void Awake() { linePrefab.GetComponent<LineRenderer>().widthMultiplier = widthMultiplier; }
 
     void Update()
     {
-        if (!clean)
+        if (!clean || clean)
         {
             if (Input.GetMouseButtonDown(0))
                 StartLine();
@@ -34,10 +38,17 @@ public class CleanManager : MonoBehaviour
         }
     }
 
-    private void StartLine()
+        private void StartLine()
     {
         if (drawing != null)
             StopCoroutine(drawing);
+
+            // Instanciar o pano
+            if (activeCloth == null)
+            {
+                activeCloth = Instantiate(clothSprite, Vector3.zero, Quaternion.identity);
+            }
+
         drawing = StartCoroutine(DrawLine());
     }
 
@@ -48,6 +59,14 @@ public class CleanManager : MonoBehaviour
 
         blobManager.CaptureBlobState();
         clean = blobManager.IsBoardClean();
+
+        if (activeCloth != null)
+        {
+            Destroy(activeCloth); //Remover o pano
+            activeCloth = null;
+        }
+
+
 
         if (clean && timer.timerIsRunning)
         {
@@ -70,12 +89,24 @@ public class CleanManager : MonoBehaviour
         line.startColor = Color.white;
         drawnLineRenderers.Add(line);
         line.positionCount = 0;
+
         while (true)
         {
+            //play pano sound
+            AudioClip soundEffect = Resources.Load<AudioClip>("SoundEffects/" + "sfx_pano");
+            AudioSource.PlayClipAtPoint(soundEffect, Vector3.zero, Music.vfxVolume);
+
             Vector3 position = mainCam.ScreenToWorldPoint(Input.mousePosition);
             position.z = 0;
             line.positionCount++;
             line.SetPosition(line.positionCount - 1, position);
+
+                // Atualizar a posição do pano
+            if (activeCloth != null)
+            {
+                activeCloth.transform.position = position;
+            }
+
             AssignScreenAsMask();
             yield return null;
         }

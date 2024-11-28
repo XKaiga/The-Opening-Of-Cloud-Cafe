@@ -6,10 +6,12 @@ using UnityEngine;
 [System.Serializable]
 public class Music
 {
-    private const string audioObjectName = "Audio Source"; 
+    public const string audioObjectName = "Audio Source"; 
 
     public static Music currMusic = new();
     public static List<Music> musicList = new();
+
+    public static int vfxVolume = 50;
 
     public string Name { get; set; }
     public EmotionEnum Emotion { get; set; }

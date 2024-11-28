@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour
 
         FileReader.ReadMusicFile();
 
+        FileReader.ReadFeedbackFile();
+
         Music.ChangeMusic(Music.musicList[0].AudioClip);
 
         LoadCharactersSprites();

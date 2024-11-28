@@ -129,7 +129,8 @@ public class Dialogue : MonoBehaviour
             if (!isChoosing && !charAnswering)
             {
                 foreach (var character in charsHateCurrMusic)
-                    InsertAtIndex(character.name + ": " + character.hateMusicTxt, lineIndex + 1);
+                    if (!lines[lineIndex + 1].Contains(character.hateMusicTxt))
+                        InsertAtIndex(character.name + ": " + character.hateMusicTxt, lineIndex + 1);
             }
 
             if (charsHateCurrMusic.Count > 0)
@@ -169,7 +170,7 @@ public class Dialogue : MonoBehaviour
         }
     }
 
-    private void InsertAtIndex(string newElement, int index)
+    public static void InsertAtIndex(string newElement, int index)
     {
         List<string> linesList = new List<string>(lines);
 
@@ -312,7 +313,6 @@ public class Dialogue : MonoBehaviour
         //acabou o texto: caixa desaparece
         if (lineIndex >= lines.Length - 1)
         {
-
             gameObject.SetActive(false);
             return;
         }
@@ -448,6 +448,12 @@ public class Dialogue : MonoBehaviour
                     break;
 
                 character.active = ShowHideParts[0].ToLower().Contains("show");
+                if (character.active)
+                {
+                    //play andar sound
+                    AudioClip soundEffect = Resources.Load<AudioClip>("SoundEffects/" + "sfx_andar");
+                    AudioSource.PlayClipAtPoint(soundEffect, Vector3.zero, Music.vfxVolume);
+                }
 
                 UpdateCharacters();
 
@@ -608,7 +614,7 @@ public class Dialogue : MonoBehaviour
     {
         charAnswering = true;
         isChoosing = false;
-
+     
         options.SetActive(false);
 
         char value = dialogueOptions[optionIndex].Prompt[0];
