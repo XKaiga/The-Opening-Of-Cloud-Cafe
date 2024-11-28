@@ -8,21 +8,21 @@ public class TrashManager : MonoBehaviour
     [SerializeField] private TableManager tableManager;
 
     [SerializeField] private TrashDrag trash;
-    private Vector2 initTrashPos = Vector2.zero;
-    public static int trashMaxQty = 3; //30
+    private Vector2 initTrashPos = new Vector2(-3.17f, -0.59f); 
+    public static int trashMaxQty = 10;
     public static int currTrashQty = 0;
 
-    public static int taskTimer = 50;
+    public static int taskTimer = 10;
 
     private void Start()
     {
         initTrashPos = trash.transform.position;
         trash.gameObject.SetActive(false);
 
-        FillTrash(0);
+        ShowTrash(0);
     }
 
-    public void FillTrash(int quantity)
+    public static void FillTrash(int quantity)
     {
         if (quantity < 0)
             return;
@@ -35,6 +35,11 @@ public class TrashManager : MonoBehaviour
             currTrashQty = trashMaxQty;
             TrashDrag.readyToRemoveTrash = true;
         }
+    }
+
+    public void ShowTrash(int quantity)
+    {
+        FillTrash(quantity);
 
         float showLimit = trashMaxQty * 2 / 3;
         if (currTrashQty >= showLimit)
@@ -53,7 +58,7 @@ public class TrashManager : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (TableManager.isChangingScene)
+        if (TableManager.inAnotherView)
             return;
 
         if (trashTimer.timerIsRunning)

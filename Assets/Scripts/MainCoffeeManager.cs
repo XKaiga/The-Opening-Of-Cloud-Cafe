@@ -9,6 +9,9 @@ using UnityEngine.UI;
 
 public class MainCoffeeManager : MonoBehaviour
 {
+    [SerializeField] private TextMeshProUGUI namePanelTxt;
+    [SerializeField] private TextMeshProUGUI dialoguePanelTxt;
+
     [SerializeField] private GameObject tasksOpenMenuBtn;
     [SerializeField] private GameObject tasksCloseMenuBtn;
     [SerializeField] private GameObject tasksMenu;
@@ -48,7 +51,9 @@ public class MainCoffeeManager : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Space))
             Dialogue.skip = !Dialogue.skip;
         if (Input.GetKeyUp(KeyCode.Escape))
+        {
             SceneManager.LoadScene("SaveLoadData");
+        }
 
         if (Upgrade.musicToUnlockExists && !Upgrade.musicUnlocking)
         {
@@ -187,6 +192,11 @@ public class MainCoffeeManager : MonoBehaviour
 
     public void ToggleTaskMenu()
     {
+        RawImage upgOpenMenuBtnImg = upgOpenMenuBtn.GetComponent<RawImage>();
+        upgOpenMenuBtnImg.enabled = !upgOpenMenuBtnImg.IsActive();
+        RawImage musicOpenMenuBtnImg = musicOpenMenuBtn.GetComponent<RawImage>();
+        musicOpenMenuBtnImg.enabled = !musicOpenMenuBtnImg.IsActive();
+
         RawImage tasksOpenMenuBtnImg = tasksOpenMenuBtn.GetComponent<RawImage>();
         tasksOpenMenuBtnImg.enabled = !tasksOpenMenuBtnImg.IsActive();
 
@@ -213,6 +223,11 @@ public class MainCoffeeManager : MonoBehaviour
             Dialogue.isMusicDoneVar = true;
             Dialogue.LoadMusicTutorial();
         }
+
+        RawImage upgOpenMenuBtnImg = upgOpenMenuBtn.GetComponent<RawImage>();
+        upgOpenMenuBtnImg.enabled = !upgOpenMenuBtnImg.IsActive();
+        RawImage tasksOpenMenuBtnImg = tasksOpenMenuBtn.GetComponent<RawImage>();
+        tasksOpenMenuBtnImg.enabled = !tasksOpenMenuBtnImg.IsActive();
 
         RawImage musicOpenMenuBtnImg = musicOpenMenuBtn.GetComponent<RawImage>();
         musicOpenMenuBtnImg.enabled = !musicOpenMenuBtnImg.IsActive();
@@ -249,6 +264,11 @@ public class MainCoffeeManager : MonoBehaviour
 
     public void ToggleUpgradeMenu()
     {
+        RawImage tasksOpenMenuBtnImg = tasksOpenMenuBtn.GetComponent<RawImage>();
+        tasksOpenMenuBtnImg.enabled = !tasksOpenMenuBtnImg.IsActive();
+        RawImage musicOpenMenuBtnImg = musicOpenMenuBtn.GetComponent<RawImage>();
+        musicOpenMenuBtnImg.enabled = !musicOpenMenuBtnImg.IsActive();
+
         RawImage upgOpenMenuBtnImg = upgOpenMenuBtn.GetComponent<RawImage>();
         upgOpenMenuBtnImg.enabled = !upgOpenMenuBtnImg.IsActive();
 
@@ -369,17 +389,26 @@ public class MainCoffeeManager : MonoBehaviour
     {
         if (!Dialogue.isChoosing && !Dialogue.startingNewDay)
         {
-            Dialogue.lineIndex--;//!!! juntar a função LoadDrinkStationScene e LoadTablesScene, para fazer o -- e recebendo uma string ou enum com o nome das scenes mudar para essa tal
+            //!!! juntar a função LoadDrinkStationScene e LoadTablesScene, para fazer o -- e recebendo uma string ou enum com o nome das scenes mudar para essa tal
+            Dialogue.skip = true;
+            Dialogue.pauseBetweenSkips = -2f;
+
+            Dialogue.nameTxt = namePanelTxt.text;
+            Dialogue.dialogueTxt = dialoguePanelTxt.text;
+
             SceneManager.LoadScene("DrinkStation");
         }
     }
     public void LoadTablesScene()
     {
-
         if (!Dialogue.isChoosing && !Dialogue.startingNewDay)
         {
-            Dialogue.skip = false;
-            Dialogue.lineIndex--;
+            Dialogue.skip = true;
+            Dialogue.pauseBetweenSkips = -2f;
+            
+            Dialogue.nameTxt = namePanelTxt.text;
+            Dialogue.dialogueTxt = dialoguePanelTxt.text;
+
             SceneManager.LoadScene("Tables");
         }
     }
@@ -388,6 +417,7 @@ public class MainCoffeeManager : MonoBehaviour
 [System.Serializable]
 public enum TaskType
 {
+    None,
     Trash,
     Clean,
     Music,

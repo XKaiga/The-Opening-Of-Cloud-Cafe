@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -10,7 +11,10 @@ using Random = UnityEngine.Random;
 public class TableManager : MonoBehaviour
 {
     private Camera mainCam;
-    public static bool isChangingScene = false;
+    [SerializeField] private TextMeshProUGUI namePanelTxt;
+    [SerializeField] private TextMeshProUGUI dialoguePanelTxt;
+
+    public static bool inAnotherView = false;
 
     [SerializeField] private Timer cleanTimer;
     [SerializeField] private Timer trashTimer;
@@ -27,16 +31,12 @@ public class TableManager : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("trashMaxQty: " + TrashManager.trashMaxQty);
         mainCam = Camera.main;
-
-        //foreach (var item in MainCoffeeManager.activeTasks)
-        //    Debug.Log(item.type + ": " + item.timer + "\n");
     }
 
     private void Start()
     {
-        isChangingScene = false;
+        inAnotherView = false;
 
         tables.SetActive(true);
         trash.SetActive(true);
@@ -88,19 +88,35 @@ public class TableManager : MonoBehaviour
                 if (!CleanManager.clean)
                 {
                     Task cleanTaskFound = MainCoffeeManager.activeTasks.Find(task => cleanTimer.gameObject.name.ToLower().Contains(task.type.ToString().ToLower()));
-                    if (cleanTaskFound != null) 
-                        cleanTaskFound.timer = float.Parse(cleanTimer.gameObject.GetComponentInChildren<Text>().text);
+                    Text cleanTimerTxt = cleanTimer.gameObject.GetComponentInChildren<Text>();
+                    if (cleanTaskFound != null)
+                        if (cleanTimerTxt.isActiveAndEnabled)
+                            cleanTaskFound.timer = float.Parse(cleanTimerTxt.text);
+                        else
+                            Debug.Log("clean error");
                 }
                 if (TrashDrag.readyToRemoveTrash)
                 {
                     Task trashTaskFound = MainCoffeeManager.activeTasks.Find(task => trashTimer.gameObject.name.ToLower().Contains(task.type.ToString().ToLower()));
+                    Text trashTimerTxt = trashTimer.gameObject.GetComponentInChildren<Text>();
                     if (trashTaskFound != null)
-                        trashTaskFound.timer = float.Parse(trashTimer.gameObject.GetComponentInChildren<Text>().text);
+                        if (trashTimerTxt.isActiveAndEnabled)
+                            trashTaskFound.timer = float.Parse(trashTimerTxt.text);
+                        else
+                            Debug.Log("trash error");
+                    trashTaskFound.timer = float.Parse(trashTimerTxt.text);
                 }
 
-                isChangingScene = true;
-                Debug.Log("Changing Scenes");
-                SceneManager.LoadScene("Dialogue");
+                inAnotherView = true;
+                if (!Dialogue.isChoosing)
+                {
+                    Dialogue.pauseBetweenSkips = 0.2f;
+                    Dialogue.skip = false;
+                    Dialogue.nameTxt = namePanelTxt.text;
+                    Dialogue.dialogueTxt = dialoguePanelTxt.text;
+             
+                    SceneManager.LoadScene("Dialogue");
+                }
             }
             else
             {
@@ -116,6 +132,8 @@ public class TableManager : MonoBehaviour
                     trashTimer.StartTimer(trashStartTime);
                 }
 
+                inAnotherView = false;
+
                 //if (TrashDrag.readyToRemoveTrash && CleanManager.clean && Timer.timeStart != (CleanManager.taskTimer + TrashManager.taskTimer))
                 //    Timer.timeStart = TrashManager.taskTimer;
             }
@@ -125,6 +143,8 @@ public class TableManager : MonoBehaviour
 
         if (colliderName.Contains("table"))
         {
+            inAnotherView = true;
+
             tables.SetActive(false);
             trash.SetActive(false);
             tableBg.SetActive(true);

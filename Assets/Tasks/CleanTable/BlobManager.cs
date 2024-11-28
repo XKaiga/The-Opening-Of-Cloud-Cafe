@@ -130,7 +130,7 @@ public class BlobManager : MonoBehaviour
 
     public void RemoveBlobs()
     {
-        trashManager.FillTrash(blobs.Length);
+        trashManager.ShowTrash(blobs.Length);
 
         foreach (var blob in blobs)
             Destroy(blob.GameObject());

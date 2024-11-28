@@ -11,13 +11,16 @@ public class CleanManager : MonoBehaviour
     public static float widthMultiplier = 0.3f;
 
     public Camera mainCam;
-    public static List<LineRenderer> drawnLineRenderers = new List<LineRenderer>();
+    public static List<LineRenderer> drawnLineRenderers = new();
 
     [SerializeField] private SpriteMask spriteMask;
     [SerializeField] private Camera spriteCam;
 
     [SerializeField] private BlobManager blobManager;
     public static bool clean = true;
+
+    [SerializeField] private GameObject clothPrefab; // Prefab do pano
+    private GameObject activeCloth; // Instância ativa do pano
 
 
     public static int taskTimer = 20;
@@ -39,6 +42,14 @@ public class CleanManager : MonoBehaviour
     {
         if (drawing != null)
             StopCoroutine(drawing);
+
+        // Instanciar o pano
+        if (activeCloth == null)
+        {
+            activeCloth = Instantiate(clothPrefab, Vector3.zero, Quaternion.identity);
+            activeCloth.GetComponent<AudioSource>().volume = Music.vfxVolume; 
+        }
+
         drawing = StartCoroutine(DrawLine());
     }
 
@@ -50,12 +61,18 @@ public class CleanManager : MonoBehaviour
         blobManager.CaptureBlobState();
         clean = blobManager.IsBoardClean();
 
+        if (activeCloth != null)
+        {
+            Destroy(activeCloth); //Remover o pano
+            activeCloth = null;
+        }
+
         if (clean && timer.timerIsRunning)
         {
             timer.StopTimer(timer.timeRemaining);
             Money.AddTaskScore();
         }
-        
+
         if (clean || !timer.timerIsRunning)
         {
             blobManager.RemoveBlobs();
@@ -74,14 +91,17 @@ public class CleanManager : MonoBehaviour
 
         while (true)
         {
-            //play pano sound
-            AudioClip soundEffect = Resources.Load<AudioClip>("SoundEffects/" + "sfx_pano");
-            AudioSource.PlayClipAtPoint(soundEffect, Vector3.zero, Music.vfxVolume);
-
             Vector3 position = mainCam.ScreenToWorldPoint(Input.mousePosition);
             position.z = 0;
             line.positionCount++;
             line.SetPosition(line.positionCount - 1, position);
+
+            // Atualizar a posição do pano
+            if (activeCloth != null)
+            {
+                activeCloth.transform.position = position;
+            }
+
             AssignScreenAsMask();
             yield return null;
         }
@@ -118,7 +138,7 @@ public class CleanManager : MonoBehaviour
     {
         foreach (var line in drawnLineRenderers)
             Destroy(line.gameObject);
-        drawnLineRenderers = null;
+        drawnLineRenderers.Clear();
         clean = true;
     }
 }

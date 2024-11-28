@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 using Random = UnityEngine.Random;
 using Input = UnityEngine.Input;
+using UnityEngine.Windows;
 
 public class Dialogue : MonoBehaviour
 {
@@ -20,9 +21,12 @@ public class Dialogue : MonoBehaviour
     [SerializeField] private TextMeshProUGUI optionText1;
     [SerializeField] private TextMeshProUGUI optionText2;
     [SerializeField] private TextMeshProUGUI optionText3;
-    private List<DialogueOption> dialogueOptions = new();
-    private int optionIndex = 0;
+    private static List<DialogueOption> dialogueOptions = new();
+    private static int optionIndex = 0;
+    private static int responseIndex = 0;
     public static bool isChoosing = false;
+    public static bool charAnswering = false;
+    private static int backToDialogueIndex = -1;
     public static bool isMusicDoneVar=false;
 
     public static List<Character> characters = new() {
@@ -35,9 +39,11 @@ public class Dialogue : MonoBehaviour
 
     [SerializeField] private float textSpeed;
     [SerializeField] private TextMeshProUGUI namePanelTxt;
+    public static string nameTxt = string.Empty;
     [SerializeField] private TextMeshProUGUI dialoguePanelTxt;
-    private string lineName;
-    private string lineDialogue;
+    public static string dialogueTxt = string.Empty;
+    public static string lineName;
+    public static string lineDialogue;
 
     private string filePath;
     private static int fileDayNumRead = -1;
@@ -47,7 +53,7 @@ public class Dialogue : MonoBehaviour
     public static bool startingNewDay = false;
     private static int dialoguePauseSecs = 3;
 
-    private const float resetTimerToHateMusic = 10;//!!!100
+    private const float resetTimerToHateMusic = 100;
     private static float timerToHateMusicSec = resetTimerToHateMusic;
     private static bool hatingcurrMusic = false;
 
@@ -60,7 +66,8 @@ public class Dialogue : MonoBehaviour
             filePath = Application.dataPath + "/Dialogue/DayFiles/day" + GameManager.startDayNum;
             if (GameManager.startDayNum == 3)
             {
-                filePath += "RONNIE";//GetMostFavoredCharacter().ToUpper();
+                string charName = GetMostFavoredCharacter() ?? "RONNIE";
+                filePath += charName.ToUpper();
             }
             filePath += ".txt";
 
@@ -71,11 +78,14 @@ public class Dialogue : MonoBehaviour
 
         if (startingNewDay)
             return;
-        if (lineIndex > 0)
-            lineIndex--;
 
         InicializeButtons();
 
+        namePanelTxt.text = nameTxt;
+        dialoguePanelTxt.text = dialogueTxt;
+
+        if (lineIndex > -1)
+            lineIndex--;
         NextLine();
     }
 
@@ -85,48 +95,33 @@ public class Dialogue : MonoBehaviour
         optionButton2.onClick.AddListener(() => ChooseOption(2));
         optionButton3.onClick.AddListener(() => ChooseOption(3));
 
-        options.SetActive(false);
+        options.SetActive(isChoosing);
+
+        if (isChoosing)
+        {
+            this.GetComponent<RawImage>().enabled = false;
+            namePanelTxt.text = "";
+            dialoguePanelTxt.text = "";
+            ShowOptions();
+        }
     }
 
+
     public static bool skip = false;
-    [SerializeField] private float pauseBetweenSkips = 0.1f;
+    public static float pauseBetweenSkips = 0.2f;
+    public bool waitingForDialogue = false;
     void Update()
     {
         if (!startingNewDay)
         {
-            if (Input.GetMouseButtonDown(0) || skip)
-            {
-                StartCoroutine(WaitXSeconds(skip ? pauseBetweenSkips : 0, () =>
-                {
-                    if (!isChoosing && !DrinkManager.mainClientWaiting && !startingNewDay)
-                    {
-                        this.GetComponent<RawImage>().enabled = true;
-
-                        if (dialoguePanelTxt.text == lineDialogue)
-                        {
-                            NextLine();
-
-                            int lineStopIndex = GameManager.startDayNum == 1 ? 173 : GameManager.startDayNum == 2 ? 383 : 182;
-                            if (lineIndex == lineStopIndex)
-                                skip = false;
-                        }
-                        else
-                        {
-                            StopAllCoroutines();
-                            namePanelTxt.text = lineName;
-                            dialoguePanelTxt.text = lineDialogue;
-                        }
-                    }
-                }));
-            }
-
             UpdateHateTimer();
+            if (skip)
+                OnClickDialogue();
         }
     }
 
     private void UpdateHateTimer()
     {
-        Debug.LogWarning("timer da musica: " + timerToHateMusicSec);
         if (timerToHateMusicSec > 0)
         {
             timerToHateMusicSec -= Time.deltaTime;
@@ -136,23 +131,54 @@ public class Dialogue : MonoBehaviour
         else
         {
             List<Character> charsHateCurrMusic = Music.WhoHatesMusic();
-            foreach (var character in charsHateCurrMusic)
+            if (!isChoosing && !charAnswering)
             {
-                if (!lines[lineIndex + 1].Contains(character.hateMusicTxt))
-                {
-                    if (isMusicDoneVar == false)
+                foreach (var character in charsHateCurrMusic)
+                    if (!lines[lineIndex + 1].Contains(character.hateMusicTxt))
                     {
-                        isMusicDoneVar = true;
-                        LoadMusicTutorial();
+                        if (isMusicDoneVar == false)
+                        {
+                            isMusicDoneVar = true;
+                            LoadMusicTutorial();
+                        }
+                        InsertAtIndex(character.name + ": " + character.hateMusicTxt, lineIndex + 1);
                     }
-                    InsertAtIndex(character.name + ": " + character.hateMusicTxt, lineIndex + 1);
-                }
             }
 
             if (charsHateCurrMusic.Count > 0)
                 hatingcurrMusic = true;
 
             timerToHateMusicSec = resetTimerToHateMusic;
+        }
+    }
+
+    public void OnClickDialogue()
+    {
+        if (!startingNewDay && !waitingForDialogue)
+        {
+            waitingForDialogue = true;
+            StartCoroutine(WaitXSeconds(skip ? pauseBetweenSkips : 0, () =>
+            {
+                waitingForDialogue = false;
+
+                if (!isChoosing && !DrinkManager.mainClientWaiting && !startingNewDay)
+                {
+                    this.GetComponent<RawImage>().enabled = true;
+
+                    if (dialoguePanelTxt.text == lineDialogue || lineDialogue == null)
+                    {
+                        NextLine();
+                    }
+                    else
+                    {
+                        StopAllCoroutines();
+                        namePanelTxt.text = lineName;
+                        nameTxt = string.Empty;
+                        dialoguePanelTxt.text = lineDialogue;
+                        dialogueTxt = string.Empty;
+                    }
+                }
+            }));
         }
     }
 
@@ -167,6 +193,9 @@ public class Dialogue : MonoBehaviour
 
     private void UpdateCharacters()
     {
+        if (CharacterSpaces[0] == null)
+            return;
+
         for (int i = 0; i < charsPosData.Count; i++)
             CharacterSpaces[i].GetComponentInChildren<Text>(true).text = charsPosData[i];
 
@@ -218,22 +247,45 @@ public class Dialogue : MonoBehaviour
         }
     }
 
-    public static IEnumerator WaitXSeconds(float seconds = -1, Action callback = null)
+    private IEnumerator WaitXSeconds(float seconds = -1, Action callback = null)
     {
-        yield return new WaitForSeconds(seconds == -1 ? dialoguePauseSecs : seconds);
+        if (seconds == -1)
+            seconds = dialoguePauseSecs;
+        else if (seconds == -2)
+            seconds = EstimateSpeakingTimeSecs(lines[lineIndex]);
+
+        yield return new WaitForSeconds(seconds);
         callback?.Invoke();
     }
 
-    private IEnumerator TypeLine(TextMeshProUGUI panelTxt, string line)
+    private float EstimateSpeakingTimeSecs(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+            return 0;
+
+        string currTxt = namePanelTxt.text + ": " + dialoguePanelTxt.text;
+        int charCount = input.Length - currTxt.Length;
+        if (charCount <= 0)
+            return 0;
+
+        float charsPerSecond = 17.0f;
+        return charCount / charsPerSecond;
+    }
+
+    private IEnumerator TypeLine(TextMeshProUGUI panelTxt, string line, bool isNamePanel)
     {
         panelTxt.gameObject.SetActive(true);
 
         string[] textFormats = { "</i>" };
         bool hasItalic = line.Contains("</i>");
 
-        for (int i = 0; i < line.Length; i++)
+        string currentTxt;
+        int startIndex = line.Contains(panelTxt.text) ? panelTxt.text.Length : 0;
+        for (int i = startIndex; i < line.Length; i++)
         {
-            panelTxt.text += line[i];
+            currentTxt = isNamePanel ? (nameTxt += line[i]) : (dialogueTxt += line[i]);
+            panelTxt.text = currentTxt;
+
             if (hasItalic)
             {
                 for (int j = 0; j < textFormats.Length; j++)
@@ -243,7 +295,8 @@ public class Dialogue : MonoBehaviour
                         while (textFormats[j].Contains(line[i + 1]))
                         {
                             i++;
-                            panelTxt.text += line[i];
+                            currentTxt = isNamePanel ? (nameTxt += line[i]) : (dialogueTxt += line[i]);
+                            panelTxt.text = currentTxt;
                             if (line[i] == '>')
                                 break;
                         }
@@ -254,6 +307,11 @@ public class Dialogue : MonoBehaviour
 
             yield return new WaitForSeconds(textSpeed);
         }
+
+        if (isNamePanel)
+            nameTxt = string.Empty;
+        else
+            dialogueTxt = string.Empty;
     }
 
     private void NextLine()
@@ -267,22 +325,44 @@ public class Dialogue : MonoBehaviour
         //acabou o texto: caixa desaparece
         if (lineIndex >= lines.Length - 1)
         {
-
             gameObject.SetActive(false);
             return;
         }
 
         string line = "";
-        if (dialogueOptions.Count != 0 && dialogueOptions[optionIndex].Responses.Count > 0)
+        if (charAnswering && responseIndex < dialogueOptions[optionIndex].Responses.Count)
         {
-            line = dialogueOptions[optionIndex].Responses[0];
-            dialogueOptions[optionIndex].Responses.RemoveAt(0);
+            string lineShowing = namePanelTxt.text.ToLower() + ": " + dialoguePanelTxt.text.ToLower();
+            if (responseIndex == 0 || lineShowing == dialogueOptions[optionIndex].Responses[responseIndex - 1].ToLower())
+            {
+                line = dialogueOptions[optionIndex].Responses[responseIndex];
+                responseIndex++;
+
+                if (responseIndex == dialogueOptions[optionIndex].Responses.Count)
+                {
+                    lineIndex = backToDialogueIndex;
+                    backToDialogueIndex = -1;
+                    responseIndex = 0;
+                    dialogueOptions.Clear();
+                    charAnswering = false;
+                }
+            }
+            else
+                line = dialogueOptions[optionIndex].Responses[responseIndex - 1];
         }
         else
             lineIndex++;
 
-        dialoguePanelTxt.text = string.Empty;
-        namePanelTxt.text = string.Empty;
+        if (dialoguePanelTxt.text != lineDialogue)
+        {
+            namePanelTxt.text = nameTxt;
+            dialoguePanelTxt.text = dialogueTxt;
+        }
+        else
+        {
+            namePanelTxt.text = "";
+            dialoguePanelTxt.text = "";
+        }
 
         IdentifyAndExecuteTypeOfText(line);
     }
@@ -311,12 +391,14 @@ public class Dialogue : MonoBehaviour
                 if (matchDialogue.Success)
                     lineDialogue = matchDialogue.Groups[1].Value;
 
-                StartCoroutine(TypeLine(namePanelTxt, lineName));
-                StartCoroutine(TypeLine(dialoguePanelTxt, lineDialogue));
+                StartCoroutine(TypeLine(namePanelTxt, lineName ?? "", true));
+                StartCoroutine(TypeLine(dialoguePanelTxt, lineDialogue ?? "", false));
                 break;
 
             case "options":
                 this.GetComponent<RawImage>().enabled = false;
+                namePanelTxt.text = "";
+                dialoguePanelTxt.text = "";
 
                 dialogueOptions.Clear();
                 isChoosing = true;
@@ -326,8 +408,6 @@ public class Dialogue : MonoBehaviour
                 break;
 
             case "drink":
-                this.GetComponent<RawImage>().enabled = false;
-
                 List<String> drinkTexts = new() { line };
                 int indexDrinks = 1;
                 while (lineIndex + indexDrinks < lines.Length && GetTypeOfText(lines[lineIndex + indexDrinks]) == "drink")
@@ -342,6 +422,10 @@ public class Dialogue : MonoBehaviour
                     bool isMainDrink = ExtractClientNameAndDrinkNumber(drinkText, out string name, out int drinkNumber);
                     if (isMainDrink)
                     {
+                        this.GetComponent<RawImage>().enabled = false;
+                        namePanelTxt.text = "";
+                        dialoguePanelTxt.text = "";
+
                         Drink mainDrink = DrinkManager.FindOrder(name, drinkNumber, DrinkManager.mainDrinks);
 
                         if (mainDrink != null && !DrinkManager.mainDrinksToServe.Contains(mainDrink))
@@ -396,11 +480,14 @@ public class Dialogue : MonoBehaviour
                 break;
 
             case "endingDay":
+                skip = false;
                 GameManager.startDayNum++;
                 lineIndex = -1;
                 startingNewDay = true;
 
                 this.GetComponent<RawImage>().enabled = false;
+                namePanelTxt.text = "";
+                dialoguePanelTxt.text = "";
 
                 StartCoroutine(WaitXSeconds(-1, () =>
                 {
@@ -418,7 +505,7 @@ public class Dialogue : MonoBehaviour
                     this.GetComponent<RawImage>().enabled = true;
 
                     startingNewDay = false;
-                    NextLine();
+                    OnClickDialogue();
                 }));
 
                 break;
@@ -445,7 +532,7 @@ public class Dialogue : MonoBehaviour
         if (lineLowerCase.Contains("(drink"))
             return "drink";
 
-        if (lineLowerCase.StartsWith("1)") || lineLowerCase.StartsWith("2)") || lineLowerCase.StartsWith("3)"))
+        if (lineLowerCase.StartsWith("1)") || lineLowerCase.StartsWith("2)") || lineLowerCase.StartsWith("3)") || lineLowerCase.StartsWith("(back"))
             return "options";
 
         if (lineLowerCase.StartsWith("(emo_"))
@@ -462,36 +549,17 @@ public class Dialogue : MonoBehaviour
         return "conversation";
     }
 
-    /*
-    private void ReadRegularDialogue()
-    {
-        while (lineIndex < lines.Length)
-        {
-            if (lines[lineIndex].Contains("(BACK TO REGULAR DIALOGUE.)"))
-            {
-                lineIndex++;
-                break;
-            }
-            lineIndex++;
-        }
-
-        if (lineIndex < lines.Length)
-        {
-            IdentifyTypeOfText();
-            StartCoroutine(TypeLine(namePanelTxt, lineName));
-            StartCoroutine(TypeLine(dialoguePanelTxt, lineDialogue));
-        }
-    }
-    */
-
     private void ReadOptions()
     {
         int optionsRead = 0;
-        while (lineIndex < lines.Length && optionsRead < 6)
+        while (lineIndex < lines.Length)
         {
             string line = lines[lineIndex];
             if (line.Contains("(BACK TO REGULAR DIALOGUE.)"))
+            {
+                backToDialogueIndex = ++lineIndex;
                 break;
+            }
 
             if (line.StartsWith("1)") || line.StartsWith("2)") || line.StartsWith("3)"))
             {
@@ -545,10 +613,10 @@ public class Dialogue : MonoBehaviour
 
     private void ShowOptions()
     {
+        options.SetActive(true);
+
         if (dialogueOptions.Count == 3)
         {
-            options.SetActive(true);
-
             string[][] parts = new string[3][];
             for (int i = 0; i < 3; i++)
                 parts[i] = dialogueOptions[i].Prompt.Split('_');
@@ -568,8 +636,10 @@ public class Dialogue : MonoBehaviour
 
     private void ExecuteOption()
     {
-        options.SetActive(false);
+        charAnswering = true;
         isChoosing = false;
+     
+        options.SetActive(false);
 
         char value = dialogueOptions[optionIndex].Prompt[0];
         if (value == '+')

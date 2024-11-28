@@ -90,7 +90,7 @@ public class EndGameManager : MonoBehaviour
     {
         GameObject[] allObjects = FindObjectsOfType<GameObject>();
         foreach (GameObject obj in allObjects)
-            if (obj.name.Contains("Btn"))
+            if (obj.name.ToLower().Contains("btn"))
                 obj.SetActive(false);
     }
 }
