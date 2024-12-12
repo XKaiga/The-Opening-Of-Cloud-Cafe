@@ -3571,9 +3571,9 @@ RectTransform:
   - {fileID: 1516020703}
   - {fileID: 1629758698}
   - {fileID: 277063112}
-  - {fileID: 1826606006}
   - {fileID: 80551690}
   - {fileID: 947229403}
+  - {fileID: 1826606006}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3786,8 +3786,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1826606006}
   - component: {fileID: 1826606008}
-  - component: {fileID: 1826606007}
   - component: {fileID: 1826606009}
+  - component: {fileID: 1826606010}
   m_Layer: 0
   m_Name: EndGame
   m_TagString: Untagged
@@ -3816,33 +3816,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1826606007
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1826606005}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0}
-  m_RaycastTarget: 0
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Texture: {fileID: 0}
-  m_UVRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
 --- !u!222 &1826606008
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3863,12 +3836,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26339bb81b546504da24c2f1423b3a67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dialogueManager: {fileID: 778154564}
   points: {fileID: 1094804756}
   pointsTxt: {fileID: 1784570257}
   ending: {fileID: 1140971426}
   endingTxt: {fileID: 1472620400}
   finalParent: {fileID: 80551689}
   txtExt: {fileID: 1606652646}
+  image: {fileID: 0}
+--- !u!114 &1826606010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1826606005}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 0}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
 --- !u!1 &1833357596
 GameObject:
   m_ObjectHideFlags: 0
