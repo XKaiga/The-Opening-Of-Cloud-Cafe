@@ -26,7 +26,9 @@ public class Dialogue : MonoBehaviour
     public static bool isChoosing = false;
     public static bool charAnswering = false;
     private static int backToDialogueIndex = -1;
+
     public static bool isMusicDoneVar = false;
+    public static bool isTrashTutDoneVar = false;
 
     public static List<Character> characters = new() {
         new Character(name: "ALYIA", patience: 2, hateMusicTxt: "\"Can you put another music plz, i don't really vibe with this one.\""),
@@ -121,6 +123,17 @@ public class Dialogue : MonoBehaviour
 
             if (skip)
                 OnClickDialogue();
+
+            if (TrashDrag.readyToRemoveTrash && !isTrashTutDoneVar)
+            {
+                isTrashTutDoneVar = true;
+                LoadTrashTutorial();
+            }
+            if (!TableManager.isCleanTutDone && TableManager.doCleanTut)
+            {
+                TableManager.isCleanTutDone = true;
+                LoadTrashTutorial();
+            }
         }
     }
 
@@ -265,7 +278,7 @@ public class Dialogue : MonoBehaviour
         callback?.Invoke();
     }
 
-    private float EstimateSpeakingTimeSecs(string input)
+    public float EstimateSpeakingTimeSecs(string input)
     {
         if (string.IsNullOrWhiteSpace(input))
             return 0;
@@ -512,31 +525,42 @@ public class Dialogue : MonoBehaviour
                 lineIndex = -1;
                 startingNewDay = true;
 
-                this.GetComponent<RawImage>().enabled = false;
-                namePanelTxt.text = "";
-                dialoguePanelTxt.text = "";
-
-                StartCoroutine(WaitXSeconds(-1, () =>
-                {
-                    if (GameManager.startDayNum > 3 || GameManager.startDayNum == 2)
-                    {
-                        EndGameManager.instance.gameObject.SetActive(true);
-                        EndGameManager.instance.StartEndGame();
-
-                        if (GameManager.startDayNum > 3)
-                            return;
-                    }
-
-                    //começar dia
-                    Start();
-                    this.GetComponent<RawImage>().enabled = true;
-
-                    startingNewDay = false;
-                    OnClickDialogue();
-                }));
+                StartCoroutine(HandleNewDay());
 
                 break;
         }
+    }
+
+    private IEnumerator HandleNewDay()
+    {
+        EndGameManager.instance.image.enabled = true;
+        namePanelTxt.text = lineName = "";
+        dialoguePanelTxt.text = "";
+        lineDialogue = "A few days later....";
+        yield return TypeLine(dialoguePanelTxt, lineDialogue, false);
+
+        yield return WaitXSeconds(1.5f, null);
+        dialoguePanelTxt.text = lineDialogue = "";
+        this.GetComponent<RawImage>().enabled = false;
+
+        if (GameManager.startDayNum > 3 || GameManager.startDayNum == 2)
+        {
+            EndGameManager.instance.gameObject.SetActive(true);
+
+            yield return EndGameManager.instance.StartEndGameCoroutine();
+
+            if (GameManager.startDayNum > 3)
+                yield break; // Exit the coroutine if day number is greater than 3
+        }
+
+        yield return WaitXSeconds(1.5f, null);
+
+        // Start new day
+        Start();
+        this.GetComponent<RawImage>().enabled = true;
+
+        startingNewDay = false;
+        OnClickDialogue();
     }
 
     public static string[] TrimSplitDialogueCode(string line)
@@ -792,8 +816,66 @@ public class Dialogue : MonoBehaviour
             SceneManager.LoadScene("DrinkStation");
         }
     }
-}
 
+    public void LoadTrashTutorial()
+    {
+        List<string> txtTrash = new List<string>
+        {
+            "Tutorial: (It is also possible to increase your trash bin’s capacity on the upgrades’ store.)",
+            "Tutorial: (Just drag the trash bag to the correspondent and correct trash can, " +
+                "and the trash will be dealt with. Throwing it on the wrong trash can will deduct points " +
+                "from your score too.)",
+            "Tutorial: (Trash can’t be accumulated at the Café, so to get rid of it is of" +
+                " upmost importance, otherwise points will be deducted from the final score and" +
+                " character ending.)",
+            "Tutorial: (When there’s trash to be taken out, hurry up! )"
+        };
+
+        foreach (var txt in txtTrash)
+        {
+            InsertAtIndex(txt, lineIndex + 1);
+        }
+
+        if (SceneManager.GetActiveScene().name != "Tables")
+        {
+            Dialogue.skip = true;
+            Dialogue.pauseBetweenSkips = -2f;
+
+            Dialogue.nameTxt = namePanelTxt.text;
+            Dialogue.dialogueTxt = dialoguePanelTxt.text;
+
+            SceneManager.LoadScene("Tables");
+        }
+    }
+    public void LoadTableTutorial()
+    {
+        List<string> txtTable = new List<string>
+        {
+            "Tutorial: (Bigger cloth sizes are available in the upgrades store.)",
+            "Tutorial: (Just click and drag the mouse on top of the stains on top of the table to clean them.",
+            "Tutorial: (You have limited time to do it, and not being able to do it in time will result" +
+            " in losing points which will affect the final score and character’s ending!",
+            "Tutorial: (As the task of cleaning a table appears on the notification’s tab, hurry to the table" +
+            " section to clean the table that’s dirty.)"
+        };
+
+        foreach (var txt in txtTable)
+        {
+            InsertAtIndex(txt, lineIndex + 1);
+        }
+
+        if (SceneManager.GetActiveScene().name != "Tables")
+        {
+            Dialogue.skip = true;
+            Dialogue.pauseBetweenSkips = -2f;
+
+            Dialogue.nameTxt = namePanelTxt.text;
+            Dialogue.dialogueTxt = dialoguePanelTxt.text;
+
+            SceneManager.LoadScene("Tables");
+        }
+    }
+}
 [System.Serializable]
 public class DialogueOption
 {

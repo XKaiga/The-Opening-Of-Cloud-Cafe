@@ -26,6 +26,9 @@ public class TableManager : MonoBehaviour
 
     private string dirtyTableName = string.Empty;
 
+    public static bool doCleanTut = false;
+    public static bool isCleanTutDone = false;
+
     private void Awake()
     {
         mainCam = Camera.main;
@@ -140,6 +143,7 @@ public class TableManager : MonoBehaviour
 
         if (colliderName.Contains("table"))
         {
+            doCleanTut = true;
             inAnotherView = true;
 
             tables.SetActive(false);
