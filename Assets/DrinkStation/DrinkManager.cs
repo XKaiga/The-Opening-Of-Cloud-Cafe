@@ -34,10 +34,6 @@ public class DrinkManager : MonoBehaviour
     public static List<Drink> mainDrinksToServe = new();
     public static bool mainClientWaiting => mainDrinksToServe.Count != 0;
 
-    public static List<Drink> secondariesDrinks = new() { }; //!!!: strings with the text to write and to convert to drinks? or drinks and general text/s ?
-    public static List<Drink> secondariesDrinksToServe = new();
-    public static bool secndClientWaiting => secondariesDrinksToServe.Count != 0;
-
     public TextMeshProUGUI tipText;
     private bool tipShowing = false;
 
@@ -136,7 +132,7 @@ public class DrinkManager : MonoBehaviour
 
             else if (colliderName.Contains("serve"))
             {
-                bool anyoneWaiting = mainClientWaiting || secndClientWaiting;
+                bool anyoneWaiting = mainClientWaiting || ScndNPCs.secndClientWaiting;
                 if (anyoneWaiting && drinkServing.IsReady())
                 {
                     Serve();
@@ -406,8 +402,8 @@ public class DrinkManager : MonoBehaviour
         AudioSource.PlayClipAtPoint(soundEffect, Vector3.zero, Music.vfxVolume);
 
         Drink correctOrder;
-        if (secndClientWaiting)
-            correctOrder = secondariesDrinksToServe[0];
+        if (ScndNPCs.secndClientWaiting)
+            correctOrder = ScndNPCs.secondariesDrinksToServe[0];
         else
             correctOrder = mainDrinksToServe[0];
 
@@ -453,12 +449,14 @@ public class DrinkManager : MonoBehaviour
 
         tipText.gameObject.transform.parent.gameObject.SetActive(!flavoursInfo.activeSelf);
         tipShowing = !flavoursInfo.activeSelf;
-        Money.ReceiveTip(gainXPoints, secndClientWaiting, tipText);
+        Money.ReceiveTip(gainXPoints, ScndNPCs.secndClientWaiting, tipText);
 
-        if (secndClientWaiting)
+        if (ScndNPCs.secndClientWaiting)
         {
-            secondariesDrinksToServe.Remove(correctOrder);
-            secondariesDrinks.Remove(correctOrder);
+            ScndNPCs.secondariesDrinksToServe.Remove(correctOrder);
+            //ScndNPCs.secondariesDrinks.Remove(correctOrder);
+
+            MainCoffeeManager.RemoveTask(TaskType.NPCOrder);
         }
         else
         {
@@ -468,7 +466,7 @@ public class DrinkManager : MonoBehaviour
 
         drinkServing = new Drink();
 
-        if (secndClientWaiting)
+        if (ScndNPCs.secndClientWaiting)
             Dialogue.lineIndex++;
 
         int num = UnityEngine.Random.Range(0, 3); //1 in 3 chance
@@ -480,29 +478,13 @@ public class DrinkManager : MonoBehaviour
         Drink drink = listToFindFrom.FirstOrDefault(d => d.client.ToLower() == name.ToLower() && d.drinkNumberOfClient == drinkNumber);
         return drink;
     }
-
-    public static void LoadDrinkTutorial()
-    {
-        List<string> txtDrink = new();
-        txtDrink.Add("Tutorial : (If you make a mistake in the process, just press the red button on the left side of the drink machine. Be careful " +
-            "because all the already poured ingredients will be going to the trash!!!)");
-        txtDrink.Add("Tutorial : (Repeat the process to the other categories, and then press the green button on the left side of the drink machine to serve it.)");
-        txtDrink.Add("Tutorial : (Then, when you are ready to pour the ingredient onto the cup press the yellow button on the left side of the drink machine.)");
-        txtDrink.Add("Tutorial : (To make a drink, select the desired category and then choose the ingredient by clicking its respective icon.)");
-        txtDrink.Add("Tutorial : (In the top right corner of the machine, you’re able to select what category of what part of the drink you want to " +
-            "add. It should be made in a sweetener-base-topping order.)");
-        txtDrink.Add("Tutorial : (To make a drink, you’ll need to choose one sweetener/syrup, one base and one topping.)");
-
-        foreach (var txt in txtDrink)
-        {
-            Dialogue.InsertAtIndex(txt, Dialogue.lineIndex + 1);
-        }
-    }
 }
 
 [System.Serializable]
 public class Drink
 {
+    public const float drinkTaskTimer = 40f;
+
     public BaseFlavour baseFlavour;
     public TopFlavour topFlavour;
     public SyrupFlavour syrupFlavour;
@@ -510,7 +492,10 @@ public class Drink
     public int drinkNumberOfClient;
     public int dayOfTheDrink;
 
-    public Drink(BaseFlavour baseFlavour = BaseFlavour.None, TopFlavour topFlavour = TopFlavour.None, SyrupFlavour syrupFlavour = SyrupFlavour.None, string client = null, int drinkNumberOfClient = 0, int dayOfTheDrink = 0)
+    public string scndOrder;
+
+    public Drink(BaseFlavour baseFlavour = BaseFlavour.None, TopFlavour topFlavour = TopFlavour.None, SyrupFlavour syrupFlavour = SyrupFlavour.None,
+                string client = null, int drinkNumberOfClient = 0, int dayOfTheDrink = 0, string scndOrder = null)
     {
         this.baseFlavour = baseFlavour;
         this.topFlavour = topFlavour;
@@ -518,6 +503,7 @@ public class Drink
         this.client = client;
         this.drinkNumberOfClient = drinkNumberOfClient;
         this.dayOfTheDrink = dayOfTheDrink;
+        this.scndOrder = scndOrder;
     }
 
     public bool IsReady() => syrupFlavour != SyrupFlavour.None && topFlavour != TopFlavour.None && baseFlavour != BaseFlavour.None;

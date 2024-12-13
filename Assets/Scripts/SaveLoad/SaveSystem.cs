@@ -90,7 +90,7 @@ public class SaveSystem : MonoBehaviour
 
         // Collect drinks to serve
         saveData.mainDrinksToServe = DrinkManager.mainDrinksToServe;
-        saveData.secondariesDrinksToServe = DrinkManager.secondariesDrinksToServe;
+        saveData.secondariesDrinksToServe = ScndNPCs.secondariesDrinksToServe;
 
         // Collect characters data
         List<Character> saveCharactersData = Dialogue.characters
@@ -132,7 +132,7 @@ public class SaveSystem : MonoBehaviour
 
         // Load drinks to serve
         DrinkManager.mainDrinksToServe = saveData.mainDrinksToServe;
-        DrinkManager.secondariesDrinksToServe = saveData.secondariesDrinksToServe;
+        ScndNPCs.secondariesDrinksToServe = saveData.secondariesDrinksToServe;
 
         // Load characters data
         Dialogue.characters = saveData.characters;
@@ -172,14 +172,14 @@ public class SaveSystem : MonoBehaviour
 
         // Load drinks to serve
         DrinkManager.mainDrinksToServe = new();
-        DrinkManager.secondariesDrinksToServe = new();
+        ScndNPCs.secondariesDrinksToServe = new();
 
         // Load characters data
         Dialogue.characters = new() {
-        new Character(name: "ALYIA", hateMusicTxt: "\"Can you put another music plz, i don't really vibe with this one.\""),
-        new Character(name: "RONNIE", hateMusicTxt: "\"I hate this music, can you put another.\""),
-        new Character(name : "JASPER", hateMusicTxt: "\"Ca...c..can you change the music plz.\""),
-        new Character(name : "AMARA", hateMusicTxt: "\"With a song like that it would be better to have zero music.\"")
+        new Character(name: "ALYIA", patience: 2, hateMusicTxt: "\"Can you put another music plz, i don't really vibe with this one.\""),
+        new Character(name: "RONNIE", patience: 4,  hateMusicTxt: "\"I hate this music, can you put another.\""),
+        new Character(name : "JASPER", patience: 3,  hateMusicTxt: "\"Ca...c..can you change the music plz.\""),
+        new Character(name : "AMARA", patience : 5, hateMusicTxt: "\"With a song like that it would be better to have zero music.\"")
         };
         GameManager.LoadCharactersSprites();
 

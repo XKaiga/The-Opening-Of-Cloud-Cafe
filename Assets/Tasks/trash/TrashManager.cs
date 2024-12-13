@@ -1,14 +1,18 @@
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class TrashManager : MonoBehaviour
 {
-    [SerializeField] private Timer trashTimer;
+    public Timer trashTimer;
     [SerializeField] private TableManager tableManager;
 
+    [SerializeField] private List<GameObject> recicleBins;
     [SerializeField] private TrashDrag trash;
+    public static TrashType currTrashType = TrashType.Default;
     private Vector2 initTrashPos = new Vector2(-3.17f, -0.59f); 
     public static int trashMaxQty = 10;
-    public static int currTrashQty = 0;
+    [SerializeField] public static int currTrashQty = 0;
 
     public static int taskTimer = 10;
 
@@ -16,6 +20,9 @@ public class TrashManager : MonoBehaviour
     {
         initTrashPos = trash.transform.position;
         trash.gameObject.SetActive(false);
+
+        foreach (var bin in recicleBins)
+            bin.SetActive(TrashDrag.readyToRemoveTrash);
 
         ShowTrash(0);
     }
@@ -56,20 +63,26 @@ public class TrashManager : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (TableManager.inAnotherView)
+        Sprite defaultTrashSprite = Resources.Load<Sprite>("Trash/Lixo_Default");
+        if (trash.gameObject.GetComponent<SpriteRenderer>().sprite != defaultTrashSprite)
             return;
 
-        if (trashTimer.timerIsRunning)
-            Money.AddTaskScore();
-
-        TrashRemoved();
+        currTrashType = (TrashType)Random.Range(1, 4);
+        Sprite trashSprite = Resources.Load<Sprite>("Trash/Lixo_" + currTrashType);
+        trash.gameObject.GetComponent<SpriteRenderer>().sprite = trashSprite;
     }
 
-    private void TrashRemoved()
+    public void TrashRemoved()
     {
         currTrashQty = 0;
         trash.transform.position = initTrashPos;
+        Sprite defaultTrashSprite = Resources.Load<Sprite>("Trash/Lixo_Default");
+        trash.gameObject.GetComponent<SpriteRenderer>().sprite = defaultTrashSprite;
+        currTrashType = TrashType.Default;
         trash.gameObject.SetActive(false);
+
+        foreach (var bin in recicleBins)
+            bin.SetActive(false);
 
         TrashDrag.readyToRemoveTrash = false;
 
@@ -77,4 +90,12 @@ public class TrashManager : MonoBehaviour
 
         tableManager.RemoveTrashTimer();
     }
+}
+
+public enum TrashType
+{
+    Default,
+    Vidro,
+    Plastico,
+    Cartao
 }

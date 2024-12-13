@@ -84,6 +84,8 @@ public class EndGameManager : MonoBehaviour
            image.color = new Color(currentColor.r, currentColor.g, currentColor.b, newAlpha);
             yield return null;
         }
+        points.SetActive(false);
+        ending.SetActive(false);
     }
 
     public static void DeactivateAllButtons()

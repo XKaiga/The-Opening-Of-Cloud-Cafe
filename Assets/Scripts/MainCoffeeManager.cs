@@ -1,12 +1,18 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using TMPro;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class MainCoffeeManager : MonoBehaviour
 {
+    [SerializeField] private Dialogue dialogue;
+
     [SerializeField] private TextMeshProUGUI namePanelTxt;
     [SerializeField] private TextMeshProUGUI dialoguePanelTxt;
 
@@ -26,14 +32,6 @@ public class MainCoffeeManager : MonoBehaviour
 
     public static List<Task> activeTasks = new();
     private static List<GameObject> activeTasksGameObjs = new();
-
-    private const float resetSpawnNPCTimerMin = 150;
-    private const float resetSpawnNPCTimerMax = 300;
-    private const float npcTaskTimerMin = 25;
-    private const float npcTaskTimerMax = 40;
-    private static float spawnNPCTimerSec;
-    private static bool npcExists = false;
-    private static bool npcSpawnTimerStarted = false;
 
     private void Start()
     {
@@ -67,35 +65,126 @@ public class MainCoffeeManager : MonoBehaviour
         //UpdateShowNpcTimer();
     }
 
-    private void UpdateShowNpcTimer()
+    public static void LoadSecndNpcsDrinks()
     {
-        if (!npcExists)
-        {
-            if (!npcSpawnTimerStarted)
-            {
-                spawnNPCTimerSec = Random.Range(resetSpawnNPCTimerMin, resetSpawnNPCTimerMax);
-                npcSpawnTimerStarted = true;
-            }
-            else
-            {
-                if (spawnNPCTimerSec > 0)
-                    spawnNPCTimerSec -= Time.deltaTime;
-                else
-                {
-                    //!!!todo spawn npc
-                    npcExists = true;
-                    npcSpawnTimerStarted = false;
-                }
-            }
-        }
+        int[] indices = CalculateIndices();
+        Array.Sort(indices, (a, b) => b.CompareTo(a));
+
+        foreach (var index in indices)
+            Dialogue.InsertAtIndex("(DRINK_NPC)", index);
     }
 
-    private void UpdateTasks()
+    public static int[] CalculateIndices()
+    {
+        if (GameManager.startDayNum < 1 || Dialogue.lines == null || Dialogue.lines.Length == 0)
+            throw new ArgumentException("Invalid level number or lines array");
+
+        int linesCount = Dialogue.lines.Length;
+
+        int minIndicesCount = (int)(linesCount / 200.0f * (2f + GameManager.startDayNum));
+        int maxIndicesCount = (int)(linesCount / 200.0f * (5f + GameManager.startDayNum));
+        int indicesCount = Random.Range(minIndicesCount, maxIndicesCount + 1);
+        List<int> indices = new();
+
+        int startBound = (int)(linesCount / 10f);
+        int endBound = linesCount - startBound;
+        int middleIndex = (int)(linesCount / 2f);
+
+        int possibilities = (int)(linesCount - startBound * 2f);
+
+        int spaceLeft = (int)(possibilities / (indicesCount - 1f));
+        int spaceRand = (int)(spaceLeft / indicesCount);
+
+        int firstIndexRand = (spaceLeft > middleIndex - startBound) ? spaceRand : spaceLeft;
+        int firstIndex = (int)(middleIndex + Random.Range(-firstIndexRand, firstIndexRand + 1));
+        indices.Add(firstIndex);
+
+        while (indices.Count < indicesCount)
+        {
+            bool valid = true;
+
+            // Check the space between the first index and the startBound
+            int maxSpaceStart = startBound;
+            int maxSpaceEnd = indices[0];
+            int maxSpaceSize = maxSpaceEnd - maxSpaceStart;
+
+            // Find the largest space between indices
+            for (int i = 0; i < indices.Count - 1; i++)
+            {
+                int currentSpaceStart = indices[i];
+                int currentSpaceEnd = indices[i + 1];
+                int currentSpaceSize = currentSpaceEnd - currentSpaceStart;
+
+                if (currentSpaceSize > maxSpaceSize)
+                {
+                    maxSpaceStart = currentSpaceStart;
+                    maxSpaceSize = currentSpaceSize;
+                }
+            }
+
+            // Check the space between the last index and the endBound
+            int endSpaceStart = indices[indices.Count - 1];
+            int endSpaceEnd = endBound;
+            int endSpaceSize = endSpaceEnd - endSpaceStart;
+
+            if (endSpaceSize > maxSpaceSize)
+            {
+                maxSpaceStart = endSpaceStart;
+                maxSpaceSize = endSpaceSize;
+            }
+
+            int middle = maxSpaceStart + maxSpaceSize / 2;
+            int randomOffset = Random.Range(-spaceRand, spaceRand + 1);
+            int newIndex = Mathf.Clamp(middle + randomOffset, startBound, endBound - 1);
+
+            bool boundReached = false;
+            while (Dialogue.lines[newIndex].Contains(")"))
+            {
+                if (newIndex == startBound || newIndex == endBound - 1)
+                {
+                    if (boundReached)
+                    {
+                        valid = false;
+                        indicesCount = indices.Count;
+                        break;
+                    }
+                    boundReached = true;
+                }
+                if (boundReached)
+                    newIndex *= -1;
+
+                if (GameManager.startDayNum == 1)
+                    newIndex++;
+                else
+                    newIndex--;
+
+                if (newIndex < 0)
+                    newIndex *= -1;
+
+                newIndex = Mathf.Clamp(newIndex, startBound, endBound - 1);
+            }
+
+            // Add the new index to the list
+            if (valid)
+            {
+                indices.Add(newIndex);
+                indices.Sort();
+            }
+
+        }
+
+        return indices.ToArray();
+    }
+
+    public void UpdateTasks()
     {
         if (TrashDrag.readyToRemoveTrash)
             CreateNewTask(activeTasksGameObjs.Count, "Take out the trash", TaskType.Trash, TrashManager.taskTimer);
         if (!CleanManager.clean)
             CreateNewTask(activeTasksGameObjs.Count, "Clean Table!", TaskType.Clean, CleanManager.taskTimer);
+        if (ScndNPCs.secndClientWaiting)
+            foreach (var client in ScndNPCs.secondariesDrinksToServe)
+                CreateNewTask(activeTasksGameObjs.Count, $"Client {client.drinkNumberOfClient} Waiting!", TaskType.NPCOrder, Drink.drinkTaskTimer);
 
         var openImg = tasksOpenMenuBtn.GetComponent<RawImage>();
         var closeImg = tasksCloseMenuBtn.GetComponent<RawImage>();
@@ -141,8 +230,28 @@ public class MainCoffeeManager : MonoBehaviour
 
         if (!ContainsTaskWithType(taskType))
             activeTasks.Add(new Task(timerSec, taskType));
-        else
+        else if (taskType != TaskType.NPCOrder)
             timerSec = activeTasks.First(task => task.type == taskType).timer;
+        else
+        {
+            //get current number
+            Match currMatch = Regex.Match(taskName, @"\d+");
+            int currTaskNum = -1;
+            if (currMatch.Success)
+                currTaskNum = int.Parse(currMatch.Value);
+
+            if (!currMatch.Success || currTaskNum == -1)
+                return;
+
+            List<Task> drinkTasks = activeTasks.FindAll(task => task.type == taskType);
+            int currIndex = ScndNPCs.secondariesDrinksToServe.FindIndex(d => d.drinkNumberOfClient == currTaskNum);
+            bool alreadyExists = currIndex < drinkTasks.Count();
+
+            if (alreadyExists)
+                timerSec = drinkTasks[currIndex].timer;
+            else
+                activeTasks.Add(new Task(timerSec, taskType));
+        }
 
         taskTimer.timeRemaining = timerSec;
 
@@ -154,7 +263,10 @@ public class MainCoffeeManager : MonoBehaviour
         if (!activeTasks.Any(task => task.type == taskType))
             return;
 
-        Task taskInfo = activeTasks.Find(task => task.type == taskType);
+        Task taskInfo = activeTasks.FirstOrDefault(task => task.type == taskType);
+        if (taskInfo == null)
+            return;
+
         activeTasks.Remove(taskInfo);
 
         switch (taskType)
@@ -226,7 +338,7 @@ public class MainCoffeeManager : MonoBehaviour
         if (Dialogue.isMusicDoneVar == false)
         {
             Dialogue.isMusicDoneVar = true;
-            Dialogue.LoadMusicTutorial();
+            dialogue.LoadMusicTutorial();
         }
 
         RawImage upgOpenMenuBtnImg = upgOpenMenuBtn.GetComponent<RawImage>();
