@@ -184,7 +184,7 @@ public class SaveSystem : MonoBehaviour
         GameManager.LoadCharactersSprites();
 
         // Load the current line index
-        Dialogue.lineIndex = 183;
+        Dialogue.lineIndex = 0;
     }
 
     private static string GetSaveFilePath(int slotNumber)

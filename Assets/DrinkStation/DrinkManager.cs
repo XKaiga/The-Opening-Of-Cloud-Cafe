@@ -22,11 +22,13 @@ public class DrinkManager : MonoBehaviour
     [SerializeField] private GameObject GOSyrups;
     [SerializeField] private GameObject GOBase;
     [SerializeField] private GameObject GOToppings;
+
     [SerializeField] private GameObject flavoursInfo;
+    [SerializeField] private GameObject cartPanel;
 
     [SerializeField] private GameObject GOQuantitiesParent;
     [SerializeField] private GameObject GOPricesParent;
-    private IngredientType currTabType = IngredientType.Syrup;
+    private IngredientType currTabType = IngredientType.Syrups;
 
     private static Drink drinkServing = new();
 
@@ -45,6 +47,7 @@ public class DrinkManager : MonoBehaviour
     public static bool isDrinkTutorialDone = false;
     private void Start()
     {
+        Money.playerMoney = 100;
         TrashDrink();
 
         flavoursInfo.SetActive(false);
@@ -90,7 +93,7 @@ public class DrinkManager : MonoBehaviour
                 if (colliderName.Contains("syrups"))
                 {
                     GOSyrups.SetActive(true);
-                    currTabType = IngredientType.Syrup;
+                    currTabType = IngredientType.Syrups;
                 }
                 else if (colliderName.Contains("base"))
                 {
@@ -159,47 +162,13 @@ public class DrinkManager : MonoBehaviour
                 if (ingredientsFromCurrType.Count > 0)
                 {
                     //!!!vfx: animation of ingredient going to the cart
-                    Money.ingredientsToBuy.Add(ingredientsFromCurrType[posNumber]);
+                    CartManager.ingredientsToBuy.Add(ingredientsFromCurrType[posNumber]);
                 }
             }
             else
             {
-                if (Money.ingredientsToBuy.Count <= 0)
-                    return;
-
-                float totalCost = 0f;
-                List<Ingredient> ingrdsChecked = new();
-                List<int> qtyBuyingIngrdsChecked = new();
-                foreach (var ingrd in Money.ingredientsToBuy)
-                {
-                    if (!ingrdsChecked.Contains(ingrd))
-                    {
-                        int qtyBuying = Money.ingredientsToBuy.Count(ingrdToBuy => ingrdToBuy == ingrd);
-                        if (ingrd.currQty + qtyBuying > ingrd.maxQty)
-                            continue;
-
-                        totalCost += ingrd.price;
-                        ingrdsChecked.Add(ingrd);
-                        qtyBuyingIngrdsChecked.Add(qtyBuying);
-                    }
-                }
-
-                if (Money.playerMoney < totalCost)
-                {
-                    //!!!vfx: red warning in the cart btn
-                    return;
-                }
-                Money.playerMoney -= totalCost;
-
-                foreach (var ingrd in ingrdsChecked)
-                {
-                    int qtyBuying = qtyBuyingIngrdsChecked[ingrdsChecked.IndexOf(ingrd)];
-                    ingrd.currQty += qtyBuying;
-                }
-
-                UpdateIngredientsInfo();
-
-                Money.ingredientsToBuy.Clear();
+                cartPanel.SetActive(true);
+                GODrinkMachine.SetActive(false);
             }
             return;
         }
@@ -213,11 +182,34 @@ public class DrinkManager : MonoBehaviour
                 bool flavourClicked = flavourBtn.parent.name.ToLower().Contains("flavours");
                 if (flavourClicked && !drinkServing.IsReady())
                 {
-                    Sprite flavourSprite = Resources.Load<Sprite>("drinkMachine/Ingredients/" + colliderParent.name.ToLower() + "/" + colliderName.ToLower());
+                    Sprite flavourSprite = Ingredient.FindIngrdSprite(colliderParent.name.ToLower(), colliderName.ToLower());
                     GODrinkScreen.GetComponent<SpriteRenderer>().sprite = flavourSprite;
                     return;
                 }
             }
+        }
+    }
+
+    public void UpdateIngredientsInfo()
+    {
+        List<Ingredient> ingredientsFromCurrType = Ingredient.ingredientsList.FindAll(ingrd => ingrd.ingrdType == currTabType);
+
+        int i = 0;
+        foreach (Transform TransQuantitie in GOQuantitiesParent.transform)
+        {
+            GameObject GOQuantitie = TransQuantitie.gameObject;
+            TextMeshPro QtyText = GOQuantitie.GetComponent<TextMeshPro>();
+            QtyText.text = ingredientsFromCurrType[i].currQty + "/" + ingredientsFromCurrType[i].maxQty;
+            i++;
+        }
+
+        i = 0;
+        foreach (Transform TransPrices in GOPricesParent.transform)
+        {
+            GameObject GOPrice = TransPrices.gameObject;
+            TextMeshPro PriceText = GOPrice.GetComponent<TextMeshPro>();
+            PriceText.text = ingredientsFromCurrType[i].price + "€";
+            i++;
         }
     }
 
@@ -251,29 +243,6 @@ public class DrinkManager : MonoBehaviour
         GOCupBase.GetComponent<SpriteRenderer>().sprite = null;
         GameObject GOCupTopp = GameObject.Find("cup" + "Toppings");
         GOCupTopp.GetComponent<SpriteRenderer>().sprite = null;
-    }
-
-    private void UpdateIngredientsInfo()
-    {
-        List<Ingredient> ingredientsFromCurrType = Ingredient.ingredientsList.FindAll(ingrd => ingrd.ingrdType == currTabType);
-
-        int i = 0;
-        foreach (Transform TransQuantitie in GOQuantitiesParent.transform)
-        {
-            GameObject GOQuantitie = TransQuantitie.gameObject;
-            TextMeshPro QtyText = GOQuantitie.GetComponent<TextMeshPro>();
-            QtyText.text = ingredientsFromCurrType[i].currQty + "/" + ingredientsFromCurrType[i].maxQty;
-            i++;
-        }
-
-        i = 0;
-        foreach (Transform TransPrices in GOPricesParent.transform)
-        {
-            GameObject GOPrice = TransPrices.gameObject;
-            TextMeshPro PriceText = GOPrice.GetComponent<TextMeshPro>();
-            PriceText.text = ingredientsFromCurrType[i].price + "€";
-            i++;
-        }
     }
 
     public static bool AddFlavour(string flavour, Drink drink = null)

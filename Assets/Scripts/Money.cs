@@ -10,8 +10,6 @@ public static class Money
 
     public static float tipModifier = 0f;
 
-    public static List<Ingredient> ingredientsToBuy = new();
-
     public static void ReceiveTip(int drinkScore, bool npcSecundario, TextMeshProUGUI tipText)
     {
         float tip = npcSecundario ? drinkScore * 0.05f + drinkScore * tipModifier : drinkScore * (0.1f + tipModifier);

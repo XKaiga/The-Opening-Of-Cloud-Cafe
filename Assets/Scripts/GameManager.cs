@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
     {
         List<String> ingredientsNameList = new() { "Caramel", "Sugar", "Strawberry", "Honey", "Vanilla", "Chocolate", //syrup
                                                     "Robusta", "Excelsa", "Tea", "Abisca", "Liberica", "Decaf", //base
-                                                    "Water", "ColdMilk", "VIC", "Foam", "HotMilk", "Chantilly"}; //toppings
+                                                    "Water", "VIC", "Foam", "HotMilk", "Chantilly", "ColdMilk"}; //toppings
 
         for (int i = 0; i < ingredientsNameList.Count; i++)
         {
@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
             
             IngredientType ingredientType;
             if (i < 6)
-                ingredientType = IngredientType.Syrup;
+                ingredientType = IngredientType.Syrups;
             else if (i < 12)
                 ingredientType = IngredientType.Base;
             else
