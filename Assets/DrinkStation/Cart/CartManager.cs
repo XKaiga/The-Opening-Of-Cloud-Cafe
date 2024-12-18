@@ -142,16 +142,11 @@ public class CartManager : MonoBehaviour
 
     public void ClearCart(bool clearList)
     {
-        if (ingredientsToBuy.Count != -1)
-        {
-            foreach (Transform trans in contentPanel)
-                Destroy(trans.gameObject);
+        foreach (Transform trans in contentPanel)
+            Destroy(trans.gameObject);
 
-            if (clearList)
-                ingredientsToBuy.Clear();
-        }
-        else
-            CloseCart();
+        if (clearList)
+            ingredientsToBuy.Clear();
     }
 
     public void CloseCart()

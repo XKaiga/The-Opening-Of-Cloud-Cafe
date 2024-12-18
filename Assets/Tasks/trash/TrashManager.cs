@@ -14,7 +14,7 @@ public class TrashManager : MonoBehaviour
     public static int trashMaxQty = 10;
     [SerializeField] public static int currTrashQty = 0;
 
-    public static int taskTimer = 10;
+    public static int taskTimer = 23;
 
     private void Start()
     {

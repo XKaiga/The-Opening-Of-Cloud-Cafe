@@ -9,11 +9,13 @@ public class TrashDrag : MonoBehaviour
 
     private Vector3 offset;
     private Camera mainCamera;
+    private Rigidbody2D rb;
     public AudioClip soundEffect;
 
     private void Start()
     {
         mainCamera = Camera.main;
+        rb = GetComponent<Rigidbody2D>();
     }
 
     void OnMouseDown()
@@ -64,7 +66,8 @@ public class TrashDrag : MonoBehaviour
             }
 
             Vector3 mousePosition = GetMouseWorldPosition();
-            transform.position = mousePosition + offset;
+            Vector3 targetPosition = mousePosition + offset;
+            rb.MovePosition(targetPosition);
 
             if (!isSoundPlaying)
             {
