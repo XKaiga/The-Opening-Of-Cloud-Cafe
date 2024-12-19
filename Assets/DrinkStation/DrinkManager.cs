@@ -75,6 +75,10 @@ public class DrinkManager : MonoBehaviour
                 {
                     Dialogue.pauseBetweenSkips = 0.2f;
                     Dialogue.skip = false;
+                    
+                    Dialogue.nameTxtTemp = Dialogue.nameTxt;
+                    Dialogue.dialogueTxtTemp = Dialogue.dialogueTxt;
+
                     Dialogue.nameTxt = namePanelTxt.text;
                     Dialogue.dialogueTxt = dialoguePanelTxt.text;
 
@@ -438,7 +442,7 @@ public class DrinkManager : MonoBehaviour
         if (ScndNPCs.secndClientWaiting)
             Dialogue.lineIndex++;
 
-        int num = UnityEngine.Random.Range(0, 3); //1 in 3 chance
+        int num = UnityEngine.Random.Range(0, 3); //1 in 3 chance to be clean
         CleanManager.clean = num == 0;
     }
 

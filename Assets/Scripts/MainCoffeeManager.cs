@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using TMPro;
 using Unity.VisualScripting.Antlr3.Runtime.Tree;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -524,6 +525,9 @@ public class MainCoffeeManager : MonoBehaviour
             //!!! juntar a função LoadDrinkStationScene e LoadTablesScene, para fazer o -- e recebendo uma string ou enum com o nome das scenes mudar para essa tal
             Dialogue.skip = true;
             Dialogue.pauseBetweenSkips = -2f;
+
+            Dialogue.nameTxtTemp = Dialogue.nameTxt;
+            Dialogue.dialogueTxtTemp = Dialogue.dialogueTxt;
 
             Dialogue.nameTxt = namePanelTxt.text;
             Dialogue.dialogueTxt = dialoguePanelTxt.text;

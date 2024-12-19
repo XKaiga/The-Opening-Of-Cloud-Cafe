@@ -40,11 +40,14 @@ public class Dialogue : MonoBehaviour
 
     [SerializeField] private float textSpeed;
     [SerializeField] private TextMeshProUGUI namePanelTxt;
-    public static string nameTxt = string.Empty;
-    [SerializeField] private TextMeshProUGUI dialoguePanelTxt;
-    public static string dialogueTxt = string.Empty;
     public static string lineName;
+    public static string nameTxt = string.Empty;
+    public static string nameTxtTemp = string.Empty;
+
+    [SerializeField] private TextMeshProUGUI dialoguePanelTxt;
     public static string lineDialogue;
+    public static string dialogueTxt = string.Empty;
+    public static string dialogueTxtTemp = string.Empty;
 
     private string filePath;
     private static int fileDayNumRead = -1;
@@ -87,6 +90,12 @@ public class Dialogue : MonoBehaviour
 
         namePanelTxt.text = nameTxt;
         dialoguePanelTxt.text = dialogueTxt;
+
+        nameTxt = nameTxtTemp;
+        dialogueTxt = dialogueTxtTemp;
+
+        nameTxtTemp = string.Empty;
+        dialogueTxtTemp = string.Empty;
 
         if (lineIndex > -1)
             lineIndex--;
@@ -303,7 +312,7 @@ public class Dialogue : MonoBehaviour
         int startIndex = line.Contains(panelTxt.text) ? panelTxt.text.Length : 0;
         for (int i = startIndex; i < line.Length; i++)
         {
-            currentTxt = isNamePanel ? (nameTxt += line[i]) : (dialogueTxt += line[i]);
+            currentTxt = isNamePanel ? (nameTxt = line.Substring(0, i + 1)) : (dialogueTxt = line.Substring(0, i + 1));
             panelTxt.text = currentTxt;
 
             if (hasItalic)
@@ -315,7 +324,7 @@ public class Dialogue : MonoBehaviour
                         while (textFormats[j].Contains(line[i + 1]))
                         {
                             i++;
-                            currentTxt = isNamePanel ? (nameTxt += line[i]) : (dialogueTxt += line[i]);
+                            currentTxt = isNamePanel ? (nameTxt = line.Substring(0, i + 1)) : (dialogueTxt = line.Substring(0, i + 1));
                             panelTxt.text = currentTxt;
                             if (line[i] == '>')
                                 break;
@@ -377,10 +386,6 @@ public class Dialogue : MonoBehaviour
         {
             namePanelTxt.text = nameTxt;
             dialoguePanelTxt.text = dialogueTxt;
-        }
-        if (namePanelTxt.text == nameTxt)
-        {
-            namePanelTxt.text = nameTxt = "";
         }
 
         IdentifyAndExecuteTypeOfText(line);
