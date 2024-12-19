@@ -60,6 +60,8 @@ public class Dialogue : MonoBehaviour
 
     private void Start()
     {
+        CleanManager.clean = false;//!!! remove this
+
         UpdateCharacters();
 
         if (fileDayNumRead != GameManager.startDayNum)
