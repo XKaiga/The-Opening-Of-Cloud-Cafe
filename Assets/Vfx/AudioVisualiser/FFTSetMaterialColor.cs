@@ -14,8 +14,6 @@ public class FFTSetMaterialColor : MonoBehaviour
 
     MeshRenderer _MeshRenderer;
 
-    public static float bigger = 0;
-
     private void Start()
     {
         _MeshRenderer = GetComponent<MeshRenderer>();
@@ -23,16 +21,12 @@ public class FFTSetMaterialColor : MonoBehaviour
 
     void Update()
     {
+        // calculate strength based on the frequency
         float bandValue = _FFT.GetBandValue(_FrequencyBandIndex, _FreqBands);
         float strength = (bandValue + 0.001f) * _StrengthScalar;
-        if (strength > bigger)
-        {
-            bigger = strength;
-            Debug.Log(bigger);
-        }
-        //_MeshRenderer.material.SetColor(_ColorName, _Col * strength); 
-        
-        _MeshRenderer.material.SetFloat("_Strength", strength); // Send strength to shader
-        _MeshRenderer.material.SetColor("_BaseColor", _Col);    // Update base color if needed
+
+        // Send strength and color to shader
+        _MeshRenderer.material.SetFloat("_Strength", strength);
+        _MeshRenderer.material.SetColor("_BaseColor", _Col);
     }
 }

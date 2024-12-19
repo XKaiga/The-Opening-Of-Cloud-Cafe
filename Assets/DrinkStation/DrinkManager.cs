@@ -1,10 +1,12 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class DrinkManager : MonoBehaviour
@@ -14,6 +16,8 @@ public class DrinkManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI dialoguePanelTxt;
 
     [SerializeField] private Dialogue dialogueManager;
+
+    [SerializeField] private Timer drinkTimer;
 
     [SerializeField] private GameObject GODrinkMachine;
     [SerializeField] private GameObject GODrinkScreen;
@@ -42,12 +46,20 @@ public class DrinkManager : MonoBehaviour
     private void Awake()
     {
         mainCam = Camera.main;
+
+        if (ScndNPCs.secndClientWaiting)
+        {
+            float drinkStartTime = MainCoffeeManager.activeTasks.Where(t => t.type == TaskType.NPCOrder) // Filter tasks of type NPCOrder
+                                                                .Select(t => t.timer)                   // Select the timer values
+                                                                .DefaultIfEmpty(Drink.drinkTaskTimer)         // Provide a default value if no tasks are found
+                                                                .Min();                                 // Get the smallest timer value
+            drinkTimer.StartTimer(drinkStartTime);
+        }
     }
 
     public static bool isDrinkTutorialDone = false;
     private void Start()
     {
-        Money.playerMoney = 100;
         TrashDrink();
 
         flavoursInfo.SetActive(false);
@@ -56,6 +68,34 @@ public class DrinkManager : MonoBehaviour
 
         UpdateIngredientsInfo();
     }
+
+    private void Update()
+    {
+        if (ScndNPCs.secndClientWaiting && !drinkTimer.timerIsRunning)
+        {
+            MainCoffeeManager.RemoveTask(TaskType.NPCOrder);
+            ScndNPCs.secondariesDrinksToServe.Remove(ScndNPCs.secondariesDrinksToServe[0]);
+
+            StartCoroutine(StartAnotherDrinkTimer());
+        }
+    }
+
+    private IEnumerator StartAnotherDrinkTimer()
+    {
+        // Wait for 3 seconds
+        yield return new WaitForSeconds(3);
+
+        // Does after waiting
+        if (ScndNPCs.secndClientWaiting)
+        {
+            float drinkStartTime = MainCoffeeManager.activeTasks.Where(t => t.type == TaskType.NPCOrder) // Filter tasks of type NPCOrder
+                                                                .Select(t => t.timer)                   // Select the timer values
+                                                                .DefaultIfEmpty(Drink.drinkTaskTimer)         // Provide a default value if no tasks are found
+                                                                .Min();                                 // Get the smallest timer value
+            drinkTimer.StartTimer(drinkStartTime);
+        }
+    }
+
 
     public void OnClick(InputAction.CallbackContext context)
     {
@@ -75,12 +115,23 @@ public class DrinkManager : MonoBehaviour
                 {
                     Dialogue.pauseBetweenSkips = 0.2f;
                     Dialogue.skip = false;
-                    
+
                     Dialogue.nameTxtTemp = Dialogue.nameTxt;
                     Dialogue.dialogueTxtTemp = Dialogue.dialogueTxt;
 
                     Dialogue.nameTxt = namePanelTxt.text;
                     Dialogue.dialogueTxt = dialoguePanelTxt.text;
+
+                    if (ScndNPCs.secndClientWaiting)
+                    {
+                        Task drinkTaskFound = MainCoffeeManager.activeTasks.Find(task => drinkTimer.gameObject.name.ToLower().Contains(task.type.ToString().ToLower()));
+                        Text drinkTimerTxt = drinkTimer.gameObject.GetComponentInChildren<Text>();
+                        if (drinkTaskFound != null)
+                            if (drinkTimerTxt.isActiveAndEnabled)
+                                drinkTaskFound.timer = float.Parse(drinkTimerTxt.text);
+                            else
+                                Debug.Log("drink task error");
+                    }
 
                     SceneManager.LoadScene("Dialogue");
                 }
@@ -426,12 +477,17 @@ public class DrinkManager : MonoBehaviour
 
         if (ScndNPCs.secndClientWaiting)
         {
-            ScndNPCs.secondariesDrinksToServe.Remove(correctOrder);
-            //ScndNPCs.secondariesDrinks.Remove(correctOrder);
-
-            MainCoffeeManager.RemoveTask(TaskType.NPCOrder);
+            if (drinkTimer.timerIsRunning)
+            {
+                drinkTimer.StopTimer(drinkTimer.timeRemaining);
+                
+                ScndNPCs.secondariesDrinksToServe.Remove(correctOrder);
+                //ScndNPCs.secondariesDrinks.Remove(correctOrder);
+                
+                Money.AddTaskScore();
+            }
         }
-        else
+        else if (mainClientWaiting)
         {
             mainDrinksToServe.Remove(correctOrder);
             mainDrinks.Remove(correctOrder);

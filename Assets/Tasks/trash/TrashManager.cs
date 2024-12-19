@@ -10,7 +10,8 @@ public class TrashManager : MonoBehaviour
     [SerializeField] private List<GameObject> recicleBins;
     [SerializeField] private TrashDrag trash;
     public static TrashType currTrashType = TrashType.Default;
-    private Vector2 initTrashPos = new Vector2(-3.17f, -0.59f); 
+    private Vector2 initTrashPos;
+    private const float finalTrashYPos = -0.2f;
     public static int trashMaxQty = 10;
     [SerializeField] public static int currTrashQty = 0;
 
@@ -18,7 +19,7 @@ public class TrashManager : MonoBehaviour
 
     private void Start()
     {
-        initTrashPos = trash.transform.position;
+        initTrashPos = trash.transform.localPosition;
         trash.gameObject.SetActive(false);
 
         foreach (var bin in recicleBins)
@@ -51,13 +52,13 @@ public class TrashManager : MonoBehaviour
         {
             trash.gameObject.SetActive(true);
 
-            float qtyOfTrashShowing = currTrashQty - showLimit;
+            float value = currTrashQty - showLimit;
+            float maxValue = trashMaxQty - showLimit;
 
-            float qtyNeededToMoveOne = (float)(trashMaxQty - showLimit) / 5;
+            float proportion = value / maxValue;
+            float newYPos = initTrashPos.y + proportion * (finalTrashYPos - initTrashPos.y);
 
-            float needToMove = qtyOfTrashShowing / qtyNeededToMoveOne;
-
-            trash.transform.position = new Vector3(trash.transform.position.x, trash.transform.position.y + needToMove / 10, trash.transform.position.z);
+            trash.transform.localPosition = new Vector3(initTrashPos.x, newYPos, trash.transform.position.z);
         }
     }
 

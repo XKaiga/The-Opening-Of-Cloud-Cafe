@@ -53,7 +53,7 @@ public class TableManager : MonoBehaviour
         if (CleanManager.clean)
             return;
 
-        int rndTable = Random.Range(0, 2);
+        int rndTable = Random.Range(0, 3);
         switch (rndTable)
         {
             case 0:
@@ -104,7 +104,6 @@ public class TableManager : MonoBehaviour
                             trashTaskFound.timer = float.Parse(trashTimerTxt.text);
                         else
                             Debug.Log("trash error");
-                    trashTaskFound.timer = float.Parse(trashTimerTxt.text);
                 }
 
                 inAnotherView = true;
