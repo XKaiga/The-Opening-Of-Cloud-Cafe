@@ -22,21 +22,19 @@ public class DrinkManager : MonoBehaviour
     [SerializeField] private GameObject GOSyrups;
     [SerializeField] private GameObject GOBase;
     [SerializeField] private GameObject GOToppings;
+
     [SerializeField] private GameObject flavoursInfo;
+    [SerializeField] private GameObject cartPanel;
 
     [SerializeField] private GameObject GOQuantitiesParent;
     [SerializeField] private GameObject GOPricesParent;
-    private IngredientType currTabType = IngredientType.Syrup;
+    private IngredientType currTabType = IngredientType.Syrups;
 
     private static Drink drinkServing = new();
 
     public static List<Drink> mainDrinks = new() { };
     public static List<Drink> mainDrinksToServe = new();
     public static bool mainClientWaiting => mainDrinksToServe.Count != 0;
-
-    public static List<Drink> secondariesDrinks = new() { }; //!!!: strings with the text to write and to convert to drinks? or drinks and general text/s ?
-    public static List<Drink> secondariesDrinksToServe = new();
-    public static bool secndClientWaiting => secondariesDrinksToServe.Count != 0;
 
     public TextMeshProUGUI tipText;
     private bool tipShowing = false;
@@ -49,6 +47,7 @@ public class DrinkManager : MonoBehaviour
     public static bool isDrinkTutorialDone = false;
     private void Start()
     {
+        Money.playerMoney = 100;
         TrashDrink();
 
         flavoursInfo.SetActive(false);
@@ -76,6 +75,10 @@ public class DrinkManager : MonoBehaviour
                 {
                     Dialogue.pauseBetweenSkips = 0.2f;
                     Dialogue.skip = false;
+                    
+                    Dialogue.nameTxtTemp = Dialogue.nameTxt;
+                    Dialogue.dialogueTxtTemp = Dialogue.dialogueTxt;
+
                     Dialogue.nameTxt = namePanelTxt.text;
                     Dialogue.dialogueTxt = dialoguePanelTxt.text;
 
@@ -94,7 +97,7 @@ public class DrinkManager : MonoBehaviour
                 if (colliderName.Contains("syrups"))
                 {
                     GOSyrups.SetActive(true);
-                    currTabType = IngredientType.Syrup;
+                    currTabType = IngredientType.Syrups;
                 }
                 else if (colliderName.Contains("base"))
                 {
@@ -136,7 +139,7 @@ public class DrinkManager : MonoBehaviour
 
             else if (colliderName.Contains("serve"))
             {
-                bool anyoneWaiting = mainClientWaiting || secndClientWaiting;
+                bool anyoneWaiting = mainClientWaiting || ScndNPCs.secndClientWaiting;
                 if (anyoneWaiting && drinkServing.IsReady())
                 {
                     Serve();
@@ -163,47 +166,13 @@ public class DrinkManager : MonoBehaviour
                 if (ingredientsFromCurrType.Count > 0)
                 {
                     //!!!vfx: animation of ingredient going to the cart
-                    Money.ingredientsToBuy.Add(ingredientsFromCurrType[posNumber]);
+                    CartManager.ingredientsToBuy.Add(ingredientsFromCurrType[posNumber]);
                 }
             }
             else
             {
-                if (Money.ingredientsToBuy.Count <= 0)
-                    return;
-
-                float totalCost = 0f;
-                List<Ingredient> ingrdsChecked = new();
-                List<int> qtyBuyingIngrdsChecked = new();
-                foreach (var ingrd in Money.ingredientsToBuy)
-                {
-                    if (!ingrdsChecked.Contains(ingrd))
-                    {
-                        int qtyBuying = Money.ingredientsToBuy.Count(ingrdToBuy => ingrdToBuy == ingrd);
-                        if (ingrd.currQty + qtyBuying > ingrd.maxQty)
-                            continue;
-
-                        totalCost += ingrd.price;
-                        ingrdsChecked.Add(ingrd);
-                        qtyBuyingIngrdsChecked.Add(qtyBuying);
-                    }
-                }
-
-                if (Money.playerMoney < totalCost)
-                {
-                    //!!!vfx: red warning in the cart btn
-                    return;
-                }
-                Money.playerMoney -= totalCost;
-
-                foreach (var ingrd in ingrdsChecked)
-                {
-                    int qtyBuying = qtyBuyingIngrdsChecked[ingrdsChecked.IndexOf(ingrd)];
-                    ingrd.currQty += qtyBuying;
-                }
-
-                UpdateIngredientsInfo();
-
-                Money.ingredientsToBuy.Clear();
+                cartPanel.SetActive(true);
+                GODrinkMachine.SetActive(false);
             }
             return;
         }
@@ -217,11 +186,34 @@ public class DrinkManager : MonoBehaviour
                 bool flavourClicked = flavourBtn.parent.name.ToLower().Contains("flavours");
                 if (flavourClicked && !drinkServing.IsReady())
                 {
-                    Sprite flavourSprite = Resources.Load<Sprite>("drinkMachine/Ingredients/" + colliderParent.name.ToLower() + "/" + colliderName.ToLower());
+                    Sprite flavourSprite = Ingredient.FindIngrdSprite(colliderParent.name.ToLower(), colliderName.ToLower());
                     GODrinkScreen.GetComponent<SpriteRenderer>().sprite = flavourSprite;
                     return;
                 }
             }
+        }
+    }
+
+    public void UpdateIngredientsInfo()
+    {
+        List<Ingredient> ingredientsFromCurrType = Ingredient.ingredientsList.FindAll(ingrd => ingrd.ingrdType == currTabType);
+
+        int i = 0;
+        foreach (Transform TransQuantitie in GOQuantitiesParent.transform)
+        {
+            GameObject GOQuantitie = TransQuantitie.gameObject;
+            TextMeshPro QtyText = GOQuantitie.GetComponent<TextMeshPro>();
+            QtyText.text = ingredientsFromCurrType[i].currQty + "/" + ingredientsFromCurrType[i].maxQty;
+            i++;
+        }
+
+        i = 0;
+        foreach (Transform TransPrices in GOPricesParent.transform)
+        {
+            GameObject GOPrice = TransPrices.gameObject;
+            TextMeshPro PriceText = GOPrice.GetComponent<TextMeshPro>();
+            PriceText.text = ingredientsFromCurrType[i].price + "€";
+            i++;
         }
     }
 
@@ -255,29 +247,6 @@ public class DrinkManager : MonoBehaviour
         GOCupBase.GetComponent<SpriteRenderer>().sprite = null;
         GameObject GOCupTopp = GameObject.Find("cup" + "Toppings");
         GOCupTopp.GetComponent<SpriteRenderer>().sprite = null;
-    }
-
-    private void UpdateIngredientsInfo()
-    {
-        List<Ingredient> ingredientsFromCurrType = Ingredient.ingredientsList.FindAll(ingrd => ingrd.ingrdType == currTabType);
-
-        int i = 0;
-        foreach (Transform TransQuantitie in GOQuantitiesParent.transform)
-        {
-            GameObject GOQuantitie = TransQuantitie.gameObject;
-            TextMeshPro QtyText = GOQuantitie.GetComponent<TextMeshPro>();
-            QtyText.text = ingredientsFromCurrType[i].currQty + "/" + ingredientsFromCurrType[i].maxQty;
-            i++;
-        }
-
-        i = 0;
-        foreach (Transform TransPrices in GOPricesParent.transform)
-        {
-            GameObject GOPrice = TransPrices.gameObject;
-            TextMeshPro PriceText = GOPrice.GetComponent<TextMeshPro>();
-            PriceText.text = ingredientsFromCurrType[i].price + "€";
-            i++;
-        }
     }
 
     public static bool AddFlavour(string flavour, Drink drink = null)
@@ -406,8 +375,8 @@ public class DrinkManager : MonoBehaviour
         AudioSource.PlayClipAtPoint(soundEffect, Vector3.zero, Music.vfxVolume);
 
         Drink correctOrder;
-        if (secndClientWaiting)
-            correctOrder = secondariesDrinksToServe[0];
+        if (ScndNPCs.secndClientWaiting)
+            correctOrder = ScndNPCs.secondariesDrinksToServe[0];
         else
             correctOrder = mainDrinksToServe[0];
 
@@ -453,12 +422,14 @@ public class DrinkManager : MonoBehaviour
 
         tipText.gameObject.transform.parent.gameObject.SetActive(!flavoursInfo.activeSelf);
         tipShowing = !flavoursInfo.activeSelf;
-        Money.ReceiveTip(gainXPoints, secndClientWaiting, tipText);
+        Money.ReceiveTip(gainXPoints, ScndNPCs.secndClientWaiting, tipText);
 
-        if (secndClientWaiting)
+        if (ScndNPCs.secndClientWaiting)
         {
-            secondariesDrinksToServe.Remove(correctOrder);
-            secondariesDrinks.Remove(correctOrder);
+            ScndNPCs.secondariesDrinksToServe.Remove(correctOrder);
+            //ScndNPCs.secondariesDrinks.Remove(correctOrder);
+
+            MainCoffeeManager.RemoveTask(TaskType.NPCOrder);
         }
         else
         {
@@ -468,10 +439,10 @@ public class DrinkManager : MonoBehaviour
 
         drinkServing = new Drink();
 
-        if (secndClientWaiting)
+        if (ScndNPCs.secndClientWaiting)
             Dialogue.lineIndex++;
 
-        int num = UnityEngine.Random.Range(0, 3); //1 in 3 chance
+        int num = UnityEngine.Random.Range(0, 3); //1 in 3 chance to be clean
         CleanManager.clean = num == 0;
     }
 
@@ -480,29 +451,13 @@ public class DrinkManager : MonoBehaviour
         Drink drink = listToFindFrom.FirstOrDefault(d => d.client.ToLower() == name.ToLower() && d.drinkNumberOfClient == drinkNumber);
         return drink;
     }
-
-    public static void LoadDrinkTutorial()
-    {
-        List<string> txtDrink = new();
-        txtDrink.Add("Tutorial : (If you make a mistake in the process, just press the red button on the left side of the drink machine. Be careful " +
-            "because all the already poured ingredients will be going to the trash!!!)");
-        txtDrink.Add("Tutorial : (Repeat the process to the other categories, and then press the green button on the left side of the drink machine to serve it.)");
-        txtDrink.Add("Tutorial : (Then, when you are ready to pour the ingredient onto the cup press the yellow button on the left side of the drink machine.)");
-        txtDrink.Add("Tutorial : (To make a drink, select the desired category and then choose the ingredient by clicking its respective icon.)");
-        txtDrink.Add("Tutorial : (In the top right corner of the machine, you’re able to select what category of what part of the drink you want to " +
-            "add. It should be made in a sweetener-base-topping order.)");
-        txtDrink.Add("Tutorial : (To make a drink, you’ll need to choose one sweetener/syrup, one base and one topping.)");
-
-        foreach (var txt in txtDrink)
-        {
-            Dialogue.InsertAtIndex(txt, Dialogue.lineIndex + 1);
-        }
-    }
 }
 
 [System.Serializable]
 public class Drink
 {
+    public const float drinkTaskTimer = 40f;
+
     public BaseFlavour baseFlavour;
     public TopFlavour topFlavour;
     public SyrupFlavour syrupFlavour;
@@ -510,7 +465,10 @@ public class Drink
     public int drinkNumberOfClient;
     public int dayOfTheDrink;
 
-    public Drink(BaseFlavour baseFlavour = BaseFlavour.None, TopFlavour topFlavour = TopFlavour.None, SyrupFlavour syrupFlavour = SyrupFlavour.None, string client = null, int drinkNumberOfClient = 0, int dayOfTheDrink = 0)
+    public string scndOrder;
+
+    public Drink(BaseFlavour baseFlavour = BaseFlavour.None, TopFlavour topFlavour = TopFlavour.None, SyrupFlavour syrupFlavour = SyrupFlavour.None,
+                string client = null, int drinkNumberOfClient = 0, int dayOfTheDrink = 0, string scndOrder = null)
     {
         this.baseFlavour = baseFlavour;
         this.topFlavour = topFlavour;
@@ -518,6 +476,7 @@ public class Drink
         this.client = client;
         this.drinkNumberOfClient = drinkNumberOfClient;
         this.dayOfTheDrink = dayOfTheDrink;
+        this.scndOrder = scndOrder;
     }
 
     public bool IsReady() => syrupFlavour != SyrupFlavour.None && topFlavour != TopFlavour.None && baseFlavour != BaseFlavour.None;

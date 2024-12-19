@@ -31,24 +31,27 @@ public class Dialogue : MonoBehaviour
     public static bool isTrashTutDoneVar = false;
 
     public static List<Character> characters = new() {
-        new Character(name: "ALYIA", hateMusicTxt: "\"Can you put another music plz, i don't really vibe with this one.\""),
-        new Character(name: "RONNIE", hateMusicTxt: "\"I hate this music, can you put another.\""),
-        new Character(name : "JASPER", hateMusicTxt: "\"Ca...c..can you change the music plz.\""),
-        new Character(name : "AMARA", hateMusicTxt: "\"With a song like that it would be better to have zero music.\"")
+        new Character(name: "ALYIA", patience: 2, hateMusicTxt: "\"Can you put another music plz, i don't really vibe with this one.\""),
+        new Character(name: "RONNIE", patience: 4,  hateMusicTxt: "\"I hate this music, can you put another.\""),
+        new Character(name : "JASPER", patience: 3,  hateMusicTxt: "\"Ca...c..can you change the music plz.\""),
+        new Character(name : "AMARA", patience : 5, hateMusicTxt: "\"With a song like that it would be better to have zero music.\"")
     };
     private static List<string> charsPosData = new() { "", "", "" };
 
     [SerializeField] private float textSpeed;
     [SerializeField] private TextMeshProUGUI namePanelTxt;
-    public static string nameTxt = string.Empty;
-    [SerializeField] private TextMeshProUGUI dialoguePanelTxt;
-    public static string dialogueTxt = string.Empty;
     public static string lineName;
+    public static string nameTxt = string.Empty;
+    public static string nameTxtTemp = string.Empty;
+
+    [SerializeField] private TextMeshProUGUI dialoguePanelTxt;
     public static string lineDialogue;
+    public static string dialogueTxt = string.Empty;
+    public static string dialogueTxtTemp = string.Empty;
 
     private string filePath;
     private static int fileDayNumRead = -1;
-    private static string[] lines;
+    public static string[] lines;
     public static int lineIndex = -1;
 
     public static bool startingNewDay = false;
@@ -56,7 +59,7 @@ public class Dialogue : MonoBehaviour
 
     private const float resetTimerToHateMusic = 100;
     private static float timerToHateMusicSec = resetTimerToHateMusic;
-    private static bool hatingcurrMusic = false;
+    public static bool onTutorial = false;
 
     private void Start()
     {
@@ -76,6 +79,9 @@ public class Dialogue : MonoBehaviour
 
             lines = System.IO.File.ReadAllLines(filePath);
 
+            if (GameManager.startDayNum > 0)
+                MainCoffeeManager.LoadSecndNpcsDrinks();
+
             fileDayNumRead = GameManager.startDayNum;
         }
 
@@ -86,6 +92,12 @@ public class Dialogue : MonoBehaviour
 
         namePanelTxt.text = nameTxt;
         dialoguePanelTxt.text = dialogueTxt;
+
+        nameTxt = nameTxtTemp;
+        dialogueTxt = dialogueTxtTemp;
+
+        nameTxtTemp = string.Empty;
+        dialogueTxtTemp = string.Empty;
 
         if (lineIndex > -1)
             lineIndex--;
@@ -117,7 +129,9 @@ public class Dialogue : MonoBehaviour
     {
         if (!startingNewDay)
         {
-            UpdateHateTimer();
+            if (!isChoosing && !charAnswering && !onTutorial)
+                UpdateHateTimer();
+
             if (skip)
                 OnClickDialogue();
 
@@ -137,31 +151,34 @@ public class Dialogue : MonoBehaviour
     private void UpdateHateTimer()
     {
         if (timerToHateMusicSec > 0)
-        {
             timerToHateMusicSec -= Time.deltaTime;
-            if (hatingcurrMusic)
-                Money.playerScore -= Time.deltaTime;
-        }
         else
         {
             List<Character> charsHateCurrMusic = Music.WhoHatesMusic();
-            if (!isChoosing && !charAnswering)
+            if (charsHateCurrMusic.Count != 0)
             {
-                foreach (var character in charsHateCurrMusic)
-                    if (!lines[lineIndex + 1].Contains(character.hateMusicTxt))
+                bool hateDone = false;
+                while (!hateDone)
+                {
+                    Character rndChar = charsHateCurrMusic[Random.Range(0, charsHateCurrMusic.Count())];
+
+                    if (!lines[lineIndex + 1].Contains(rndChar.hateMusicTxt))
                     {
                         if (isMusicDoneVar == false)
                         {
                             isMusicDoneVar = true;
                             LoadMusicTutorial();
                         }
-                        InsertAtIndex(character.name + ": " + character.hateMusicTxt, lineIndex + 1);
+
+                        InsertAtIndex(rndChar.name + ": " + rndChar.hateMusicTxt, lineIndex + 1);
+                        rndChar.Patience--;
+                        Money.playerScore -= (5 - rndChar.Patience) * 5 + 5;
+                        hateDone = true;
                     }
+                    else
+                        break;
+                }
             }
-
-            if (charsHateCurrMusic.Count > 0)
-                hatingcurrMusic = true;
-
             timerToHateMusicSec = resetTimerToHateMusic;
         }
     }
@@ -297,7 +314,7 @@ public class Dialogue : MonoBehaviour
         int startIndex = line.Contains(panelTxt.text) ? panelTxt.text.Length : 0;
         for (int i = startIndex; i < line.Length; i++)
         {
-            currentTxt = isNamePanel ? (nameTxt += line[i]) : (dialogueTxt += line[i]);
+            currentTxt = isNamePanel ? (nameTxt = line.Substring(0, i + 1)) : (dialogueTxt = line.Substring(0, i + 1));
             panelTxt.text = currentTxt;
 
             if (hasItalic)
@@ -309,7 +326,7 @@ public class Dialogue : MonoBehaviour
                         while (textFormats[j].Contains(line[i + 1]))
                         {
                             i++;
-                            currentTxt = isNamePanel ? (nameTxt += line[i]) : (dialogueTxt += line[i]);
+                            currentTxt = isNamePanel ? (nameTxt = line.Substring(0, i + 1)) : (dialogueTxt = line.Substring(0, i + 1));
                             panelTxt.text = currentTxt;
                             if (line[i] == '>')
                                 break;
@@ -372,10 +389,6 @@ public class Dialogue : MonoBehaviour
             namePanelTxt.text = nameTxt;
             dialoguePanelTxt.text = dialogueTxt;
         }
-        if (namePanelTxt.text == nameTxt)
-        {
-            namePanelTxt.text = nameTxt = "";
-        }
 
         IdentifyAndExecuteTypeOfText(line);
     }
@@ -387,6 +400,8 @@ public class Dialogue : MonoBehaviour
             line = lines[lineIndex];
             line = FormatItalic(line);
         }
+
+        onTutorial = line.Contains("Tutorial");
 
         string typeOfText = GetTypeOfText(line);
         switch (typeOfText)
@@ -425,7 +440,8 @@ public class Dialogue : MonoBehaviour
                 {
                     DrinkManager.isDrinkTutorialDone = true;
                     lineIndex--;
-                    DrinkManager.LoadDrinkTutorial();
+
+                    LoadDrinkTutorial();
                     return;
                 }
 
@@ -454,14 +470,24 @@ public class Dialogue : MonoBehaviour
                         continue;
                     }
 
-                    int indexMaxDrink = DrinkManager.secondariesDrinks.Count - 1;
-                    int randomDrinkIndex = Random.Range(0, indexMaxDrink);
-                    DrinkManager.secondariesDrinksToServe.Add(DrinkManager.secondariesDrinks[randomDrinkIndex]);
-
-                    string drinkServeAnswer = lines[lineIndex + 1];
-                    lineIndex++; //skip answer of receiving drink !!!how secondaries work
-                    NextLine();
+                    //int randomDrinkIndex = Random.Range(0, ScndNPCs.secondariesDrinks.Count);
+                    //Drink secDrink = ScndNPCs.secondariesDrinks[randomDrinkIndex];
+                    //if (!ScndNPCs.secondariesDrinksToServe.Contains(secDrink))
+                    //    ScndNPCs.secondariesDrinksToServe.Add(secDrink);
+                    ScndNPCs.secondariesDrinksToServe.Add(ScndNPCs.GenerateRandomScndDrink());
+                    MainCoffeeManager.activeTasks.Add(new(Drink.drinkTaskTimer, TaskType.NPCOrder));
                 }
+
+                MainCoffeeManager dialogueManager = FindObjectOfType<MainCoffeeManager>();
+                if (dialogueManager != null)
+                    dialogueManager.UpdateTasks();
+
+                if (charAnswering)
+                    responseIndex += drinkTexts.Count();
+
+                if (!DrinkManager.mainClientWaiting)
+                    NextLine();
+
                 break;
 
             case "emo": //(EMO_Name_Emotion)
@@ -730,21 +756,71 @@ public class Dialogue : MonoBehaviour
         return Regex.Replace(line, pattern, "<i>$1</i>");
     }
 
-    public static void LoadMusicTutorial()
+    public void LoadMusicTutorial()
     {
-        List<string> txtMusic = new List<string>();
-        txtMusic.Add("Tutorial : (Upgrades can be bought at the upgrades store so you’re able to see which emotion songs portray.)");
-        txtMusic.Add("Tutorial : (Feel the music and try to figure out if it better fits the mood.)");
-        txtMusic.Add("Tutorial : (Go on the music tab to change your café’s tune when the " +
+        List<string> txtMusic = new List<string>
+        {
+            "Tutorial : (Upgrades can be bought at the upgrades store so you’re able to see which emotion songs portray.)",
+            "Tutorial : (Feel the music and try to figure out if it better fits the mood.)",
+            "Tutorial : (Go on the music tab to change your café’s tune when the " +
             "customers complain, and find a better fitting choice so you can carry out " +
-            "the conversation without losing points. )");
-        txtMusic.Add("Tutorial : (However, as conversations with customers shift and mood changes," +
+            "the conversation without losing points. )",
+            "Tutorial : (However, as conversations with customers shift and mood changes," +
             " the music has to be changed as well. No one likes to hear happy music while having" +
-            " a sad conversation, or, at the very least, your customers don’t.)");
-        txtMusic.Add("Tutorial : (Like any Café, Cloud Café has background music playing.)");
+            " a sad conversation, or, at the very least, your customers don’t.)",
+            "Tutorial : (Like any Café, Cloud Café has background music playing.)"
+        };
+
         foreach (var txt in txtMusic)
         {
             InsertAtIndex(txt, lineIndex + 1);
+        }
+
+        if (SceneManager.GetActiveScene().name != "Dialogue")
+        {
+            pauseBetweenSkips = 0.2f;
+            skip = false;
+            nameTxt = namePanelTxt.text;
+            dialogueTxt = dialoguePanelTxt.text;
+
+            if (SceneManager.GetActiveScene().name == "Tables")
+                TableManager.inAnotherView = true;
+
+            SceneManager.LoadScene("Dialogue");
+        }
+    }
+
+    public void LoadDrinkTutorial()
+    {
+        List<string> txtDrink = new()
+        {
+            "Tutorial : (If you make a mistake in the process, just press the red button on the left side of the drink machine. Be careful " +
+            "because all the already poured ingredients will be going to the trash!!!)",
+            "Tutorial : (Repeat the process to the other categories, and then press the green button on the left side of the drink machine to serve it.)",
+            "Tutorial : (Then, when you are ready to pour the ingredient onto the cup press the yellow button on the left side of the drink machine.)",
+            "Tutorial : (To make a drink, select the desired category and then choose the ingredient by clicking its respective icon.)",
+            "Tutorial : (In the top right corner of the machine, you’re able to select what category of what part of the drink you want to " +
+            "add. It should be made in a sweetener-base-topping order.)",
+            "Tutorial : (To make a drink, you’ll need to choose one sweetener/syrup, one base and one topping.)"
+        };
+
+        foreach (var txt in txtDrink)
+        {
+            Dialogue.InsertAtIndex(txt, Dialogue.lineIndex + 1);
+        }
+
+        if (SceneManager.GetActiveScene().name != "DrinkStation")
+        {
+            Dialogue.skip = true;
+            Dialogue.pauseBetweenSkips = -2f;
+
+            Dialogue.nameTxt = namePanelTxt.text;
+            Dialogue.dialogueTxt = dialoguePanelTxt.text;
+
+            if (SceneManager.GetActiveScene().name == "Tables")
+                TableManager.inAnotherView = true;
+
+            SceneManager.LoadScene("DrinkStation");
         }
     }
 

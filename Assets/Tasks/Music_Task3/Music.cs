@@ -30,7 +30,7 @@ public class Music
     public static List<Character> WhoHatesMusic()
     {
         List<Character> charsHateCurrMusic = new();
-        foreach (var character in Dialogue.characters.Where(c => c.active))
+        foreach (var character in Dialogue.characters.Where(c => c.active && c.Patience > 0))
         {
             if (character.currentEmotion != EmotionEnum.None && character.currentEmotion != currMusic.Emotion)
                 charsHateCurrMusic.Add(character);

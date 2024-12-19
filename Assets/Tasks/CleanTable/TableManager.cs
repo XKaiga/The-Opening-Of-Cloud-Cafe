@@ -161,6 +161,6 @@ public class TableManager : MonoBehaviour
 
     public void RemoveTrashTimer()
     {
-        trashTimer.StopTimer();
+        trashTimer.StopTimer(trashTimer.timeRemaining);
     }
 }

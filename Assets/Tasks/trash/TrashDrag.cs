@@ -2,16 +2,20 @@ using UnityEngine;
 
 public class TrashDrag : MonoBehaviour
 {
+    [SerializeField] private TrashManager trashManager;
+
     public static bool readyToRemoveTrash = false;
     private bool isDragging = false;
 
     private Vector3 offset;
     private Camera mainCamera;
+    private Rigidbody2D rb;
     public AudioClip soundEffect;
 
     private void Start()
     {
         mainCamera = Camera.main;
+        rb = GetComponent<Rigidbody2D>();
     }
 
     void OnMouseDown()
@@ -25,19 +29,58 @@ public class TrashDrag : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (TableManager.inAnotherView)
+            return;
+
+        if (collision.name.Contains("recicle"))
+        {
+            string recicleColor = TrashManager.currTrashType == TrashType.Vidro ? "Green" :
+                                  TrashManager.currTrashType == TrashType.Plastico ? "Yellow" : "Blue";
+
+            string[] recicleNameParts = collision.name.Split('_');
+            if (recicleNameParts[0] == recicleColor && trashManager.trashTimer.timerIsRunning)
+                Money.AddTaskScore();
+            
+            trashManager.TrashRemoved();
+        }
+
+    }
+
+    private bool correctSprite = false;
+    private bool isSoundPlaying = false;
     void OnMouseDrag()
     {
         if (isDragging && readyToRemoveTrash)
         {
+            if (!correctSprite)
+            {
+                SpriteRenderer spriteRenderer = this.gameObject.GetComponent<SpriteRenderer>();
+
+                Sprite trashSprite = Resources.Load<Sprite>("Trash/Lixo_" + TrashManager.currTrashType);
+                spriteRenderer.sprite = trashSprite;
+
+                if (!spriteRenderer.sprite.name.Contains("Default"))
+                    correctSprite = true;
+            }
+
             Vector3 mousePosition = GetMouseWorldPosition();
-            transform.position = mousePosition + offset;
-            AudioSource.PlayClipAtPoint(soundEffect, transform.position);
+            Vector3 targetPosition = mousePosition + offset;
+            rb.MovePosition(targetPosition);
+
+            if (!isSoundPlaying)
+            {
+                AudioSource.PlayClipAtPoint(soundEffect, transform.position);
+                isSoundPlaying = true;
+            }
         }
     }
 
     void OnMouseUp()
     {
         isDragging = false;
+        isSoundPlaying = false;
     }
 
     private Vector3 GetMouseWorldPosition()

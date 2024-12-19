@@ -18,7 +18,7 @@ public class EndGameManager : MonoBehaviour
     [SerializeField] private GameObject finalParent;
     [SerializeField] private GameObject txtExt;
 
-    public RawImage image;
+    public Image image;
     private const float fadeSpeed = 0.5f;
 
     private void Awake()
@@ -33,7 +33,7 @@ public class EndGameManager : MonoBehaviour
     }
     private void Start()
     {
-        image = GetComponent<RawImage>();
+        image = GetComponent<Image>();
     }
 
     public Coroutine StartEndGameCoroutine()

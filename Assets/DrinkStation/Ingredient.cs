@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public class Ingredient
 {
@@ -18,12 +19,18 @@ public class Ingredient
         this.maxQty = maxQty;
         this.price = price;
     }
+
+    public static Sprite FindIngrdSprite(string ingrdType, string ingrdName)
+    {
+        Sprite ingrdSprite = Resources.Load<Sprite>("drinkMachine/Ingredients/" + ingrdType.ToLower() + "/" + ingrdName.ToLower());
+        return ingrdSprite;
+    }
 }
 
 public enum IngredientType
 {
     None,
-    Syrup,
+    Syrups,
     Base,
     Toppings
 }
