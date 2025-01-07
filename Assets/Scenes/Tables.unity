@@ -2218,7 +2218,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 8.1, y: 8.1}
+    oldSize: {x: 10.24, y: 10.24}
     newSize: {x: 8.1, y: 8.1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -2268,7 +2268,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 29123213b16e0c347bdb05f4187999af, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d35744e7835b7b843a19dc529b688be8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -2288,14 +2288,14 @@ RectTransform:
   m_GameObject: {fileID: 916333753}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0.2566457}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.9767711}
+  m_LocalScale: {x: 0.19630167, y: 0.19630167, z: 0.19630167}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 893817111}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -8.786474, y: -4.634518}
+  m_AnchoredPosition: {x: -8.789, y: -4.66}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &978703424

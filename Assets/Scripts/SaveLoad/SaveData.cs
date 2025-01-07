@@ -5,7 +5,8 @@ using System.Collections.Generic;
 public class SaveData
 {
     //Save Info
-    public DateTime saveDate;
+    public string name;
+    public string saveDate;
 
     //Money class
     public float playerScore;

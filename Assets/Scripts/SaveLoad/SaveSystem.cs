@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TMPro;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
 public class SaveSystem : MonoBehaviour
 {
-    [SerializeField] private TMP_InputField slotNumberTxt;
+    [SerializeField] private SlotsManager slotsManager;
+    [SerializeField] private TMP_InputField slotNameTxt;
 
     private void Update()
     {
@@ -21,27 +24,32 @@ public class SaveSystem : MonoBehaviour
         if (GameManager.startDayNum == -1)
             return;
 
-        bool isValid = GetSlotNumberInput(out int slotNumber);
+        string slotName = slotNameTxt.text;
+        string selectedSlotName = slotsManager.currSlotSelected;
+        if (slotName == "" && selectedSlotName == "")
+            return;
 
-        if (isValid)
-        {
-            SaveData saveData = GatherSaveData();
-            SaveDataToSlot(slotNumber, saveData);
-        }
+        if (selectedSlotName != "")
+            DeleteSaveSlot(selectedSlotName);
+
+        if (slotName == "")
+            slotName = selectedSlotName;
+        
+        SaveData saveData = GatherSaveData(slotName);
+        SaveDataToSlot(slotName, saveData);
+        slotsManager.LoadSlots();
     }
 
     public void OnClickLoadBtn()
     {
-        bool isValid = GetSlotNumberInput(out int slotNumber);
+        if (slotsManager == null || slotsManager.currSlotSelected == "")
+            return;
 
-        if (isValid)
+        SaveData saveData = LoadDataFromSlot(slotsManager.currSlotSelected);
+        if (saveData != null)
         {
-            SaveData saveData = LoadDataFromSlot(slotNumber);
-            if (saveData != null)
-            {
-                LoadSaveData(saveData);
-                SceneManager.LoadScene("Dialogue");
-            }
+            LoadSaveData(saveData);
+            SceneManager.LoadScene("Dialogue");
         }
     }
 
@@ -50,23 +58,13 @@ public class SaveSystem : MonoBehaviour
         SceneManager.LoadScene("StartMenu");
     }
 
-    private bool GetSlotNumberInput(out int result)
-    {
-        result = -1;
-
-        bool isInt = int.TryParse(slotNumberTxt.text.Trim(), out int slotNumber);
-        if (!isInt || slotNumber < 0)
-            return false;
-        result = slotNumber;
-        return true;
-    }
-
-    public static SaveData GatherSaveData()
+    public static SaveData GatherSaveData(string slotName)
     {
         SaveData saveData = new();
 
         //get save info
-        saveData.saveDate = DateTime.Now;
+        saveData.name = slotName;
+        saveData.saveDate = SetDateFormat(DateTime.Now);
 
         saveData.playerScore = Money.playerScore;
         saveData.playerMoney = Money.playerMoney;
@@ -121,8 +119,8 @@ public class SaveSystem : MonoBehaviour
 
         // Load current music name
         Music foundCurrMusic = Music.FindMusicByName(saveData.currMusicName);
-        Music.currMusic = foundCurrMusic ?? Music.musicList[0];
-        Music.ChangeMusic(Music.currMusic.AudioClip);
+        Music music = foundCurrMusic ?? Music.musicList[0];
+        Music.ChangeMusic(music.AudioClip);
 
         // Load active tasks
         MainCoffeeManager.activeTasks = saveData.activeTasks;
@@ -187,22 +185,22 @@ public class SaveSystem : MonoBehaviour
         Dialogue.lineIndex = -1;
     }
 
-    private static string GetSaveFilePath(int slotNumber)
+    private static string GetSaveFilePath(string slotName)
     {
-        return Application.persistentDataPath + "/SaveSlot" + slotNumber + ".json";
+        return Application.persistentDataPath + "/SaveSlot" + slotName + ".json";
     }
 
-    public static void SaveDataToSlot(int slotNumber, SaveData data)
+    public static void SaveDataToSlot(string slotName, SaveData data)
     {
-        string path = GetSaveFilePath(slotNumber);
+        string path = GetSaveFilePath(slotName);
         string json = JsonUtility.ToJson(data, true);
         File.WriteAllText(path, json);
-        Debug.Log("Saved to slot " + slotNumber + " at path: " + path);
+        Debug.Log("Saved at " + data.saveDate + " to slot " + slotName + " at path: " + path);
     }
 
-    public static SaveData LoadDataFromSlot(int slotNumber)
+    public static SaveData LoadDataFromSlot(string slotName)
     {
-        string path = GetSaveFilePath(slotNumber);
+        string path = GetSaveFilePath(slotName);
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path);
@@ -213,25 +211,55 @@ public class SaveSystem : MonoBehaviour
         return null;
     }
 
-    public static bool SaveSlotExists(int slotNumber)
+    public static bool SaveSlotExists(string slotName)
     {
-        return File.Exists(GetSaveFilePath(slotNumber));
+        return File.Exists(GetSaveFilePath(slotName));
     }
 
-    public static void DeleteSaveSlot(int slotNumber)
+    public static void DeleteSaveSlot(string slotName)
     {
-        string path = GetSaveFilePath(slotNumber);
+        string path = GetSaveFilePath(slotName);
         if (File.Exists(path))
         {
             File.Delete(path);
-            Debug.Log("Deleted save in slot " + slotNumber);
+            Debug.Log("Deleted save in slot " + slotName);
         }
+    }
+
+    public static List<SaveData> GetAllSaveData()
+    {
+        List<SaveData> allSaveData = new List<SaveData>();
+        string saveDirectory = Application.persistentDataPath;
+
+        // Get all files matching the "SaveSlot*.json" pattern
+        string[] files = Directory.GetFiles(saveDirectory, "SaveSlot*.json");
+
+        foreach (string file in files)
+        {
+            try
+            {
+                // Read the file content
+                string json = File.ReadAllText(file);
+
+                // Deserialize the JSON into a SaveData object
+                SaveData data = JsonUtility.FromJson<SaveData>(json);
+
+                // Add the deserialized object to the list
+                allSaveData.Add(data);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("Failed to load save data from file: " + file + "\nError: " + e.Message);
+            }
+        }
+
+        return allSaveData;
     }
 
     public static bool LoadLatestSaveSlot()
     {
-        int latestSlot = GetLatestSaveSlot();
-        if (latestSlot != -1)
+        string latestSlot = GetLatestSaveSlot();
+        if (latestSlot != "")
         {
             SaveData saveData = LoadDataFromSlot(latestSlot);
             if (saveData != null)
@@ -243,29 +271,58 @@ public class SaveSystem : MonoBehaviour
         return false;
     }
 
-    private static int GetLatestSaveSlot()
+    public static string GetLatestSaveSlot()
     {
-        int latestSlot = -1;
+        string saveDirectory = Application.persistentDataPath;
+        string latestSlotName = null;
         DateTime latestDate = DateTime.MinValue;
 
-        int totalSlots = 10;
+        // Get all files matching the "SaveSlot*.json" pattern
+        string[] files = Directory.GetFiles(saveDirectory, "SaveSlot*.json");
 
-        for (int i = 0; i < totalSlots; i++)
+        foreach (string file in files)
         {
-            string path = GetSaveFilePath(i);
-            if (File.Exists(path))
+            try
             {
-                string json = File.ReadAllText(path);
+                // Read the file content
+                string json = File.ReadAllText(file);
+
+                // Deserialize the JSON into a SaveData object
                 SaveData data = JsonUtility.FromJson<SaveData>(json);
 
-                if (data.saveDate > latestDate)
+                // Try to parse the saveDate into a DateTime
+                DateTime parsedDate = GetSaveDate(data.saveDate);
+
+                // Check if this save has the latest date
+                if (parsedDate >= latestDate)
                 {
-                    latestDate = data.saveDate;
-                    latestSlot = i;
+                    latestDate = parsedDate;
+                    latestSlotName = data.name;
                 }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("Failed to load save data from file: " + file + "\nError: " + e.Message);
             }
         }
 
-        return latestSlot;
+        if (latestSlotName == null)
+        {
+            Debug.LogWarning("No save slots found.");
+        }
+
+        return latestSlotName;
+    }
+
+    // Convert DateTime to string for saving
+    public static string SetDateFormat(DateTime date) => date.ToString("dd/MM/yyyy");
+
+    // Convert string back to DateTime when loading
+    public static DateTime GetSaveDate(string dateString)
+    {
+        return DateTime.TryParseExact(dateString, "dd/MM/yyyy",
+                                      System.Globalization.CultureInfo.InvariantCulture,
+                                      System.Globalization.DateTimeStyles.None,
+                                      out DateTime date) ? date : DateTime.MinValue;
     }
 }
