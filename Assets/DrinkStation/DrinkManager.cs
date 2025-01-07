@@ -6,6 +6,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.PlayerLoop;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -275,14 +276,19 @@ public class DrinkManager : MonoBehaviour
         int qtyIngrdToTrash = emptyDrink.CompareDrinks(drinkServing);
         if (qtyIngrdToTrash == 0)
             return;
-        int numberOfTrash = qtyIngrdToTrash switch
+
+        if (!FirstDrink())
         {
-            1 => new[] { 3, 4, 5 }[Random.Range(0, 3)],
-            2 => new[] { 6, 7, 8 }[Random.Range(0, 3)],
-            3 => new[] { 9, 10, 11 }[Random.Range(0, 3)],
-            _ => throw new ArgumentOutOfRangeException(nameof(qtyIngrdToTrash), "qtyIngrdToTrash must be between 1 and 3.")
-        };
-        TrashManager.FillTrash(numberOfTrash);
+            int numberOfTrash = qtyIngrdToTrash switch
+            {
+                1 => new[] { 3, 4, 5 }[Random.Range(0, 3)],
+                2 => new[] { 6, 7, 8 }[Random.Range(0, 3)],
+                3 => new[] { 9, 10, 11 }[Random.Range(0, 3)],
+                _ => throw new ArgumentOutOfRangeException(nameof(qtyIngrdToTrash), "qtyIngrdToTrash must be between 1 and 3.")
+            };
+            TrashManager.FillTrash(numberOfTrash);
+        }
+
 
         RemoveDrink();
     }
@@ -420,6 +426,14 @@ public class DrinkManager : MonoBehaviour
         return null;
     }
 
+    private bool FirstDrink()
+    {
+        if (ScndNPCs.secndClientWaiting)
+            return false;
+
+        return (mainClientWaiting && mainDrinksToServe[0].client.ToUpper() == "ALYIA");
+    }
+
     private void Serve()
     {
         //play sound maquina
@@ -478,15 +492,18 @@ public class DrinkManager : MonoBehaviour
         float drinkBaseCost = drinkServing.GetDrinkCost();
         Money.ReceiveTip(gainXPoints, ScndNPCs.secndClientWaiting, tipText, drinkBaseCost);
 
+        //saving the bool because the values used to determine the bool will be modified
+        bool firstDrink = FirstDrink();
+
         if (ScndNPCs.secndClientWaiting)
         {
             if (drinkTimer.timerIsRunning)
             {
                 drinkTimer.StopTimer(drinkTimer.timeRemaining);
-                
+
                 ScndNPCs.secondariesDrinksToServe.Remove(correctOrder);
                 //ScndNPCs.secondariesDrinks.Remove(correctOrder);
-                
+
                 Money.AddTaskScore();
             }
         }
@@ -498,11 +515,14 @@ public class DrinkManager : MonoBehaviour
 
         drinkServing = new Drink();
 
-        if (ScndNPCs.secndClientWaiting)
-            Dialogue.lineIndex++;
+        if (firstDrink)
+        {
+            if (ScndNPCs.secndClientWaiting)
+                Dialogue.lineIndex++;
 
-        int num = UnityEngine.Random.Range(0, 3); //1 in 3 chance to be clean
-        CleanManager.clean = num == 0;
+            int num = UnityEngine.Random.Range(0, 3); //1 in 3 chance to be clean
+            CleanManager.clean = num == 4;
+        }
     }
 
     public static Drink FindOrder(string name, int drinkNumber, List<Drink> listToFindFrom)
@@ -546,7 +566,7 @@ public class Drink
 
         Ingredient baseIngrd = Ingredient.ingredientsList.Find(ingrd => ingrd.name == this.baseFlavour.ToString());
         float baseCost = baseIngrd != null ? baseIngrd.price : 0;
-        
+
         Ingredient topIngrd = Ingredient.ingredientsList.Find(ingrd => ingrd.name == this.topFlavour.ToString());
         float topCost = topIngrd != null ? topIngrd.price : 0;
 

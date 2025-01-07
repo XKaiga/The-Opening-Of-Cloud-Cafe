@@ -27,7 +27,8 @@ public class GameManager : MonoBehaviour
 
         FileReader.ReadFinalsFile();
 
-        Music.ChangeMusic(Music.musicList[0].AudioClip);
+        if (Music.currMusic.AudioClip == null)
+            Music.ChangeMusic(Music.musicList[0].AudioClip);
 
         LoadCharactersSprites();
 
@@ -42,7 +43,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < ingredientsNameList.Count; i++)
         {
             string ingredientName = ingredientsNameList[i];
-            
+
             IngredientType ingredientType;
             if (i < 6)
                 ingredientType = IngredientType.Syrups;
