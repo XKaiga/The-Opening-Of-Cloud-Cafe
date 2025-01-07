@@ -36,6 +36,11 @@ public class TableManager : MonoBehaviour
 
     private void Start()
     {
+        if (!Dialogue.skip)
+        {
+            Dialogue.onTutorial = true;
+        }
+
         inAnotherView = false;
 
         tables.SetActive(true);

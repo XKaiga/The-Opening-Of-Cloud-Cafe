@@ -52,10 +52,9 @@ public class MainCoffeeManager : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.Space))
             Dialogue.skip = !Dialogue.skip;
+        
         if (Input.GetKeyUp(KeyCode.Escape))
-        {
             SceneManager.LoadScene("SaveLoadData");
-        }
 
         if (Upgrade.musicToUnlockExists && !Upgrade.musicUnlocking)
         {

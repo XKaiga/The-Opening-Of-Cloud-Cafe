@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 using Random = UnityEngine.Random;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
 
 public class Dialogue : MonoBehaviour
 {
@@ -125,6 +126,22 @@ public class Dialogue : MonoBehaviour
     public bool waitingForDialogue = false;
     void Update()
     {
+        if (SceneManager.GetActiveScene().name == "Tables")
+        {
+            Debug.Log("skip: " + skip);
+            Debug.Log("ontutorial: " + onTutorial);
+        }
+        if (!skip && !onTutorial)
+        {
+            string sceneName = SceneManager.GetActiveScene().name;
+            if (sceneName == "DrinkStation" || sceneName == "Tables")
+            {
+                skip = true;
+                pauseBetweenSkips = -2f;
+            }
+        }
+
+
         if (!startingNewDay)
         {
             if (!isChoosing && !charAnswering && !onTutorial)
@@ -400,6 +417,7 @@ public class Dialogue : MonoBehaviour
         }
 
         onTutorial = line.Contains("Tutorial");
+        Debug.Log("changing? " +onTutorial);
 
         string typeOfText = GetTypeOfText(line);
         switch (typeOfText)
@@ -437,6 +455,7 @@ public class Dialogue : MonoBehaviour
                 if (DrinkManager.isDrinkTutorialDone == false)
                 {
                     DrinkManager.isDrinkTutorialDone = true;
+
                     lineIndex--;
 
                     LoadDrinkTutorial();
@@ -790,27 +809,10 @@ public class Dialogue : MonoBehaviour
 
     public void LoadDrinkTutorial()
     {
-        List<string> txtDrink = new()
-        {
-            "Tutorial : (If you make a mistake in the process, just press the red button on the left side of the drink machine. Be careful " +
-            "because all the already poured ingredients will be going to the trash!!!)",
-            "Tutorial : (Repeat the process to the other categories, and then press the green button on the left side of the drink machine to serve it.)",
-            "Tutorial : (Then, when you are ready to pour the ingredient onto the cup press the yellow button on the left side of the drink machine.)",
-            "Tutorial : (To make a drink, select the desired category and then choose the ingredient by clicking its respective icon.)",
-            "Tutorial : (In the top right corner of the machine, you’re able to select what category of what part of the drink you want to " +
-            "add. It should be made in a sweetener-base-topping order.)",
-            "Tutorial : (To make a drink, you’ll need to choose one sweetener/syrup, one base and one topping.)"
-        };
-
-        foreach (var txt in txtDrink)
-        {
-            Dialogue.InsertAtIndex(txt, Dialogue.lineIndex + 1);
-        }
-
         if (SceneManager.GetActiveScene().name != "DrinkStation")
         {
-            Dialogue.skip = true;
-            Dialogue.pauseBetweenSkips = -2f;
+            pauseBetweenSkips = 0.2f;
+            skip = false;
 
             Dialogue.nameTxt = namePanelTxt.text;
             Dialogue.dialogueTxt = dialoguePanelTxt.text;
@@ -836,15 +838,17 @@ public class Dialogue : MonoBehaviour
             "Tutorial: (When there’s trash to be taken out, hurry up! )"
         };
 
+        lineIndex--;
         foreach (var txt in txtTrash)
         {
             InsertAtIndex(txt, lineIndex + 1);
         }
+        lineIndex++;
 
         if (SceneManager.GetActiveScene().name != "Tables")
         {
-            Dialogue.skip = true;
-            Dialogue.pauseBetweenSkips = -2f;
+            pauseBetweenSkips = 0.2f;
+            skip = false;
 
             Dialogue.nameTxt = namePanelTxt.text;
             Dialogue.dialogueTxt = dialoguePanelTxt.text;
@@ -871,8 +875,8 @@ public class Dialogue : MonoBehaviour
 
         if (SceneManager.GetActiveScene().name != "Tables")
         {
-            Dialogue.skip = true;
-            Dialogue.pauseBetweenSkips = -2f;
+            pauseBetweenSkips = 0.2f;
+            skip = false;
 
             Dialogue.nameTxt = namePanelTxt.text;
             Dialogue.dialogueTxt = dialoguePanelTxt.text;
@@ -881,6 +885,7 @@ public class Dialogue : MonoBehaviour
         }
     }
 }
+
 [System.Serializable]
 public class DialogueOption
 {

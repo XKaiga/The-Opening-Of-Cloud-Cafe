@@ -59,7 +59,9 @@ public class DrinkManager : MonoBehaviour
         }
     }
 
+    [SerializeField] private GameObject tutManager;
     public static bool isDrinkTutorialDone = false;
+    private static bool isDrinkTutorialSeen = false;
     private void Start()
     {
         TrashDrink();
@@ -79,6 +81,13 @@ public class DrinkManager : MonoBehaviour
             ScndNPCs.secondariesDrinksToServe.Remove(ScndNPCs.secondariesDrinksToServe[0]);
 
             StartCoroutine(StartAnotherDrinkTimer());
+        }
+
+        if (DrinkManager.isDrinkTutorialDone && !isDrinkTutorialSeen)
+        {
+            isDrinkTutorialSeen = true;
+
+            tutManager.SetActive(true);
         }
     }
 
