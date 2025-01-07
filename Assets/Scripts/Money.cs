@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 public static class Money
 {
@@ -10,14 +12,14 @@ public static class Money
 
     public static float tipModifier = 0f;
 
-    public static void ReceiveTip(int drinkScore, bool npcSecundario, TextMeshProUGUI tipText)
+    public static void ReceiveTip(int drinkScore, bool npcSecundario, TextMeshProUGUI tipText, float drinkBaseCost = 0f)
     {
         float tip = npcSecundario ? drinkScore * 0.05f + drinkScore * tipModifier : drinkScore * (0.1f + tipModifier);
-        tip = (float)Math.Round(tip, 2);
+
+        float totalMoneyEarned = (float)Math.Round(drinkBaseCost + tip, 2);
+        playerMoney += totalMoneyEarned;
         
-        playerMoney += tip;
-        
-        tipText.text = tip + "€";
+        tipText.text = totalMoneyEarned + "€";
     }
 
     public static void AddTaskScore()
@@ -30,6 +32,26 @@ public static class Money
     //    int score = (int)(tarefasCumpridas * 100) / totalTarefas;
     //    return score;
     //}
+
+    public static void UpdatedMoneyText(Text textComponent)
+    {
+        if (textComponent == null)
+            return;
+
+        textComponent.text = FormatMoneyValue(playerMoney);
+    }
+
+    public static string FormatMoneyValue(float money)
+    {
+        // Round to two decimal places
+        float rounded = Mathf.Round(money * 100) / 100;
+
+        // Check if it's an integer
+        if (Mathf.Approximately(rounded, Mathf.Floor(rounded)))
+            return rounded.ToString("F0") + " €"; // No decimal places if it's a whole number
+        else
+            return rounded.ToString("F2") + " €"; // Two decimal places otherwise
+    }
 }
 
 [System.Serializable]
@@ -83,6 +105,7 @@ public class Upgrade
         Upgrade musicUpg = Upgrade.FindUpgradeByName("Unlock Music");
 
         Money.playerMoney -= musicUpg.price;
+
         musicUpg.level++;
 
         return true;

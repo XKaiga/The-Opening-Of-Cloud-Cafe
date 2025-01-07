@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -473,7 +474,9 @@ public class DrinkManager : MonoBehaviour
 
         tipText.gameObject.transform.parent.gameObject.SetActive(!flavoursInfo.activeSelf);
         tipShowing = !flavoursInfo.activeSelf;
-        Money.ReceiveTip(gainXPoints, ScndNPCs.secndClientWaiting, tipText);
+
+        float drinkBaseCost = drinkServing.GetDrinkCost();
+        Money.ReceiveTip(gainXPoints, ScndNPCs.secndClientWaiting, tipText, drinkBaseCost);
 
         if (ScndNPCs.secndClientWaiting)
         {
@@ -521,7 +524,7 @@ public class Drink
     public int drinkNumberOfClient;
     public int dayOfTheDrink;
 
-    public string scndOrder;
+    public string scndOrderNum;
 
     public Drink(BaseFlavour baseFlavour = BaseFlavour.None, TopFlavour topFlavour = TopFlavour.None, SyrupFlavour syrupFlavour = SyrupFlavour.None,
                 string client = null, int drinkNumberOfClient = 0, int dayOfTheDrink = 0, string scndOrder = null)
@@ -532,10 +535,27 @@ public class Drink
         this.client = client;
         this.drinkNumberOfClient = drinkNumberOfClient;
         this.dayOfTheDrink = dayOfTheDrink;
-        this.scndOrder = scndOrder;
+        this.scndOrderNum = scndOrder;
     }
 
     public bool IsReady() => syrupFlavour != SyrupFlavour.None && topFlavour != TopFlavour.None && baseFlavour != BaseFlavour.None;
+
+    public float GetDrinkCost()
+    {
+        float taxesCost = 0.2f;
+
+        Ingredient baseIngrd = Ingredient.ingredientsList.Find(ingrd => ingrd.name == this.baseFlavour.ToString());
+        float baseCost = baseIngrd != null ? baseIngrd.price : 0;
+        
+        Ingredient topIngrd = Ingredient.ingredientsList.Find(ingrd => ingrd.name == this.topFlavour.ToString());
+        float topCost = topIngrd != null ? topIngrd.price : 0;
+
+        Ingredient syrupIngrd = Ingredient.ingredientsList.Find(ingrd => ingrd.name == this.syrupFlavour.ToString());
+        float syrupCost = syrupIngrd != null ? syrupIngrd.price : 0;
+
+        float endDrinkCost = (syrupCost + baseCost + topCost) * (1f + taxesCost);
+        return endDrinkCost;
+    }
 
     public int CompareDrinks(Drink other)
     {
