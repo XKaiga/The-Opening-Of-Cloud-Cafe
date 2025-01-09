@@ -20,6 +20,8 @@ public class MenuManager : MonoBehaviour
         bool loaded = SaveSystem.LoadLatestSaveSlot();
         if (loaded)
             SceneManager.LoadScene("Dialogue");
+        else
+            Debug.LogWarning("Warning: Couldn't find Latest Save!");
     }
 
     public void OnClickOptionsOption()

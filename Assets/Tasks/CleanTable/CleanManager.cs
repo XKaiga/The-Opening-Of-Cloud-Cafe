@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D;
 
 public class CleanManager : MonoBehaviour
 {
@@ -25,10 +26,13 @@ public class CleanManager : MonoBehaviour
 
     public static int taskTimer = 20;
 
-    private void Awake() { linePrefab.GetComponent<LineRenderer>().widthMultiplier = widthMultiplier; }
+    private void Awake() { linePrefab.GetComponent<LineRenderer>().widthMultiplier = widthMultiplier;}
 
     void Update()
     {
+        if (drawnLineRenderers.Count <= 1)
+            spriteMask.sprite = null;
+     
         if (!clean)
         {
             if (Input.GetMouseButtonDown(0))
@@ -58,6 +62,7 @@ public class CleanManager : MonoBehaviour
         if (drawing != null)
             StopCoroutine(drawing);
 
+        blobManager.CaptureBoardState();
         blobManager.CaptureBlobState();
         clean = blobManager.IsBoardClean();
 

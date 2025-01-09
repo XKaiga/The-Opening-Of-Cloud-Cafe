@@ -258,7 +258,7 @@ public class SaveSystem : MonoBehaviour
 
     public static bool LoadLatestSaveSlot()
     {
-        string latestSlot = GetLatestSaveSlot();
+        string latestSlot = GetLatestSaveSlotName();
         if (latestSlot != "")
         {
             SaveData saveData = LoadDataFromSlot(latestSlot);
@@ -271,7 +271,7 @@ public class SaveSystem : MonoBehaviour
         return false;
     }
 
-    public static string GetLatestSaveSlot()
+    public static string GetLatestSaveSlotName()
     {
         string saveDirectory = Application.persistentDataPath;
         string latestSlotName = null;

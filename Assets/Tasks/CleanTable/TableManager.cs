@@ -36,6 +36,11 @@ public class TableManager : MonoBehaviour
 
     private void Start()
     {
+        if (!Dialogue.skip)
+        {
+            Dialogue.onTutorial = true;
+        }
+
         inAnotherView = false;
 
         tables.SetActive(true);
@@ -85,36 +90,34 @@ public class TableManager : MonoBehaviour
         {
             if (colliderName.Contains("tables"))
             {
-                if (!CleanManager.clean)
-                {
-                    Task cleanTaskFound = MainCoffeeManager.activeTasks.Find(task => cleanTimer.gameObject.name.ToLower().Contains(task.type.ToString().ToLower()));
-                    Text cleanTimerTxt = cleanTimer.gameObject.GetComponentInChildren<Text>();
-                    if (cleanTaskFound != null)
-                        if (cleanTimerTxt.isActiveAndEnabled)
-                            cleanTaskFound.timer = float.Parse(cleanTimerTxt.text);
-                        else
-                            Debug.Log("clean error");
-                }
-                if (TrashDrag.readyToRemoveTrash)
-                {
-                    Task trashTaskFound = MainCoffeeManager.activeTasks.Find(task => trashTimer.gameObject.name.ToLower().Contains(task.type.ToString().ToLower()));
-                    Text trashTimerTxt = trashTimer.gameObject.GetComponentInChildren<Text>();
-                    if (trashTaskFound != null)
-                        if (trashTimerTxt.isActiveAndEnabled)
-                            trashTaskFound.timer = float.Parse(trashTimerTxt.text);
-                        else
-                            Debug.Log("trash error");
-                }
-
-                inAnotherView = true;
                 if (!Dialogue.isChoosing)
                 {
-                    Dialogue.pauseBetweenSkips = 0.2f;
-                    Dialogue.skip = false;
-                    Dialogue.nameTxt = namePanelTxt.text;
-                    Dialogue.dialogueTxt = dialoguePanelTxt.text;
-             
-                    SceneManager.LoadScene("Dialogue");
+                    if (!CleanManager.clean)
+                    {
+                        Task cleanTaskFound = MainCoffeeManager.activeTasks.Find(task => cleanTimer.gameObject.name.ToLower().Contains(task.type.ToString().ToLower()));
+                        Text cleanTimerTxt = cleanTimer.gameObject.GetComponentInChildren<Text>();
+                        if (cleanTaskFound != null)
+                            if (cleanTimerTxt.isActiveAndEnabled)
+                                cleanTaskFound.timer = float.Parse(cleanTimerTxt.text);
+                            else
+                                Debug.Log("clean error");
+                    }
+                    if (TrashDrag.readyToRemoveTrash)
+                    {
+                        Task trashTaskFound = MainCoffeeManager.activeTasks.Find(task => trashTimer.gameObject.name.ToLower().Contains(task.type.ToString().ToLower()));
+                        Text trashTimerTxt = trashTimer.gameObject.GetComponentInChildren<Text>();
+                        if (trashTaskFound != null)
+                            if (trashTimerTxt.isActiveAndEnabled)
+                                trashTaskFound.timer = float.Parse(trashTimerTxt.text);
+                            else
+                                Debug.Log("trash error");
+                    }
+
+                    inAnotherView = true;
+
+                    Dialogue dialogueManager = FindObjectOfType<Dialogue>();
+                    if (dialogueManager != null)
+                        dialogueManager.LoadDialogueScene();
                 }
             }
             else

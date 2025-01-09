@@ -64,7 +64,7 @@ public class BlobManager : MonoBehaviour
         CaptureBlobState();
     }
 
-    private void CaptureBoardState()
+    public void CaptureBoardState()
     {
         foreach (var blob in blobs)
             blob.enabled = false;
@@ -112,8 +112,7 @@ public class BlobManager : MonoBehaviour
         }
 
         float cleanPercentage = (float)differingPixels / totalPixels;
-
-        return false;//cleanPercentage >= cleanThreshold;
+        return cleanPercentage >= cleanThreshold;
     }
 
     private Texture2D CaptureTextureFromRenderTexture(RenderTexture renderTexture)
