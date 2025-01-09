@@ -22,6 +22,7 @@ PLAYER: Possibly he didn’t expect to be addressed so suddenly.
 PLAYER: “Hello, good morning sir. Don’t worry, take your time, but I just thought it would be for the best if I let you know that you’ll need to purchase some service to be able to spend time here.”
 PLAYER: “And for that to be made possible, you’ll need to head to the front counter and ask for your drink.”
 PLAYER: The young man faces me, his face red, possibly feeling shy.
+(EFFECT_JASPER_SHOCKED)
 ???: “Yes, s-sorry, I was just feeling the environment first…”
 PLAYER: I get appalled by how low this guy speaks. 
 PLAYER: That probably was what was happening. He was really shy and needed time to feel adequate, which was totally valid, I just needed to verify.
@@ -39,7 +40,8 @@ PLAYER: However, she perhaps needed some help.
 PLAYER: As I’m about to speak to her, another customer enters the café, almost announcing her presence.
 (Show_RONNIE)
 (EMO_RONNIE_Happy)
-???: “Good morning beautiful people!”
+???: “Good morning beautiful people!
+(EFFECT_RONNIE_JOY)
 PLAYER: Basically everyone in the coffee shop turns around to face her, owing to the fact that it wasn’t really common for people to act that way.
 PLAYER: As she heads to the front counter and gets in line after the previous girl, that was still picking on what to eat.
 PLAYER: Since there was now someone waiting for her choice, I decided to say something and offer some help.
@@ -51,6 +53,7 @@ PLAYER: The girl behind her also starts to pay attention to the conversation as 
 (EMO_AMARA_Angry)
 PLAYER: “Of course I don’t think you’re dumb, I was just trying to see if you had exact thoughts on what to order or maybe wanted suggestions.”
 PLAYER: “In the case you’re following drink trends, you could maybe tell me which trend it is and I can see if I have the necessary ingredients to make it.”
+(EFFECT_AMARA_ANGRY)
 ???: “Can’t you see that I’m trying to think? Stop bothering me!”
 PLAYER: She returns to her pondering state.
 PLAYER: As a barista I can do only so much, and as I’m still quite inexperienced and new to the job, I begin thinking what could be the best way to deal with this situation.
@@ -62,6 +65,7 @@ PLAYER: She proceeds to make an expression behind the first girl, as if implying
 PLAYER: “Well, excuse me.”
 PLAYER: I get the attention of the first girl’s attention again.
 PLAYER: “As you’re still thinking and the person behind you has their drink order in mind, would you mind her placing her order first?”
+(EFFECT_AMARA_ANGRY)
 ???: “Of course not! Respect the line!”
 PLAYER: I can see the girl behind her roll her eyes, as if not believing what she is experiencing.
 RONNIE: “Excuse me, barista? My name is Ronnie. Can I ask you a question?”
@@ -73,9 +77,12 @@ PLAYER: I had to be nice as I’m getting paid for this. The other customers are
 RONNIE: “Excuse me Miss, what’s your name?”
 PLAYER: Ronnie addresses the customer in front of her.
 AMARA: “I don’t know what my name has to do with this conversation. But it is Amara, clearly a superior name like me.”
+(EFFECT_AMARA_PRIDE)
+(EFFECT_RONNIE_LAUGHTER)
 PLAYER: Ronnie laughs loudly, as if that had genuinely entertained her.
 RONNIE: “Oh wow at least you’re funny. Just made my wait worth it, I love putting people in their place.”
 PLAYER: I sense the tone shift by the end of the sentence.
+(EFFECT_AMARA_SHOCKED)
 RONNIE: “First, your name is just needed for me to know how to address you, because “bitch” is rather rude.”
 PLAYER: My eyes widened after what was just said.
 RONNIE: “Second, I need you to hurry up because I have places to be and you’re being rude to staff and customers.”
@@ -85,6 +92,7 @@ AMARA: “First, you need to respect the rules whether it is convenient for you 
 (EMO_AMARA_Tense)
 PLAYER: The guy sitting quietly until now decides to speak up.
 ???: “Sorry to butt in, but you could just be more patient…”
+(EFFECT_RONNIE_SHOCKED)
 PLAYER: I don’t know if I should find the situation comical or worrying.
 PLAYER: Ronnie is baffled to realize the guy was talking to her.
 RONNIE: “And you are???”
@@ -95,14 +103,17 @@ PLAYER: I sigh, still struggling to know what to do.
 2) “Maybe let her be Ronnie… She is probably getting done thinking.” (Jasper)
 3) “Amara has a point with the rules, she is in front of the line so she can deny you passing in front of her.” (Amara)
 1)
+(EFFECT_AMARA_ANGRY)
 AMARA: ”HOW DARE YOU? I have JUST finished deciding.”
 PLAYER: Maybe I should’ve kept that one to myself, as she was already done.
 RONNIE: “Well I was struggling to see if you were actually capable of that.”
 PLAYER: “Okay now, let’s not escalate this any longer, let just Amara order, for now.”
 2)
+(EFFECT_JASPER_JOY)
 JASPER: “Exactly, she seems like she’s done, right Amara?”
 AMARA: “Yes I’m done. Thank you.”
 3)
+(EFFECT_RONNIE_ANGRY)
 AMARA: “Exactly! So stop crying like a baby and let me order once and for all!”
 PLAYER: Ronnie seems rather frustrated but remains silent, probably just wanting to order herself too.
 (BACK TO REGULAR DIALOGUE.)
@@ -129,6 +140,7 @@ PLAYER: “Me, more assertive?”
 PLAYER: I think about it for a bit.
 PLAYER: “I am not in the best place to just try and make people act as I see fit.”
 2)
+(EFFECT_RONNIE_ANGRY)
 RONNIE: “Does that sound like what’s important right now?”
 PLAYER: She had a point.
 PLAYER: Even if she felt like she was right in the situation, if she also felt hurt it would be valid for her to leave a place that made her uncomfortable.
@@ -185,6 +197,7 @@ RONNIE: “But sure, go for it.”
 2)
 PLAYER: Ronnie smiles, looking like she is feeling a little relieved by my attitude.
 RONNIE: “Okay, good luck then, I hope you can make some sense to go to her.”
+(EFFECT_RONNIE_JOY)
 PLAYER: She gives me a comforting smile.
 3)
 RONNIE: “Yeah I guess we can’t really lose in this scenario. Hope it all works out.”
@@ -253,6 +266,7 @@ PLAYER: “...take it out on other people.”
 PLAYER: “Me and Ronnie were quite hurt from how you acted before.”
 PLAYER: She rolls her eyes.
 (BACK TO REGULAR DIALOGUE.)
+(EFFECT_AMARA_ANGRY)
 AMARA: “I don’t believe that after being vulnerable with you you still take her side!”
 PLAYER: She looks rather upset.
 (EMO_AMARA_Angry)
@@ -273,6 +287,7 @@ PLAYER: “Ronnie, come here!”
 PLAYER: I can see her coming in a rather defensive manner.
 RONNIE: “Did she realize what she did?”
 PLAYER: “Yeah, I was hoping we could all talk and sort it out for once and for all.”
+(EFFECT_RONNIE_SHOCKED)
 RONNIE: “Why talk? She knows she’s wrong, that's enough. She just needs to apologize and we can move forward.”
 PLAYER: I sigh lightly.
 PLAYER: “Just because she is mostly wrong doesn’t mean she was the only one making mistakes in the whole interaction.”
@@ -314,6 +329,7 @@ JASPER: “It’s okay. I mean, I don’t like seeing conflict and they were cle
 JASPER: “I just tried to find the best and fastest way to end the discussion.”
 PLAYER: “And with all of this, I came to the conclusion that I still have not taken your order.”
 PLAYER: I let out a small laugh. Jasper seems like he remembered that the same time I did.
+(EFFECT_JASPER_LAUGHTER)
 JASPER: “That is true!”
 JASPER: “Well let me order then. Give me the fruitiest coffee around. I was feeling like having juice but this is a coffee shop, so give me something fruity, with a good texture and a hint of sweetness to it.”
 (DRINK_JASPER_1)

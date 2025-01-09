@@ -119,6 +119,7 @@ PLAYER: Ronnie seems more attentive now, as Amara really showed sincerity in her
 RONNIE: “I apologize too. I mean, I meant well but calling you the b-word was just not okay.”
 RONNIE: “I could’ve also handled things better, and escalating them wasn’t the answer. It could’ve gone extremely worse if the circumstances were other.”
 JASPER: “See??? That wasn’t so hard, wasn’t it?”
+(EFFECT_JASPER_LAUGHTER)
 PLAYER: He chuckles as the two girls look at him rather confused, but then join the laughter as well, the mood clearly lightening up.
 PLAYER: “Still Amara… I need to ask.”
 1) “What made you feel the need to be so blunt, Amara?” (+)
@@ -129,6 +130,7 @@ PLAYER: Amara seems to close off for a moment, but decides to answer regardless.
 AMARA: “You know, I’ve always struggled to fit in. No matter how hard I tried, I always felt like an outsider.”
 PLAYER: I lean in, curious about what she’s sharing.
 AMARA: “Growing up in a wealthy family, people assumed I had it easy. But I was bullied a lot, especially because of my dark skin and curls.”
+(EFFECT_RONNIE_SHOCKED)
 RONNIE: “Okay, first of all, you’re rich?”
 PLAYER: Ronnie seems shocked, which makes me chuckle.
 AMARA: “Yeah, surprise! But money didn’t protect me from the kids who thought they were better than me.”
@@ -146,6 +148,7 @@ AMARA: “I had to fake it, honestly. I thought if I followed every trend and dr
 AMARA: “But no, it just made things worse. I felt like I was trying to erase parts of myself, and it never got me accepted. Instead, I became a target.”
 RONNIE: “That’s awful… I’m so sorry you went through that.”
 AMARA: “It was painful. Over time, I buried those feelings, but it made me bitter.”
+(EFFECT_AMARA_LAUGHTER)
 PLAYER: She lets out a laugh, as we three knew really well what she meant by that.
 AMARA: “I thought if I acted tough and rude, people would respect me instead of mocking me.”
 AMARA: “I pushed people away first, thinking it would shield me from more hurt. But it only made me feel more alone.”
@@ -154,6 +157,7 @@ AMARA: “I pushed people away first, thinking it would shield me from more hurt
 3) “They are the ones missing out, you know your truth.” (-)
 1)
 PLAYER: Surprisingly, Amara chuckles. 
+(EFFECT_AMARA_LAUGHTER)
 AMARA: “Honestly what am I doing? Over-sharing with a bunch of strangers over here!”
 PLAYER: “Hey! That’s the charm of Cloud Café! You get rain but also light fluffy clouds!”
 RONNIE: “That’s the cringiest thing I’ve heard from you, did not expect that at all.”
@@ -192,6 +196,7 @@ AMARA: “Thanks, I appreciate that. I guess I just need to find a way to balanc
 PLAYER: Amara takes her time reflecting on what we’ve been talking about. It’s only up to her to decide what would be the best course of action for her for now.
 PLAYER: Ronnie looks at Amara for a few moments.
 RONNIE: “I’m once again sorry for being rude yesterday. You wanted resolution and I just backed out on you, and that wasn’t fair of me to do.”
+(EFFECT_AMARA_JOY)
 PLAYER: Amara gives a slight smile, genuinely thankful for the kind words Ronnie said to her.
 AMARA: “It’s okay. I could see you meant well today, we can burn that bridge.”
 PLAYER: After some time Ronnie gets up, getting her things.

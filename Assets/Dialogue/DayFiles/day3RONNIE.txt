@@ -43,6 +43,7 @@ PLAYER: Amara rolls her eyes, as Ronnie takes another sip of her drink.
 2) “Why are you crying? Do you need something?” (-)
 3) “I’m here if you need anything, take your time.” (*)
 1)
+(EFFECT_RONNIE_LAUGHTER)
 PLAYER: Ronnie can’t avoid but laugh at my comment.
 RONNIE: “Oh you have no idea.”
 PLAYER: “Well that’s up to you honestly.”
@@ -76,6 +77,7 @@ PLAYER: She sighs, still reflecting on the subject.
 2) “Seems like they are giving you a hard time…” (+)
 3) “Family can be a hard subject indeed.” (*)
 1)
+(EFFECT_RONNIE_ANGRY)
 PLAYER: Ronnie looks at me like I’ve committed a crime.
 RONNIE: “Don’t trash talk my family… You don’t know them.”
 PLAYER: I regret saying such words immediately.
@@ -93,6 +95,7 @@ RONNIE: “And all my brothers are in the medical, business, and administration 
 PLAYER: “You’re the youngest out of all of them?”
 PLAYER: Ronnie nods, almost feeling nostalgic about her childhood or some early memories  that are going through her mind.
 RONNIE: “I’m the girl too. So you know, need to prove myself sometimes.”
+(EFFECT_RONNIE_LAUGHTER)
 PLAYER: She chuckles, but I have the underlying feeling that there’s more to that feeling that she is currently portraying.
 JASPER: “I have always wanted siblings…”
 PLAYER: I hear Jasper butting in the conversation. I get quite surprised to see him taking the initiative to start some sort of socialization.
@@ -105,6 +108,7 @@ RONNIE: “Well, I have three older brothers. I always looked up to them as I gr
 AMARA: “Why were you so stressed walking in then? They can’t be all that if they’re causing you to feel that way.“
 PLAYER: While Jasper’s interjection was more welcomed by Ronnie, Amara’s had the opposite effect.
 RONNIE: “And why are you saying anything about this?”
+(EFFECT_AMARA_ANGRY)
 AMARA: “Because you’re talking out loud so we can hear. So at least, we’re going to comment on it.”
 PLAYER: Ronnie remains with her mouth shut. She couldn’t really clap back, it was a public space and everyone had freedom of speech.
 AMARA: “Still, my question remains, why are you stressed then, if everyone in that family is perfect.”
@@ -117,6 +121,7 @@ RONNIE: “I don’t really know… I mean it’s a great opportunity and all th
 2) “It’s not your dream job I bet.” (+)
 3) “You still have the choice to not do it if you don’t want to.”(*)
 1)
+(EFFECT_RONNIE_ANGRY)
 RONNIE: “Yeah but how is that useful if I’ll be miserable doing it?”
 PLAYER: “Oh…”
 PLAYER: “Yeah, that makes sense, I won’t talk more.”
@@ -177,6 +182,7 @@ PLAYER: I need to give her some really good advice…
 PLAYER: Ronnie looks at me as if deep thinking about what I told her.
 PLAYER: Jasper and Amara are also taken aback from my words, processing them as well in their own way.
 PLAYER: After some time Ronnie gets up, getting her things.
+(EFFECT_RONNIE_JOY)
 RONNIE: “I think what to do now guys. Thanks.”
 PLAYER: Ronnie looks at Amara for a few moments 
 RONNIE: “I’m sorry for being rude yesterday. You wanted resolution and I just backed out on you, and that wasn’t fair of me to do.”

@@ -1639,7 +1639,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 691135607}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1825,6 +1825,12 @@ MonoBehaviour:
   optionText1: {fileID: 1370725231}
   optionText2: {fileID: 1520919987}
   optionText3: {fileID: 144488327}
+  effectsPrefabs:
+  - {fileID: 6384732444823289448, guid: b01646108aefad843962db4c8c3f1419, type: 3}
+  - {fileID: 3053577015627305649, guid: fda1fff39428d0642af5634c2a6b7cee, type: 3}
+  - {fileID: 1809995030652062838, guid: 8953044fdf784b5489b3caab6b1c893a, type: 3}
+  - {fileID: 4347304983203028561, guid: 1f80c34037d6fe942b1f456611262244, type: 3}
+  - {fileID: 4648612156700008346, guid: 7666e22c6eae26745bd31a0b64bd1b2c, type: 3}
   textSpeed: 0.05
   namePanelTxt: {fileID: 1012233828}
   dialoguePanelTxt: {fileID: 1601671816}

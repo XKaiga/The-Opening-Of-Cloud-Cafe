@@ -25,6 +25,7 @@ PLAYER: I nod to her. Something sweet, warm, and she’s a teenager, I shouldn�
 PLAYER: I think I can pull something off.
 (DRINK_ALYIA_1)
 PLAYER: I hand her drink, watching her take a sip.
+(EFFECT_ALYIA_JOY)
 PLAYER: Alyia smiles, seemingly quite comforted by her drink.
 ALYIA: “Thanks… This is actually quite nice.”
 (EMO_ALYIA_Happy)
@@ -49,6 +50,7 @@ PLAYER: She smiles faintly, as if she’s remembering the reason behind her trou
 PLAYER: “I mean I have to wake up early to open up the café, but honestly I’d be still sleeping if I had the chance.”
 PLAYER: “You’re so productive for your age, I could never!”
 PLAYER: I mention, with a smile, since she had been walking around this early morning.
+(EFFECT_ALYIA_LAUGHTER)
 PLAYER: Alyia lets out a laugh, and my smile widens as it felt like I had lightened the mood.
 ALYIA: “Well not quite. Honestly, on regular days I’d still be sleeping at this hour, but today I just couldn’t.”
 PLAYER: Her tone softens.
@@ -79,6 +81,7 @@ PLAYER: It wasn’t necessary for me to be looking at her, to know that she was 
 1)
 PLAYER: Mothers aren’t always perfect, and maybe she was in her own way trying to look out for you.
 ALYIA: “She wasn’t! She never did!
+(EFFECT_ALYIA_ANGRY)
 PLAYER: Her tone becomes more defensive. Maybe I jumped to some conclusions…
 2)
 PLAYER: I mean your mother having her insecurities or not, she shouldn’t be making you feel the same way.
@@ -105,6 +108,7 @@ ALYIA: “Like really bad…”
 2)
 PLAYER: “I mean I don’t know how bad it is, living like that could be annoying, but I can’t see how leaving would be a good idea.”
 PLAYER: “You have to be stronger.”
+(EFFECT_ALYIA_ANGRY)
 ALYIA: “How can you be strong? It’s easier said then done…”
 3)
 PLAYER: “They’ll come looking for you anytime now, I don’t know if you have this really thought through.”
@@ -128,6 +132,7 @@ ALYIA: “And my dad… he doesn’t even care.”
 3)“Doesn’t even care? Doesn’t sound very nice of him…”(*)
 1)
 PLAYER: “He probably just doesn’t know how to act properly.”
+(EFFECT_ALYIA_ANGRY)
 ALYIA: “That is just not true… That’s the thing.”
 PLAYER: She looks to me unpleasantly, as if I’d told the biggest lie ever.
 2)
@@ -137,6 +142,7 @@ PLAYER: She takes a deep breath.
 3)
 PLAYER: “I mean how could he not?”
 ALYIA: ”Well, curious isn’t it?”
+(EFFECT_ALYIA_LAUGHTER)
 PLAYER: She chuckles.
 (BACK TO REGULAR DIALOGUE.)
 ALYIA: “I used to think my dad was unaware of this all. That he got used to it, or just thought it was normal to act like this.”
@@ -177,6 +183,7 @@ ALYIA: “Could you give me something to drink, to go I mean?”
 PLAYER: “Of course, what would you like?”
 ALYIA: ”No caffeine please, and just something fun, like unusual I guess?”
 ALYIA: “Thanks for the talk, I feel like my head is clearer.”
+(EFFECT_ALYIA_JOY)
 PLAYER: “No problem, I hope you see you come back to the café, to order actual coffee next time.”
 PLAYER: She nods, waving goodbye as she leaves. 
 (EMO_ALYIA_None)
