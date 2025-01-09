@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using TMPro;
+using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEditor.Rendering;
 using UnityEngine;
@@ -15,22 +16,26 @@ public class MainCoffeeManager : MonoBehaviour
 {
     [SerializeField] private Dialogue dialogue;
 
+    [Header("Dialogue Panel")]
     [SerializeField] private TextMeshProUGUI namePanelTxt;
     [SerializeField] private TextMeshProUGUI dialoguePanelTxt;
 
     [SerializeField] private Text skipBtnText;
     [SerializeField] private Text playBtnText;
 
+    [Header("Tasks Tab")]
     [SerializeField] private GameObject tasksOpenMenuBtn;
     [SerializeField] private GameObject tasksCloseMenuBtn;
     [SerializeField] private GameObject tasksMenu;
     [SerializeField] private GameObject taskPrefab;
     private static Vector3 taskPrefabPosition;
 
+    [Header("Music Tab")]
     [SerializeField] private GameObject musicOpenMenuBtn;
     [SerializeField] private GameObject musicCloseMenuBtn;
     [SerializeField] private GameObject musicMenu;
 
+    [Header("Upgrades Tab")]
     [SerializeField] private GameObject upgOpenMenuBtn;
     [SerializeField] private GameObject upgCloseMenuBtn;
     [SerializeField] private GameObject upgMenu;
@@ -50,10 +55,11 @@ public class MainCoffeeManager : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyUp(KeyCode.Space))
+            Dialogue.skip = !Dialogue.skip;
+        
         if (Input.GetKeyUp(KeyCode.Escape))
-        {
             SceneManager.LoadScene("SaveLoadData");
-        }
 
         if (Upgrade.musicToUnlockExists && !Upgrade.musicUnlocking)
         {
@@ -418,11 +424,19 @@ public class MainCoffeeManager : MonoBehaviour
         RawImage musicOpenMenuBtnImg = musicOpenMenuBtn.GetComponent<RawImage>();
         musicOpenMenuBtnImg.enabled = !musicOpenMenuBtnImg.IsActive();
 
+        Transform GO_fftArrayOpen = musicOpenMenuBtn.transform.Find("FFTArrayOpen");
+        if (GO_fftArrayOpen != null)
+            GO_fftArrayOpen.gameObject.SetActive(!musicOpenMenuBtnImg.IsActive());
+
         RawImage musicMenuImg = musicMenu.GetComponent<RawImage>();
         musicMenuImg.enabled = !musicMenuImg.IsActive();
 
         RawImage musicCloseMenuBtnImg = musicCloseMenuBtn.GetComponent<RawImage>();
         musicCloseMenuBtnImg.enabled = !musicCloseMenuBtnImg.IsActive();
+
+        Transform GO_fftArrayClose = musicCloseMenuBtn.transform.Find("FFTArrayClose");
+        if (GO_fftArrayClose != null)
+            GO_fftArrayClose.gameObject.SetActive(!musicCloseMenuBtnImg.IsActive());
 
         if (Upgrade.musicUnlocking && !musicMenuImg.IsActive())
         {
@@ -461,11 +475,21 @@ public class MainCoffeeManager : MonoBehaviour
         RawImage upgMenuImg = upgMenu.GetComponent<RawImage>();
         upgMenuImg.enabled = !upgMenuImg.IsActive();
 
+        Transform transMoneyBg = upgMenu.transform.Find("MoneyBg");
+        if (transMoneyBg != null)
+        {
+            transMoneyBg.gameObject.SetActive(upgMenuImg.IsActive());
+            Money.UpdatedMoneyText(transMoneyBg.GetComponentInChildren<Text>());
+        }
+
         RawImage upgCloseMenuBtnImg = upgCloseMenuBtn.GetComponent<RawImage>();
         upgCloseMenuBtnImg.enabled = !upgCloseMenuBtnImg.IsActive();
 
         foreach (Transform upg in upgMenu.transform)
         {
+            if (upg.gameObject == transMoneyBg.gameObject)
+                continue;
+
             GameObject upgObject = upg.gameObject;
 
             Image upgImg = upgObject.GetComponent<Image>();
@@ -493,7 +517,14 @@ public class MainCoffeeManager : MonoBehaviour
             Upgrade upgFound = Upgrade.FindUpgradeByName(upgName);
             if (upgFound != null)
             {
-                upgFound.Buy();
+                bool bought = upgFound.Buy();
+                if (bought)
+                {
+                    Transform transMoneyBg = upgMenu.transform.Find("MoneyBg");
+                    if (transMoneyBg != null)
+                        Money.UpdatedMoneyText(transMoneyBg.GetComponentInChildren<Text>());
+                }
+
                 TextMeshProUGUI menuItemInstanceText = upg.GetComponentInChildren<TextMeshProUGUI>();
                 if (upgFound.name.Contains("Music"))
                     menuItemInstanceText.text = upgFound.name + "\n";

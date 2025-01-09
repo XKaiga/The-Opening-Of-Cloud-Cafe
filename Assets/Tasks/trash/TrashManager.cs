@@ -12,7 +12,7 @@ public class TrashManager : MonoBehaviour
     public static TrashType currTrashType = TrashType.Default;
     private Vector2 initTrashPos;
     private const float finalTrashYPos = -0.2f;
-    public static int trashMaxQty = 10;
+    public static int trashMaxQty = 3;
     [SerializeField] public static int currTrashQty = 0;
 
     public static int taskTimer = 23;
@@ -22,10 +22,13 @@ public class TrashManager : MonoBehaviour
         initTrashPos = trash.transform.localPosition;
         trash.gameObject.SetActive(false);
 
+        ShowTrash(0);
+    }
+
+    private void OnEnable()
+    {
         foreach (var bin in recicleBins)
             bin.SetActive(TrashDrag.readyToRemoveTrash);
-
-        ShowTrash(0);
     }
 
     public static void FillTrash(int quantity)
