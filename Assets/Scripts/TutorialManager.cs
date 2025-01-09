@@ -10,7 +10,7 @@ public class TutorialManager : MonoBehaviour
     }
     public void OnClickNoOption()
     {
-        GameManager.startDayNum = 2;
+        GameManager.startDayNum = 1;
         this.gameObject.SetActive(false);
         SceneManager.LoadScene("Dialogue");
     }

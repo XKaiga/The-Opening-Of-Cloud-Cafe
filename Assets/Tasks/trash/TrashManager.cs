@@ -45,7 +45,7 @@ public class TrashManager : MonoBehaviour
 
         if (currTrashQty >= trashMaxQty && !TrashDrag.readyToRemoveTrash)
         {
-            MainCoffeeManager.ActivateNewTask(!Dialogue.isTrashTutDoneVar ? 99 : TrashManager.taskTimer, TaskType.Trash));
+            MainCoffeeManager.ActivateNewTask(!Dialogue.isTrashTutDoneVar ? 99 : TrashManager.taskTimer, TaskType.Trash);
             currTrashQty = trashMaxQty;
             TrashDrag.readyToRemoveTrash = true;
         }

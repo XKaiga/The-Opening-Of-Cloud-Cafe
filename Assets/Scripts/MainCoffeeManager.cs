@@ -236,18 +236,14 @@ public class MainCoffeeManager : MonoBehaviour
             foreach (var client in ScndNPCs.secondariesDrinksToServe)
                 CreateNewTask(activeTasksGameObjs.Count, $"Client {client.drinkNumberOfClient} Waiting!", TaskType.NPCOrder, Drink.drinkTaskTimer);
         }
-    }
-
         if (activeTasksGameObjs.Count > 0)
             ActivateTaskWarning();
     }
 
     private void ActivateTaskWarning()
     {
-        var openImg = tasksOpenMenuBtn.GetComponent<RawImage>();
-        var closeImg = tasksCloseMenuBtn.GetComponent<RawImage>();
-        StartCoroutine(BlinkRawImageRed(openImg));
-        StartCoroutine(BlinkRawImageRed(closeImg));
+        StartCoroutine(BlinkRawImageRed(tasksOpenMenuBtnImg));
+        StartCoroutine(BlinkRawImageRed(tasksCloseMenuBtnImg));
 
         StartCoroutine(MoveRedMarker());
     }
@@ -274,37 +270,37 @@ public class MainCoffeeManager : MonoBehaviour
     }
 
     private IEnumerator BlinkRawImageRed(RawImage rawImage)
-{
-    Color originalColor = rawImage.color;
-    float blinkDuration = 2.5f;
-    float blinkInterval = 0.5f;
-
-    float elapsedTime = 0f;
-    while (elapsedTime < blinkDuration)
     {
-        rawImage.color = (rawImage.color == Color.red) ? originalColor : Color.red;
-        yield return new WaitForSeconds(blinkInterval);
-        elapsedTime += blinkInterval;
+        Color originalColor = rawImage.color;
+        float blinkDuration = 2.5f;
+        float blinkInterval = 0.5f;
+
+        float elapsedTime = 0f;
+        while (elapsedTime < blinkDuration)
+        {
+            rawImage.color = (rawImage.color == Color.red) ? originalColor : Color.red;
+            yield return new WaitForSeconds(blinkInterval);
+            elapsedTime += blinkInterval;
+        }
+
+        rawImage.color = originalColor;
     }
 
-    rawImage.color = originalColor;
-}
-
-private void UpdateTaskTabBtnColor()
-{
-    if (activeTasksGameObjs.Count > 0)
+    private void UpdateTaskTabBtnColor()
     {
-        tasksOpenMenuBtnImg.color = Color.red;
-        tasksCloseMenuBtnImg.color = Color.red;
+        if (activeTasksGameObjs.Count > 0)
+        {
+            tasksOpenMenuBtnImg.color = Color.red;
+            tasksCloseMenuBtnImg.color = Color.red;
+        }
+        else
+        {
+            tasksOpenMenuBtnImg.color = Color.white;
+            tasksCloseMenuBtnImg.color = Color.white;
+        }
     }
-    else
-    {
-        tasksOpenMenuBtnImg.color = Color.white;
-        tasksCloseMenuBtnImg.color = Color.white;
-    }
-}
 
-private bool ContainsTaskWithType(TaskType taskType)
+    private bool ContainsTaskWithType(TaskType taskType)
     {
         bool containsTask = activeTasks.Any(task => task.type == taskType);
         return containsTask;
@@ -341,7 +337,7 @@ private bool ContainsTaskWithType(TaskType taskType)
             else if (taskType == TaskType.Trash && !Dialogue.isTrashTutDoneVar)
                 doingTutorial = true;
 
-        ActivateNewTask(doingTutorial ? 99 : timerSec, taskType);
+            ActivateNewTask(doingTutorial ? 99 : timerSec, taskType);
         }
         else if (taskType != TaskType.NPCOrder)
             timerSec = activeTasks.First(task => task.type == taskType).timer;

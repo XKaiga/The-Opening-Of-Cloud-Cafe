@@ -8,11 +8,8 @@ using System;
 using System.Linq;
 using Random = UnityEngine.Random;
 using UnityEngine.SceneManagement;
-using System.Numerics;
-using Unity.VisualScripting;
 using Vector3 = UnityEngine.Vector3;
 using Quaternion = UnityEngine.Quaternion;
-using Unity.VisualScripting;
 using UnityEngine.EventSystems;
 
 public class Dialogue : MonoBehaviour
