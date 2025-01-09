@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -17,6 +18,9 @@ public class MainCoffeeManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI namePanelTxt;
     [SerializeField] private TextMeshProUGUI dialoguePanelTxt;
 
+    [SerializeField] private Text skipBtnText;
+    [SerializeField] private Text playBtnText;
+
     [SerializeField] private GameObject tasksOpenMenuBtn;
     [SerializeField] private GameObject tasksCloseMenuBtn;
     [SerializeField] private GameObject tasksMenu;
@@ -31,6 +35,7 @@ public class MainCoffeeManager : MonoBehaviour
     [SerializeField] private GameObject upgCloseMenuBtn;
     [SerializeField] private GameObject upgMenu;
 
+    [SerializeField] private GameObject markerGO;
     public static List<Task> activeTasks = new();
     private static List<GameObject> activeTasksGameObjs = new();
 
@@ -45,8 +50,6 @@ public class MainCoffeeManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Space))
-            Dialogue.skip = !Dialogue.skip;
         if (Input.GetKeyUp(KeyCode.Escape))
         {
             SceneManager.LoadScene("SaveLoadData");
@@ -62,8 +65,30 @@ public class MainCoffeeManager : MonoBehaviour
             //abre music tab
             ToggleMusicMenu();
         }
+    }
 
-        //UpdateShowNpcTimer();
+    public void OnClickSkipBtn()
+    {
+        Dialogue.skip = !Dialogue.skip;
+        if (Dialogue.skip)
+            skipBtnText.text = "Stop";
+        else
+            skipBtnText.text = "Skip";
+    }
+
+    public void OnClickPlayBtn()
+    {
+        Dialogue.skip = !Dialogue.skip;
+        if (Dialogue.skip)
+        {
+            Dialogue.pauseBetweenSkips = -2f;
+            playBtnText.text = "Pause";
+        }
+        else
+        {
+            Dialogue.pauseBetweenSkips = Dialogue.defaultTimeBetweenSkips;
+            playBtnText.text = "Play";
+        }
     }
 
     public static void LoadSecndNpcsDrinks()
@@ -177,6 +202,11 @@ public class MainCoffeeManager : MonoBehaviour
         return indices.ToArray();
     }
 
+    public static void ActivateNewTask(float timer, TaskType type)
+    {
+        activeTasks.Add(new Task(timer, type));
+    }
+
     public void UpdateTasks()
     {
         if (TrashDrag.readyToRemoveTrash)
@@ -187,18 +217,56 @@ public class MainCoffeeManager : MonoBehaviour
             foreach (var client in ScndNPCs.secondariesDrinksToServe)
                 CreateNewTask(activeTasksGameObjs.Count, $"Client {client.drinkNumberOfClient} Waiting!", TaskType.NPCOrder, Drink.drinkTaskTimer);
 
+        if (activeTasksGameObjs.Count > 0)
+            ActivateTaskWarning();
+    }
+
+    private void ActivateTaskWarning()
+    {
         var openImg = tasksOpenMenuBtn.GetComponent<RawImage>();
         var closeImg = tasksCloseMenuBtn.GetComponent<RawImage>();
-        if (activeTasksGameObjs.Count > 0)
+        StartCoroutine(BlinkRawImageRed(openImg));
+        StartCoroutine(BlinkRawImageRed(closeImg));
+
+        StartCoroutine(MoveRedMarker());
+    }
+    private IEnumerator MoveRedMarker()
+    {
+        TextMeshProUGUI marker = markerGO.GetComponent<TextMeshProUGUI>();
+
+        markerGO.SetActive(true);
+        marker.alignment = TextAlignmentOptions.Bottom;
+
+        float markerDuration = 2.5f;
+        float markerInterval = 0.5f;
+
+        float elapsedTime = 0f;
+        while (elapsedTime < markerDuration)
         {
-            openImg.color = Color.red;
-            closeImg.color = Color.red;
+            marker.alignment = (marker.alignment == TextAlignmentOptions.Bottom) ? TextAlignmentOptions.Top : TextAlignmentOptions.Bottom;
+            yield return new WaitForSeconds(markerInterval);
+            elapsedTime += markerInterval;
         }
-        else
+
+        marker.alignment = TextAlignmentOptions.Top;
+        markerGO.SetActive(false);
+    }
+
+    private IEnumerator BlinkRawImageRed(RawImage rawImage)
+    {
+        Color originalColor = rawImage.color;
+        float blinkDuration = 2.5f;
+        float blinkInterval = 0.5f;
+
+        float elapsedTime = 0f;
+        while (elapsedTime < blinkDuration)
         {
-            openImg.color = Color.white;
-            closeImg.color = Color.white;
+            rawImage.color = (rawImage.color == Color.red) ? originalColor : Color.red;
+            yield return new WaitForSeconds(blinkInterval);
+            elapsedTime += blinkInterval;
         }
+
+        rawImage.color = originalColor;
     }
 
     private bool ContainsTaskWithType(TaskType taskType)
@@ -230,7 +298,7 @@ public class MainCoffeeManager : MonoBehaviour
         taskTimer.timerIsRunning = true;
 
         if (!ContainsTaskWithType(taskType))
-            activeTasks.Add(new Task(timerSec, taskType));
+            ActivateNewTask(timerSec, taskType);
         else if (taskType != TaskType.NPCOrder)
             timerSec = activeTasks.First(task => task.type == taskType).timer;
         else
@@ -251,7 +319,7 @@ public class MainCoffeeManager : MonoBehaviour
             if (alreadyExists)
                 timerSec = drinkTasks[currIndex].timer;
             else
-                activeTasks.Add(new Task(timerSec, taskType));
+                ActivateNewTask(timerSec, taskType);
         }
 
         taskTimer.timeRemaining = timerSec;
@@ -541,6 +609,9 @@ public class MainCoffeeManager : MonoBehaviour
         {
             Dialogue.skip = true;
             Dialogue.pauseBetweenSkips = -2f;
+
+            Dialogue.nameTxtTemp = Dialogue.nameTxt;
+            Dialogue.dialogueTxtTemp = Dialogue.dialogueTxt;
 
             Dialogue.nameTxt = namePanelTxt.text;
             Dialogue.dialogueTxt = dialoguePanelTxt.text;

@@ -113,7 +113,7 @@ public class BlobManager : MonoBehaviour
 
         float cleanPercentage = (float)differingPixels / totalPixels;
 
-        return false;//cleanPercentage >= cleanThreshold;
+        return cleanPercentage >= cleanThreshold;
     }
 
     private Texture2D CaptureTextureFromRenderTexture(RenderTexture renderTexture)

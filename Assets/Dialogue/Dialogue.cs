@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 using Random = UnityEngine.Random;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class Dialogue : MonoBehaviour
 {
@@ -121,7 +122,8 @@ public class Dialogue : MonoBehaviour
 
 
     public static bool skip = false;
-    public static float pauseBetweenSkips = 0.2f;
+    public const float defaultTimeBetweenSkips = 0.2f;
+    public static float pauseBetweenSkips = defaultTimeBetweenSkips;
     public bool waitingForDialogue = false;
     void Update()
     {
@@ -130,8 +132,13 @@ public class Dialogue : MonoBehaviour
             if (!isChoosing && !charAnswering && !onTutorial)
                 UpdateHateTimer();
 
-            if (skip)
+            if (skip || Input.GetKeyUp(KeyCode.Space))
+            {
+                EventSystem.current.SetSelectedGameObject(null); // Clear focus on UI elements
                 OnClickDialogue();
+            }
+
+            ManagePlayerInputs();
 
             if (TrashDrag.readyToRemoveTrash && !isTrashTutDoneVar)
             {
@@ -144,6 +151,83 @@ public class Dialogue : MonoBehaviour
                 LoadTrashTutorial();
             }
         }
+    }
+
+    private void HandleDialogueSceneInput()
+    {
+        MainCoffeeManager mainCoffeeManager = FindObjectOfType<MainCoffeeManager>();
+        if (mainCoffeeManager == null)
+            return;
+
+        if (Input.GetKeyUp(KeyCode.D))
+        {
+            mainCoffeeManager.LoadDrinkStationScene();
+        }
+        else if (Input.GetKeyUp(KeyCode.T))
+        {
+            mainCoffeeManager.LoadTablesScene();
+        }
+        else if (Input.GetKeyUp(KeyCode.M) || Input.GetKeyUp(KeyCode.S))
+        {
+            mainCoffeeManager.ToggleMusicMenu();
+        }
+        else if (Input.GetKeyUp(KeyCode.U))
+        {
+            mainCoffeeManager.ToggleUpgradeMenu();
+        }
+        else if (Input.GetKeyUp(KeyCode.Tab))
+        {
+            mainCoffeeManager.ToggleTaskMenu();
+        }
+    }
+    private void HandleDrinkStationInput()
+    {
+        DrinkManager drinkManager = FindObjectOfType<DrinkManager>();
+        if (drinkManager == null)
+            return;
+
+        if (Input.GetKeyUp(KeyCode.B))
+        {
+            if (!isChoosing)
+            {
+                drinkManager.StartChangingScene();
+                LoadDialogueScene();
+            }
+        }
+        else if (Input.GetKeyUp(KeyCode.Tab) || Input.GetKeyUp(KeyCode.I))
+        {
+            drinkManager.ToggleInfoPanel();
+        }
+    }
+    private void ManagePlayerInputs()
+    {
+        string activeSceneName = SceneManager.GetActiveScene().name;
+
+        switch (activeSceneName)
+        {
+            case "Dialogue":
+                HandleDialogueSceneInput();
+                break;
+
+            case "DrinkStation":
+                HandleDrinkStationInput();
+                break;
+        }
+
+    }
+
+    public void LoadDialogueScene()
+    {
+        pauseBetweenSkips = defaultTimeBetweenSkips;
+        skip = false;
+
+        nameTxtTemp = nameTxt;
+        dialogueTxtTemp = dialogueTxt;
+
+        nameTxt = namePanelTxt.text;
+        dialogueTxt = dialoguePanelTxt.text;
+
+        SceneManager.LoadScene("Dialogue");
     }
 
     private void UpdateHateTimer()
@@ -473,7 +557,7 @@ public class Dialogue : MonoBehaviour
                     //if (!ScndNPCs.secondariesDrinksToServe.Contains(secDrink))
                     //    ScndNPCs.secondariesDrinksToServe.Add(secDrink);
                     ScndNPCs.secondariesDrinksToServe.Add(ScndNPCs.GenerateRandomScndDrink());
-                    MainCoffeeManager.activeTasks.Add(new(Drink.drinkTaskTimer, TaskType.NPCOrder));
+                    MainCoffeeManager.ActivateNewTask(Drink.drinkTaskTimer, TaskType.NPCOrder);
                 }
 
                 MainCoffeeManager dialogueManager = FindObjectOfType<MainCoffeeManager>();
@@ -776,7 +860,7 @@ public class Dialogue : MonoBehaviour
 
         if (SceneManager.GetActiveScene().name != "Dialogue")
         {
-            pauseBetweenSkips = 0.2f;
+            pauseBetweenSkips = defaultTimeBetweenSkips;
             skip = false;
             nameTxt = namePanelTxt.text;
             dialogueTxt = dialoguePanelTxt.text;
