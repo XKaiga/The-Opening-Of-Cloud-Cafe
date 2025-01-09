@@ -30,6 +30,7 @@ PLAYER: I smile recognising her words, agreeing with them.
 PLAYER: “Bring him here instead then, please. I want to know what he’ll order too.”
 PLAYER: Amara nods, calling Jasper over to the front counter where we were.
 AMARA: “Jasper! Hey!”
+(EFFECT_JASPER_SHOCKED)
 PLAYER: Jasper looks at us rather confused by the sudden mention of his name.
 AMARA: “Come here, I want to talk to you.”
 PLAYER: Jasper freezes for a few seconds, before grabbing his stuff and making his way over to me and Amara.
@@ -71,7 +72,9 @@ PLAYER: I nod, not planning on disturbing her more than necessary.
 PLAYER: As I turn to face Amara and Jasper, I can see Jasper excitedly talk about my café, complimenting it a lot, which makes me smile in appreciation.
 JASPER: “It’s really decorated and it’s fun to be here. Like the mood makes me almost more loose from myself.”
 AMARA: ”Okay chill.”
+(EFFECT_JASPER_SHOCKED)
 PLAYER: Jasper seems taken aback by Amara’s remark but returns to being calm after she chuckles, probably finding him rather funny.
+(EFFECT_AMARA_LAUGHTER)
 AMARA: “You’re talking like you’ll get drunk or something, but yeah, I get what you mean.”
 PLAYER: Jasper chuckles too, clearly the interaction they are having with each other.
 JASPER: “I’m sorry if I’m being too much though, I just thought I could talk freely with you.”
@@ -80,6 +83,7 @@ PLAYER: Amara is surprised by his sentence, as am I, it was some insecurity surf
 2) “You can talk freely, nobody said otherwise.” (*)
 3) “You’re not being too much, you’re just talking to us.” (+)
 1)
+(EFFECT_JASPER_SHOCKED)
 PLAYER: Jasper is taken aback, but with a few moments he can understand what I meant.
 2)
 PLAYER: Jasper nods, but takes some time to talk again.
@@ -92,6 +96,7 @@ AMARA: ”Why? Only now you became more interesting as you started to get excite
 AMARA: “Go on, talk about the Café, we’re all listening.”
 PLAYER: As Amara says that, she makes a head movement indicating someone else was listening to the conversation.
 PLAYER: As I turn around I see that Ronnie was also listening to the conversation.
+(EFFECT_RONNIE_SHOCKED)
 RONNIE: “Sorry, I just found his remark weird as well, just trying to to figure that out as well, but I can leave if you wan-”
 AMARA: “Calm down nobody told you to do that.”
 PLAYER: Amara interrupts Ronnie, leaving her a bit speechless.
@@ -106,6 +111,7 @@ PLAYER: I am quite confused by his statement too. Jasper barely expresses himsel
 PLAYER: How can he express himself less as he already does?
 JASPER: “Like they don’t say anything bad per se. Just ignore it when I talk, give me bad looks when I try to get some attention. It must be me overthinking it though.”
 RONNIE: “And why don’t you tell those same guys to piss off?”
+(EFFECT_AMARA_LAUGHTER)
 PLAYER: Amara chuckles with Ronnie’s remark.
 PLAYER: “I mean I wouldn’t rule that off but I believe there could be better ways to go about it.”
 PLAYER: I say with a slight smile on my face.
@@ -146,8 +152,10 @@ PLAYER: It’s like he is having trouble formulating his thoughts himself, like 
 RONNIE: “Okay guys let’s calm down now, if you put it that way Amara you’re diminishing his feelings.”
 PLAYER: Amara doesn’t seem pleased to be talked that way.
 AMARA: “But please are you hearing him??? I mean that sucks but that sounds like nothing, at least compared to what I went through, and you’re not seeing me complaining.”
+(EFFECT_RONNIE_ANGRY)
 RONNIE: “That was such a disgusting thing you said just there.”
 PLAYER: “Okay guys, maybe let’s settle this for now-”
+(EFFECT_AMARA_ANGRY)
 AMARA: “Like you know what I’ve been through! Like sorry to Jasper, but he’s insecure of how he expresses himself, if he talks loud enough, or too much or too little.”
 AMARA: “When there are so many bigger things a person could be worried about!”
 AMARA: “And the way he’s complaining about it makes him sound like he is just wanting attention! Which is fine, but damn, just ask for it.”
@@ -157,9 +165,12 @@ PLAYER: Ronnie seems furious after everything that came out of Amara’s mouth.
 RONNIE: “I don’t know what you’ve been through but I do know you’ve grown bitter and are taking it out on other people.”
 RONNIE: “You did that yesterday to me and are doing it today to Jasper and I just won’t stand by it!”
 RONNIE: “We don’t know the full story yet and you’re already ranting about it!”
+(EFFECT_AMARA_LAUGHTER)
 PLAYER: I can hear Amara’s laugh.
 AMARA: “What more could there even be!-”
 JASPER: “GUYS STOP!”
+(EFFECT_RONNIE_SHOCKED)
+(EFFECT_AMARA_SHOCKED)
 PLAYER: Everyone freezes, we weren’t even aware that Jasper could speak that high.
 JASPER: “You don’t know how hard it is to me to even express myself when i’ve spent all my life being invalidated and diminished.”
 JASPER: “Because yes, I know it seems silly but once every word that comes out of your mouth becomes background noise you grow insecurities.”
@@ -172,6 +183,7 @@ PLAYER: I can see that Amara is regretting every word she said right now without
 2) “You have every right to be upset…” (*)
 3) “These issues always come with more to them than it originally seems.” (+)
 1)
+(EFFECT_JASPER_ANGRY)
 JASPER: “Well duh, of course it is!”
 PLAYER: That was kind of the obvious statement right there…
 2)
@@ -195,6 +207,7 @@ PLAYER: “In any case, I’m always here to teach you the basics that I’ve on
 PLAYER: “But the most important part of this… I’m now realizing it’s being able to deal with customers… and you did that not once, but twice with these two.”
 PLAYER: Amara and Ronnie look around rather shy.
 PLAYER: “I know you can do it Jasper.”
+(EFFECT_JASPER_SHOCKED)
 PLAYER: Jasper looks around seemingly rather confident.
 JASPER: “Thanks, I’ll give that a thought as I go on with my day. Thanks for the conversation guys.”
 (Hide_JASPER)

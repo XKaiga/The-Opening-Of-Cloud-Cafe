@@ -5,7 +5,7 @@ public class ShaderHeightController2 : MonoBehaviour
     public Material material; // Assign your material here in the Inspector
     public float changeInterval = 0.5f; // Time interval between changes
     public int type = 0; // Time interval between changes
-    private float[] yValues_2 = { 0.15f, 0.55f, 0.25f, 0.1f, 0.8f }; // The Y values to cycle through
+    private float[] yValues_2 =  { 0.15f, 0.7f, 0.35f, 0.65f, 0.2f }; // The Y values to cycle through
     private int currentIndex = 0; // Index to track the current Y value
     private float timer = 2f; // Timer to track time elapsed
 

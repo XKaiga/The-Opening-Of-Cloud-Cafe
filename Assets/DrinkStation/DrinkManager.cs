@@ -126,8 +126,7 @@ public class DrinkManager : MonoBehaviour
             {
                 if (!Dialogue.isChoosing)
                 {
-                    Dialogue.pauseBetweenSkips = 0.2f;
-                    Dialogue.skip = false;
+                    StartChangingScene();
 
                     Dialogue.nameTxtTemp = Dialogue.nameTxt;
                     Dialogue.dialogueTxtTemp = Dialogue.dialogueTxt;
@@ -170,11 +169,7 @@ public class DrinkManager : MonoBehaviour
 
             else if (colliderName.Contains("info"))
             {
-                GODrinkMachine.SetActive(!GODrinkMachine.activeSelf);
-                flavoursInfo.SetActive(!flavoursInfo.activeSelf);
-
-                if (tipShowing)
-                    tipText.gameObject.transform.parent.gameObject.SetActive(!flavoursInfo.activeSelf);
+                ToggleInfoPanel();
             }
 
             else if (colliderName.Contains("pour"))
@@ -246,6 +241,29 @@ public class DrinkManager : MonoBehaviour
                     return;
                 }
             }
+        }
+    }
+
+    public void ToggleInfoPanel()
+    {
+        GODrinkMachine.SetActive(!GODrinkMachine.activeSelf);
+        flavoursInfo.SetActive(!flavoursInfo.activeSelf);
+
+        if (tipShowing)
+            tipText.gameObject.transform.parent.gameObject.SetActive(!flavoursInfo.activeSelf);
+    }
+
+    public void StartChangingScene()
+    {
+        if (ScndNPCs.secndClientWaiting)
+        {
+            Task drinkTaskFound = MainCoffeeManager.activeTasks.Find(task => drinkTimer.gameObject.name.ToLower().Contains(task.type.ToString().ToLower()));
+            Text drinkTimerTxt = drinkTimer.gameObject.GetComponentInChildren<Text>();
+            if (drinkTaskFound != null)
+                if (drinkTimerTxt.isActiveAndEnabled)
+                    drinkTaskFound.timer = float.Parse(drinkTimerTxt.text);
+                else
+                    Debug.Log("drink task error");
         }
     }
 

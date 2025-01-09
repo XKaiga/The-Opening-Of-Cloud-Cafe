@@ -8,7 +8,12 @@ using System;
 using System.Linq;
 using Random = UnityEngine.Random;
 using UnityEngine.SceneManagement;
+using System.Numerics;
 using Unity.VisualScripting;
+using Vector3 = UnityEngine.Vector3;
+using Quaternion = UnityEngine.Quaternion;
+using Unity.VisualScripting;
+using UnityEngine.EventSystems;
 
 public class Dialogue : MonoBehaviour
 {
@@ -24,12 +29,14 @@ public class Dialogue : MonoBehaviour
     [SerializeField] private TextMeshProUGUI optionText1;
     [SerializeField] private TextMeshProUGUI optionText2;
     [SerializeField] private TextMeshProUGUI optionText3;
+    [SerializeField] private List<GameObject> effectsPrefabs;
     private static List<DialogueOption> dialogueOptions = new();
     private static int optionIndex = 0;
     private static int responseIndex = 0;
     public static bool isChoosing = false;
     public static bool charAnswering = false;
     private static int backToDialogueIndex = -1;
+    
 
     public static bool isMusicDoneVar = false;
     public static bool isTrashTutDoneVar = false;
@@ -143,7 +150,8 @@ public class Dialogue : MonoBehaviour
     }
 
     public static bool skip = false;
-    public static float pauseBetweenSkips = 0.2f;
+    public const float defaultTimeBetweenSkips = 0.2f;
+    public static float pauseBetweenSkips = defaultTimeBetweenSkips;
     public bool waitingForDialogue = false;
     void Update()
     {
@@ -159,8 +167,13 @@ public class Dialogue : MonoBehaviour
             if (!isChoosing && !charAnswering && !onTutorial)
                 UpdateHateTimer();
 
-            if (skip)
+            if (skip || Input.GetKeyUp(KeyCode.Space))
+            {
+                EventSystem.current.SetSelectedGameObject(null); // Clear focus on UI elements
                 OnClickDialogue();
+            }
+
+            ManagePlayerInputs();
 
             if (TrashDrag.readyToRemoveTrash && !isTrashTutDoneVar)
             {
@@ -173,6 +186,83 @@ public class Dialogue : MonoBehaviour
                 LoadTableTutorial();
             }
         }
+    }
+
+    private void HandleDialogueSceneInput()
+    {
+        MainCoffeeManager mainCoffeeManager = FindObjectOfType<MainCoffeeManager>();
+        if (mainCoffeeManager == null)
+            return;
+
+        if (Input.GetKeyUp(KeyCode.D))
+        {
+            mainCoffeeManager.LoadDrinkStationScene();
+        }
+        else if (Input.GetKeyUp(KeyCode.T))
+        {
+            mainCoffeeManager.LoadTablesScene();
+        }
+        else if (Input.GetKeyUp(KeyCode.M) || Input.GetKeyUp(KeyCode.S))
+        {
+            mainCoffeeManager.ToggleMusicMenu();
+        }
+        else if (Input.GetKeyUp(KeyCode.U))
+        {
+            mainCoffeeManager.ToggleUpgradeMenu();
+        }
+        else if (Input.GetKeyUp(KeyCode.Tab))
+        {
+            mainCoffeeManager.ToggleTaskMenu();
+        }
+    }
+    private void HandleDrinkStationInput()
+    {
+        DrinkManager drinkManager = FindObjectOfType<DrinkManager>();
+        if (drinkManager == null)
+            return;
+
+        if (Input.GetKeyUp(KeyCode.B))
+        {
+            if (!isChoosing)
+            {
+                drinkManager.StartChangingScene();
+                LoadDialogueScene();
+            }
+        }
+        else if (Input.GetKeyUp(KeyCode.Tab) || Input.GetKeyUp(KeyCode.I))
+        {
+            drinkManager.ToggleInfoPanel();
+        }
+    }
+    private void ManagePlayerInputs()
+    {
+        string activeSceneName = SceneManager.GetActiveScene().name;
+
+        switch (activeSceneName)
+        {
+            case "Dialogue":
+                HandleDialogueSceneInput();
+                break;
+
+            case "DrinkStation":
+                HandleDrinkStationInput();
+                break;
+        }
+
+    }
+
+    public void LoadDialogueScene()
+    {
+        pauseBetweenSkips = defaultTimeBetweenSkips;
+        skip = false;
+
+        nameTxtTemp = nameTxt;
+        dialogueTxtTemp = dialogueTxt;
+
+        nameTxt = namePanelTxt.text;
+        dialogueTxt = dialoguePanelTxt.text;
+
+        SceneManager.LoadScene("Dialogue");
     }
 
     private void UpdateHateTimer()
@@ -572,6 +662,78 @@ public class Dialogue : MonoBehaviour
                 StartCoroutine(HandleNewDay());
 
                 break;
+
+
+            case "effect":
+
+            Debug.Log("reconheceu a palavra effect");
+
+            if (SceneManager.GetActiveScene().name != "Dialogue")
+            break;
+
+            Debug.Log("reconheceu que a cena e dialogue");
+
+
+            string[] effectParts = TrimSplitDialogueCode(line);
+
+            Debug.Log("dividiu o a linha em partes");
+
+            var effectDetermined = Effects.DetermineEffect(effectParts[2]);
+
+            Debug.Log("determinou o efeito");
+
+            if (effectDetermined == null){
+
+                Debug.Log("o effeito deu null");
+                    break;
+            }
+                    Debug.Log("o efeito nao e nulo");
+
+                //if (effectDetermined is Effects effect)
+                //{
+                    Debug.Log("entrou no if");
+
+                    Character characterPartEffect = Character.DetermineCharacter(effectParts[1]);
+
+                    Debug.Log("determinou a personagem objetivo");
+
+                
+                    foreach(RawImage CharacterSpace in CharacterSpaces){
+
+                        Text nameCharacter = CharacterSpace.GetComponentInChildren<Text>();
+
+                        Debug.Log("obteve o nome da personagem");
+
+                        Vector3 position = CharacterSpace.gameObject.transform.position; 
+
+                        if(characterPartEffect.name == nameCharacter.text){
+
+                            Debug.Log("viu a personagem presente");
+
+                            foreach (GameObject effectPrebab in effectsPrefabs){
+
+                                if (effectDetermined is Effects.EffectType tipo){
+
+                                    Debug.Log("reconheceu a o tipo de efeito");
+ 
+                                    if (effectPrebab.GetComponent<Effects>().type == tipo){
+
+                                        Debug.Log("instanciou");
+                                        Instantiate(effectPrebab, position, Quaternion.identity);
+                                         break;
+                                    }
+                                }
+
+                            }
+                             break;
+                        }
+                    }
+
+                //}
+            
+                NextLine();
+
+            break;
         }
     }
 
@@ -639,6 +801,8 @@ public class Dialogue : MonoBehaviour
 
         if (lineLowerCase.Contains("(endday_"))
             return "endingDay";
+        if (lineLowerCase.Contains("(effect_"))
+            return "effect";
 
         return "conversation";
     }
@@ -693,7 +857,7 @@ public class Dialogue : MonoBehaviour
 
     private string SeparateOption(string optionLine)
     {
-        string pattern = @"^\d*\)?\s*[“\""]?(.*?)[”\""]?\s*\(([^)]*)\)$";
+        string pattern = @"^\d*\)?\s*[ï¿½\""]?(.*?)[ï¿½\""]?\s*\(([^)]*)\)$";
 
         Match match = Regex.Match(optionLine, pattern);
         if (match.Success)
@@ -796,15 +960,15 @@ public class Dialogue : MonoBehaviour
     {
         List<string> txtMusic = new()
         {
-            "Tutorial : (Upgrades can be bought at the upgrades store so you’re able to see which emotion songs portray.)",
+            "Tutorial : (Upgrades can be bought at the upgrades store so youï¿½re able to see which emotion songs portray.)",
             "Tutorial : (Feel the music and try to figure out if it better fits the mood.)",
-            "Tutorial : (Go on the music tab to change your café’s tune when the " +
+            "Tutorial : (Go on the music tab to change your cafï¿½s tune when the " +
             "customers complain, and find a better fitting choice so you can carry out " +
             "the conversation without losing points. )",
             "Tutorial : (However, as conversations with customers shift and mood changes," +
             " the music has to be changed as well. No one likes to hear happy music while having" +
-            " a sad conversation, or, at the very least, your customers don’t.)",
-            "Tutorial : (Like any Café, Cloud Café has background music playing.)"
+            " a sad conversation, or, at the very least, your customers donï¿½t.)",
+            "Tutorial : (Like any Cafï¿½, Cloud Cafï¿½ has background music playing.)"
         };
 
         foreach (var txt in txtMusic)
@@ -814,7 +978,7 @@ public class Dialogue : MonoBehaviour
 
         if (SceneManager.GetActiveScene().name != "Dialogue")
         {
-            pauseBetweenSkips = 0.2f;
+            pauseBetweenSkips = defaultTimeBetweenSkips;
             skip = false;
             nameTxt = namePanelTxt.text;
             dialogueTxt = dialoguePanelTxt.text;
@@ -860,14 +1024,14 @@ public class Dialogue : MonoBehaviour
     {
         List<string> txtTrash = new()
         {
-            "Tutorial: (It is also possible to increase your trash bin’s capacity on the upgrades’ store.)",
+            "Tutorial: (It is also possible to increase your trash binï¿½s capacity on the upgradesï¿½ store.)",
             "Tutorial: (Just drag the trash bag to the correspondent and correct trash can, " +
                 "and the trash will be dealt with. Throwing it on the wrong trash can will deduct points " +
                 "from your score too.)",
-            "Tutorial: (Trash can’t be accumulated at the Café, so to get rid of it is of" +
+            "Tutorial: (Trash canï¿½t be accumulated at the Cafï¿½, so to get rid of it is of" +
                 " upmost importance, otherwise points will be deducted from the final score and" +
                 " character ending.)",
-            "Tutorial: (When there’s trash to be taken out, hurry up! )"
+            "Tutorial: (When thereï¿½s trash to be taken out, hurry up! )"
         };
 
         lineIndex--;
@@ -904,9 +1068,9 @@ public class Dialogue : MonoBehaviour
             "Tutorial: (Bigger cloth sizes are available in the upgrades store.)",
             "Tutorial: (Just click and drag the mouse on top of the stains on top of the table to clean them.)",
             "Tutorial: (You have limited time to do it, and not being able to do it in time will result" +
-            " in losing points which will affect the final score and character’s ending!)",
-            "Tutorial: (As the task of cleaning a table appears on the notification’s tab, hurry to the table" +
-            " section to clean the table that’s dirty.)"
+            " in losing points which will affect the final score and characterâ€™s ending!)",
+            "Tutorial: (As the task of cleaning a table appears on the notificationâ€™s tab, hurry to the table" +
+            " section to clean the table thatâ€™s dirty.)"
         };
 
         lineIndex--;

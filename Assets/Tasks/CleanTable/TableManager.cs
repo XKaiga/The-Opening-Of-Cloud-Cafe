@@ -87,13 +87,14 @@ public class TableManager : MonoBehaviour
         {
             if (colliderName.Contains("tables"))
             {
-                UpdateCleanTimerOnExit();
 
-                UpdateTrashTimerOnExit();
-
-                inAnotherView = true;
                 if (!Dialogue.isChoosing)
                 {
+                    UpdateCleanTimerOnExit();
+
+                    UpdateTrashTimerOnExit();
+
+                    inAnotherView = true;
                     Dialogue.pauseBetweenSkips = 0.2f;
                     Dialogue.skip = false;
                     Dialogue.nameTxt = namePanelTxt.text;
