@@ -20,8 +20,8 @@ public class MainCoffeeManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI dialoguePanelTxt;
 
     [Header("Tasks Tab")]
-    [SerializeField] private GameObject tasksOpenMenuBtn;
-    [SerializeField] private GameObject tasksCloseMenuBtn;
+    [SerializeField] private RawImage tasksOpenMenuBtnImg;
+    [SerializeField] private RawImage tasksCloseMenuBtnImg;
     [SerializeField] private GameObject tasksMenu;
     [SerializeField] private GameObject taskPrefab;
     private static Vector3 taskPrefabPosition;
@@ -52,7 +52,7 @@ public class MainCoffeeManager : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.Space))
             Dialogue.skip = !Dialogue.skip;
-        
+
         if (Input.GetKeyUp(KeyCode.Escape))
             SceneManager.LoadScene("SaveLoadData");
 
@@ -67,7 +67,8 @@ public class MainCoffeeManager : MonoBehaviour
             ToggleMusicMenu();
         }
 
-        //UpdateShowNpcTimer();
+        UpdateTaskTabBtnColor();
+
     }
 
     public static void LoadSecndNpcsDrinks()
@@ -88,7 +89,7 @@ public class MainCoffeeManager : MonoBehaviour
 
         int minIndicesCount = (int)(linesCount / 200.0f * (2f + GameManager.startDayNum));
         int maxIndicesCount = (int)(linesCount / 200.0f * (5f + GameManager.startDayNum));
-        int indicesCount = Random.Range(minIndicesCount, maxIndicesCount + 1);
+        int indicesCount = Random.Range(minIndicesCount, maxIndicesCount + 1) + 10;
         List<int> indices = new();
 
         int startBound = (int)(linesCount / 10f);
@@ -188,20 +189,33 @@ public class MainCoffeeManager : MonoBehaviour
         if (!CleanManager.clean)
             CreateNewTask(activeTasksGameObjs.Count, "Clean Table!", TaskType.Clean, CleanManager.taskTimer);
         if (ScndNPCs.secndClientWaiting)
+        {
+            for (int i = tasksMenu.transform.childCount - 1; i >= 0; i--)
+            {
+                Transform transTask = tasksMenu.transform.GetChild(i);
+                TaskTimerMenu taskMenu = transTask.gameObject.GetComponent<TaskTimerMenu>();
+                if (taskMenu != null && taskMenu.taskType == TaskType.NPCOrder)
+                {
+                    activeTasksGameObjs.Remove(transTask.gameObject);
+                    Destroy(transTask.gameObject);
+                }
+            }
             foreach (var client in ScndNPCs.secondariesDrinksToServe)
                 CreateNewTask(activeTasksGameObjs.Count, $"Client {client.drinkNumberOfClient} Waiting!", TaskType.NPCOrder, Drink.drinkTaskTimer);
+        }
+    }
 
-        var openImg = tasksOpenMenuBtn.GetComponent<RawImage>();
-        var closeImg = tasksCloseMenuBtn.GetComponent<RawImage>();
+    private void UpdateTaskTabBtnColor()
+    {
         if (activeTasksGameObjs.Count > 0)
         {
-            openImg.color = Color.red;
-            closeImg.color = Color.red;
+            tasksOpenMenuBtnImg.color = Color.red;
+            tasksCloseMenuBtnImg.color = Color.red;
         }
         else
         {
-            openImg.color = Color.white;
-            closeImg.color = Color.white;
+            tasksOpenMenuBtnImg.color = Color.white;
+            tasksCloseMenuBtnImg.color = Color.white;
         }
     }
 
@@ -234,7 +248,16 @@ public class MainCoffeeManager : MonoBehaviour
         taskTimer.timerIsRunning = true;
 
         if (!ContainsTaskWithType(taskType))
-            activeTasks.Add(new Task(timerSec, taskType));
+        {
+            bool doingTutorial = false;
+
+            if (taskType == TaskType.Clean && !TableManager.isCleanTutDone)
+                doingTutorial = true;
+            else if (taskType == TaskType.Trash && !Dialogue.isTrashTutDoneVar)
+                doingTutorial = true;
+
+            activeTasks.Add(new Task(doingTutorial ? 99 : timerSec, taskType));
+        }
         else if (taskType != TaskType.NPCOrder)
             timerSec = activeTasks.First(task => task.type == taskType).timer;
         else
@@ -277,7 +300,9 @@ public class MainCoffeeManager : MonoBehaviour
         switch (taskType)
         {
             case TaskType.Trash:
-                TrashDrag.readyToRemoveTrash = false;
+                TrashManager trashManager = FindObjectOfType<TrashManager>();
+                if (trashManager != null)
+                    trashManager.TrashRemoved();
                 break;
             case TaskType.Clean:
                 CleanManager.clean = true;
@@ -295,15 +320,20 @@ public class MainCoffeeManager : MonoBehaviour
         activeTasksGameObjs.Remove(taskToRemove);
         Destroy(taskToRemove);
 
-        foreach (var task in activeTasksGameObjs)
-        {
-            if (task.transform.position == taskPrefabPosition)
-                continue;
 
-            Vector3 position = task.transform.localPosition;
-            position.y += (task.GetComponent<RectTransform>().rect.height + 5);
-            task.transform.localPosition = position;
+        if (activeTasksGameObjs.Count != 0)
+        {
+            foreach (var task in activeTasksGameObjs)
+            {
+                if (task.transform.position == taskPrefabPosition)
+                    continue;
+
+                Vector3 position = task.transform.localPosition;
+                position.y += (task.GetComponent<RectTransform>().rect.height + 5);
+                task.transform.localPosition = position;
+            }
         }
+
         /*at least before update:   !!!
          * atualizar que mesa estão limpas ou etc...,
          * ou criar um enum com os diferentes tipos de task e baseado na que foi feita atualizar,
@@ -319,13 +349,11 @@ public class MainCoffeeManager : MonoBehaviour
         RawImage musicOpenMenuBtnImg = musicOpenMenuBtn.GetComponent<RawImage>();
         musicOpenMenuBtnImg.enabled = !musicOpenMenuBtnImg.IsActive();
 
-        RawImage tasksOpenMenuBtnImg = tasksOpenMenuBtn.GetComponent<RawImage>();
         tasksOpenMenuBtnImg.enabled = !tasksOpenMenuBtnImg.IsActive();
 
         RawImage tasksMenuImg = tasksMenu.GetComponent<RawImage>();
         tasksMenuImg.enabled = !tasksMenuImg.IsActive();
 
-        RawImage tasksCloseMenuBtnImg = tasksCloseMenuBtn.GetComponent<RawImage>();
         tasksCloseMenuBtnImg.enabled = !tasksCloseMenuBtnImg.IsActive();
 
         foreach (var task in activeTasksGameObjs)
@@ -348,7 +376,6 @@ public class MainCoffeeManager : MonoBehaviour
 
         RawImage upgOpenMenuBtnImg = upgOpenMenuBtn.GetComponent<RawImage>();
         upgOpenMenuBtnImg.enabled = !upgOpenMenuBtnImg.IsActive();
-        RawImage tasksOpenMenuBtnImg = tasksOpenMenuBtn.GetComponent<RawImage>();
         tasksOpenMenuBtnImg.enabled = !tasksOpenMenuBtnImg.IsActive();
 
         RawImage musicOpenMenuBtnImg = musicOpenMenuBtn.GetComponent<RawImage>();
@@ -394,7 +421,6 @@ public class MainCoffeeManager : MonoBehaviour
 
     public void ToggleUpgradeMenu()
     {
-        RawImage tasksOpenMenuBtnImg = tasksOpenMenuBtn.GetComponent<RawImage>();
         tasksOpenMenuBtnImg.enabled = !tasksOpenMenuBtnImg.IsActive();
         RawImage musicOpenMenuBtnImg = musicOpenMenuBtn.GetComponent<RawImage>();
         musicOpenMenuBtnImg.enabled = !musicOpenMenuBtnImg.IsActive();

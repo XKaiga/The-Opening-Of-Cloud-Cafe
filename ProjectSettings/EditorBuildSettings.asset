@@ -26,4 +26,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Menus/Options.unity
     guid: 2abb5fda92e14fe4c9bb947d8a72add8
+  - enabled: 1
+    path: Assets/Scenes/TrashScene.unity
+    guid: 1c5cb00fe6e85bc4e8e2bb9daa3d5dff
   m_configObjects: {}

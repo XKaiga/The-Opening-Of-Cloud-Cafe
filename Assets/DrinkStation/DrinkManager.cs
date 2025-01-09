@@ -55,6 +55,7 @@ public class DrinkManager : MonoBehaviour
                                                                 .Select(t => t.timer)                   // Select the timer values
                                                                 .DefaultIfEmpty(Drink.drinkTaskTimer)         // Provide a default value if no tasks are found
                                                                 .Min();                                 // Get the smallest timer value
+            drinkTimer.taskType = TaskType.NPCOrder;
             drinkTimer.StartTimer(drinkStartTime);
         }
     }
@@ -103,6 +104,7 @@ public class DrinkManager : MonoBehaviour
                                                                 .Select(t => t.timer)                   // Select the timer values
                                                                 .DefaultIfEmpty(Drink.drinkTaskTimer)         // Provide a default value if no tasks are found
                                                                 .Min();                                 // Get the smallest timer value
+            drinkTimer.taskType = TaskType.NPCOrder;
             drinkTimer.StartTimer(drinkStartTime);
         }
     }
@@ -133,16 +135,7 @@ public class DrinkManager : MonoBehaviour
                     Dialogue.nameTxt = namePanelTxt.text;
                     Dialogue.dialogueTxt = dialoguePanelTxt.text;
 
-                    if (ScndNPCs.secndClientWaiting)
-                    {
-                        Task drinkTaskFound = MainCoffeeManager.activeTasks.Find(task => drinkTimer.gameObject.name.ToLower().Contains(task.type.ToString().ToLower()));
-                        Text drinkTimerTxt = drinkTimer.gameObject.GetComponentInChildren<Text>();
-                        if (drinkTaskFound != null)
-                            if (drinkTimerTxt.isActiveAndEnabled)
-                                drinkTaskFound.timer = float.Parse(drinkTimerTxt.text);
-                            else
-                                Debug.Log("drink task error");
-                    }
+                    UpdateDrinkTimerOnExit();
 
                     SceneManager.LoadScene("Dialogue");
                 }
@@ -253,6 +246,20 @@ public class DrinkManager : MonoBehaviour
                     return;
                 }
             }
+        }
+    }
+
+    public void UpdateDrinkTimerOnExit()
+    {
+        if (ScndNPCs.secndClientWaiting)
+        {
+            Task drinkTaskFound = MainCoffeeManager.activeTasks.Find(task => drinkTimer.gameObject.name.ToLower().Contains(task.type.ToString().ToLower()));
+            Text drinkTimerTxt = drinkTimer.gameObject.GetComponentInChildren<Text>();
+            if (drinkTaskFound != null)
+                if (drinkTimerTxt.isActiveAndEnabled)
+                    drinkTaskFound.timer = float.Parse(drinkTimerTxt.text);
+                else
+                    Debug.Log("drink task error");
         }
     }
 
@@ -524,13 +531,15 @@ public class DrinkManager : MonoBehaviour
 
         drinkServing = new Drink();
 
-        if (firstDrink)
+        if (!firstDrink)
         {
-            if (ScndNPCs.secndClientWaiting)
-                Dialogue.lineIndex++;
+            //if (ScndNPCs.secndClientWaiting) //!!!não sei se faz sentido, acho que não
+            //    Dialogue.lineIndex++;
 
             int num = UnityEngine.Random.Range(0, 3); //1 in 3 chance to be clean
-            CleanManager.clean = num == 4;
+            CleanManager.clean = num == 010;
+            if (!CleanManager.clean)
+                MainCoffeeManager.activeTasks.Add(new(!TableManager.isCleanTutDone ? 99 : CleanManager.taskTimer, TaskType.Clean));
         }
     }
 

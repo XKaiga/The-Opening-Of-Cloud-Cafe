@@ -36,11 +36,6 @@ public class TableManager : MonoBehaviour
 
     private void Start()
     {
-        if (!Dialogue.skip)
-        {
-            Dialogue.onTutorial = true;
-        }
-
         inAnotherView = false;
 
         tables.SetActive(true);
@@ -52,6 +47,7 @@ public class TableManager : MonoBehaviour
         if (TrashDrag.readyToRemoveTrash)
         {
             float trashStartTime = MainCoffeeManager.activeTasks.Find(t => t.type == TaskType.Trash).timer;
+            trashTimer.taskType = TaskType.Trash;
             trashTimer.StartTimer(trashStartTime);
         }
 
@@ -73,6 +69,7 @@ public class TableManager : MonoBehaviour
         }
 
         float cleanStartTime = MainCoffeeManager.activeTasks.Find(t => t.type == TaskType.Clean).timer;
+        cleanTimer.taskType = TaskType.Clean;
         cleanTimer.StartTimer(cleanStartTime);
     }
 
@@ -90,26 +87,9 @@ public class TableManager : MonoBehaviour
         {
             if (colliderName.Contains("tables"))
             {
-                if (!CleanManager.clean)
-                {
-                    Task cleanTaskFound = MainCoffeeManager.activeTasks.Find(task => cleanTimer.gameObject.name.ToLower().Contains(task.type.ToString().ToLower()));
-                    Text cleanTimerTxt = cleanTimer.gameObject.GetComponentInChildren<Text>();
-                    if (cleanTaskFound != null)
-                        if (cleanTimerTxt.isActiveAndEnabled)
-                            cleanTaskFound.timer = float.Parse(cleanTimerTxt.text);
-                        else
-                            Debug.Log("clean error");
-                }
-                if (TrashDrag.readyToRemoveTrash)
-                {
-                    Task trashTaskFound = MainCoffeeManager.activeTasks.Find(task => trashTimer.gameObject.name.ToLower().Contains(task.type.ToString().ToLower()));
-                    Text trashTimerTxt = trashTimer.gameObject.GetComponentInChildren<Text>();
-                    if (trashTaskFound != null)
-                        if (trashTimerTxt.isActiveAndEnabled)
-                            trashTaskFound.timer = float.Parse(trashTimerTxt.text);
-                        else
-                            Debug.Log("trash error");
-                }
+                UpdateCleanTimerOnExit();
+
+                UpdateTrashTimerOnExit();
 
                 inAnotherView = true;
                 if (!Dialogue.isChoosing)
@@ -118,7 +98,7 @@ public class TableManager : MonoBehaviour
                     Dialogue.skip = false;
                     Dialogue.nameTxt = namePanelTxt.text;
                     Dialogue.dialogueTxt = dialoguePanelTxt.text;
-             
+
                     SceneManager.LoadScene("Dialogue");
                 }
             }
@@ -133,6 +113,7 @@ public class TableManager : MonoBehaviour
                 if (TrashDrag.readyToRemoveTrash)
                 {
                     float trashStartTime = MainCoffeeManager.activeTasks.Find(t => t.type == TaskType.Trash).timer;
+                    trashTimer.taskType = TaskType.Trash;
                     trashTimer.StartTimer(trashStartTime);
                 }
 
@@ -163,8 +144,39 @@ public class TableManager : MonoBehaviour
         }
     }
 
+    public void UpdateCleanTimerOnExit()
+    {
+        if (!CleanManager.clean)
+        {
+            Task cleanTaskFound = MainCoffeeManager.activeTasks.Find(task => cleanTimer.gameObject.name.ToLower().Contains(task.type.ToString().ToLower()));
+            Text cleanTimerTxt = cleanTimer.gameObject.GetComponentInChildren<Text>();
+            if (cleanTaskFound != null)
+                if (cleanTimerTxt.isActiveAndEnabled)
+                    cleanTaskFound.timer = float.Parse(cleanTimerTxt.text);
+                else
+                    Debug.Log("clean error");
+        }
+    }
+
+
+    public void UpdateTrashTimerOnExit()
+    {
+        if (TrashDrag.readyToRemoveTrash)
+        {
+            Task trashTaskFound = MainCoffeeManager.activeTasks.Find(task => trashTimer.gameObject.name.ToLower().Contains(task.type.ToString().ToLower()));
+            Text trashTimerTxt = trashTimer.gameObject.GetComponentInChildren<Text>();
+            if (trashTaskFound != null)
+                if (trashTimerTxt.isActiveAndEnabled)
+                    trashTaskFound.timer = float.Parse(trashTimerTxt.text);
+                else
+                    Debug.Log("trash error");
+        }
+    }
+
+
     public void RemoveTrashTimer()
     {
-        trashTimer.StopTimer(trashTimer.timeRemaining);
+        if (trashTimer.timerIsRunning)
+            trashTimer.StopTimer(trashTimer.timeRemaining);
     }
 }

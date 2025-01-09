@@ -68,14 +68,19 @@ public class SaveSystem : MonoBehaviour
 
         saveData.playerScore = Money.playerScore;
         saveData.playerMoney = Money.playerMoney;
+        saveData.tipModifier = Money.tipModifier;
         saveData.upgrades = Upgrade.upgradesList;
 
         // Collect trash data
+        saveData.trashMaxQty = TrashManager.trashMaxQty;
         saveData.currTrashQty = TrashManager.currTrashQty;
         saveData.readyToRemoveTrash = TrashDrag.readyToRemoveTrash;
+        saveData.taskTimerTrash = TrashManager.taskTimer;
 
         // Collect cleaning status
         saveData.clean = CleanManager.clean;
+        saveData.taskTimerClean = CleanManager.taskTimer;
+        saveData.widthMultiplier = CleanManager.widthMultiplier;
 
         // Collect current music name
         saveData.currMusicName = Music.currMusic.Name;
@@ -108,14 +113,19 @@ public class SaveSystem : MonoBehaviour
     {
         Money.playerScore = saveData.playerScore;
         Money.playerMoney = saveData.playerMoney;
+        Money.tipModifier = saveData.tipModifier;
         Upgrade.upgradesList = saveData.upgrades;
 
         // Load trash data
+        TrashManager.trashMaxQty = saveData.trashMaxQty;
         TrashManager.currTrashQty = saveData.currTrashQty;
         TrashDrag.readyToRemoveTrash = saveData.readyToRemoveTrash;
+        TrashManager.taskTimer = saveData.taskTimerTrash;
 
         // Load cleaning status
         CleanManager.clean = saveData.clean;
+        CleanManager.widthMultiplier = saveData.widthMultiplier;
+        CleanManager.taskTimer = saveData.taskTimerClean;
 
         // Load current music name
         Music foundCurrMusic = Music.FindMusicByName(saveData.currMusicName);
@@ -144,20 +154,25 @@ public class SaveSystem : MonoBehaviour
     {
         Money.playerScore = 0;
         Money.playerMoney = 0;
+        Money.tipModifier = 0;
 
         List<Upgrade> upgrades = new() {
             new(1, 7, 10, "Bigger Bin"), new(1, 13, 0.1f, "Larger Cloth"),
-            new(1, 4, 3, "Extended Timer"), new(1, 10, 0.05f, "Tip Boost"),
+            new(1, 4, 3, "Extended Timer"), new(1, 10, 0.1f, "Tip Boost"),
             new(1,10,0,"Unlock Music")
         };
         Upgrade.upgradesList = upgrades;
 
         // Load trash data
+        TrashManager.trashMaxQty = 10;
         TrashManager.currTrashQty = 0;
+        TrashManager.taskTimer = 23;
         TrashDrag.readyToRemoveTrash = false;
 
         // Load cleaning status
         CleanManager.clean = true;
+        CleanManager.taskTimer = 20;
+        CleanManager.widthMultiplier = 0.3f;
 
         // Load current music name
         Music.ChangeMusic(Music.musicList[0].AudioClip);
@@ -182,7 +197,7 @@ public class SaveSystem : MonoBehaviour
         GameManager.LoadCharactersSprites();
 
         // Load the current line index
-        Dialogue.lineIndex = -1;
+        Dialogue.lineIndex = 180;//-1;
     }
 
     private static string GetSaveFilePath(string slotName)

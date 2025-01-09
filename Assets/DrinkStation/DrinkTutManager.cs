@@ -41,20 +41,21 @@ public class DrinkTutManager : MonoBehaviour
     private void Start()
     {
         tutText = DrinkTutRawImage.gameObject.GetComponentInChildren<TextMeshProUGUI>();
-        ToggleOtherGameObjects();
+        SetOtherGameObjects(false);
         UpdateTutorial();
     }
 
     public void OnClickRightArrow()
     {
-        if (currSpriteNum < 8)
+        if (currSpriteNum < tutLines.Count-1)
         {
             currSpriteNum++;
             UpdateTutorial();
         }
         else
         {
-            ToggleOtherGameObjects();
+            SetOtherGameObjects(true);
+            Dialogue.skip = true;
             gameObject.SetActive(false);
         }
     }
@@ -74,11 +75,12 @@ public class DrinkTutManager : MonoBehaviour
         tutText.text = tutLines[currSpriteNum];
     }
 
-    private void ToggleOtherGameObjects()
+    private void SetOtherGameObjects(bool active)
     {
-        machine.SetActive(!machine.activeSelf);
-        infoBtn.SetActive(!infoBtn.activeSelf);
-        backBtn.SetActive(!backBtn.activeSelf);
-        dialoguePanel.SetActive(!dialoguePanel.activeSelf);
+        machine.SetActive(active);
+        infoBtn.SetActive(active);
+        backBtn.SetActive(active);
+
+        dialoguePanel.GetComponent<RawImage>().enabled = false;
     }
 }

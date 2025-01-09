@@ -12,15 +12,20 @@ public class SaveData
     public float playerScore;
     public float playerMoney;
     public List<Upgrade> upgrades = new();
+    public float tipModifier;
 
     //TrashManager class
+    public int trashMaxQty;
     public int currTrashQty;
+    public int taskTimerTrash;
 
     //TrashDrag class
     public bool readyToRemoveTrash;
 
     //CleanManager class
+    public float widthMultiplier;
     public bool clean;
+    public int taskTimerClean;
 
     //Music class
     public string currMusicName;

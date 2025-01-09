@@ -12,6 +12,9 @@ using Unity.VisualScripting;
 
 public class Dialogue : MonoBehaviour
 {
+    private EndGameManager endGameManager;
+    private RawImage EndGameImage;
+
     [SerializeField] private List<RawImage> CharacterSpaces;
 
     [SerializeField] private GameObject options;
@@ -62,8 +65,27 @@ public class Dialogue : MonoBehaviour
     private static float timerToHateMusicSec = resetTimerToHateMusic;
     public static bool onTutorial = false;
 
+    private void Awake()
+    {
+        EndGameManager endManager = FindObjectOfType<EndGameManager>();
+        if (endGameManager != null)
+        {
+            endGameManager = endManager;
+            EndGameImage = endManager.image;
+            Debug.Log("Success");
+        }
+        else
+            Debug.Log("Failed");
+    }
+
     private void Start()
     {
+        if (SceneManager.GetActiveScene().name == "Dialogue")
+        {
+            skip = false;
+            pauseBetweenSkips = 0.2f;
+        }
+
         UpdateCharacters();
 
         if (fileDayNumRead != GameManager.startDayNum)
@@ -120,30 +142,20 @@ public class Dialogue : MonoBehaviour
         }
     }
 
-
     public static bool skip = false;
     public static float pauseBetweenSkips = 0.2f;
     public bool waitingForDialogue = false;
     void Update()
     {
-        if (SceneManager.GetActiveScene().name == "Tables")
-        {
-            Debug.Log("skip: " + skip);
-            Debug.Log("ontutorial: " + onTutorial);
-        }
-        if (!skip && !onTutorial)
-        {
-            string sceneName = SceneManager.GetActiveScene().name;
-            if (sceneName == "DrinkStation" || sceneName == "Tables")
-            {
-                skip = true;
-                pauseBetweenSkips = -2f;
-            }
-        }
-
-
         if (!startingNewDay)
         {
+            string sceneName = SceneManager.GetActiveScene().name;
+            if (sceneName != "Dialogue" && sceneName != "DrinkStation")
+            {
+                skip = !onTutorial;
+                pauseBetweenSkips = onTutorial ? 0.2f : -2f;
+            }
+
             if (!isChoosing && !charAnswering && !onTutorial)
                 UpdateHateTimer();
 
@@ -158,7 +170,7 @@ public class Dialogue : MonoBehaviour
             if (!TableManager.isCleanTutDone && TableManager.doCleanTut)
             {
                 TableManager.isCleanTutDone = true;
-                LoadTrashTutorial();
+                LoadTableTutorial();
             }
         }
     }
@@ -417,7 +429,6 @@ public class Dialogue : MonoBehaviour
         }
 
         onTutorial = line.Contains("Tutorial");
-        Debug.Log("changing? " +onTutorial);
 
         string typeOfText = GetTypeOfText(line);
         switch (typeOfText)
@@ -456,8 +467,6 @@ public class Dialogue : MonoBehaviour
                 {
                     DrinkManager.isDrinkTutorialDone = true;
 
-                    lineIndex--;
-
                     LoadDrinkTutorial();
                     return;
                 }
@@ -490,9 +499,12 @@ public class Dialogue : MonoBehaviour
                     //int randomDrinkIndex = Random.Range(0, ScndNPCs.secondariesDrinks.Count);
                     //Drink secDrink = ScndNPCs.secondariesDrinks[randomDrinkIndex];
                     //if (!ScndNPCs.secondariesDrinksToServe.Contains(secDrink))
-                    //    ScndNPCs.secondariesDrinksToServe.Add(secDrink);
-                    ScndNPCs.secondariesDrinksToServe.Add(ScndNPCs.GenerateRandomScndDrink());
-                    MainCoffeeManager.activeTasks.Add(new(Drink.drinkTaskTimer, TaskType.NPCOrder));
+                    //    ScndNPCs.secondariesDrinksToServe.Add(secDrink)
+                    if (!MainCoffeeManager.activeTasks.Any(task => task.type == TaskType.NPCOrder)) //!!! temp until having more than 1 npc works
+                    {
+                        ScndNPCs.secondariesDrinksToServe.Add(ScndNPCs.GenerateRandomScndDrink());
+                        MainCoffeeManager.activeTasks.Add(new(Drink.drinkTaskTimer, TaskType.NPCOrder));
+                    }
                 }
 
                 MainCoffeeManager dialogueManager = FindObjectOfType<MainCoffeeManager>();
@@ -544,10 +556,18 @@ public class Dialogue : MonoBehaviour
                 break;
 
             case "endingDay":
+                startingNewDay = true;
+
+                if (SceneManager.GetActiveScene().name != "Dialogue")
+                    SceneManager.LoadScene("Dialogue");
+
+                EndGameManager.DeactivateAllButtons();
+
+                EndGameImage.enabled = true;
+
                 skip = false;
                 GameManager.startDayNum++;
                 lineIndex = -1;
-                startingNewDay = true;
 
                 StartCoroutine(HandleNewDay());
 
@@ -556,8 +576,7 @@ public class Dialogue : MonoBehaviour
     }
 
     private IEnumerator HandleNewDay()
-    {
-        EndGameManager.instance.image.enabled = true;
+    {   
         namePanelTxt.text = lineName = "";
         dialoguePanelTxt.text = "";
         lineDialogue = "A few days later....";
@@ -569,9 +588,9 @@ public class Dialogue : MonoBehaviour
 
         if (GameManager.startDayNum > 3 || GameManager.startDayNum == 2)
         {
-            EndGameManager.instance.gameObject.SetActive(true);
+            endGameManager.gameObject.SetActive(true);
 
-            yield return EndGameManager.instance.StartEndGameCoroutine();
+            yield return endGameManager.StartEndGameCoroutine();
 
             if (GameManager.startDayNum > 3)
                 yield break; // Exit the coroutine if day number is greater than 3
@@ -775,7 +794,7 @@ public class Dialogue : MonoBehaviour
 
     public void LoadMusicTutorial()
     {
-        List<string> txtMusic = new List<string>
+        List<string> txtMusic = new()
         {
             "Tutorial : (Upgrades can be bought at the upgrades store so you’re able to see which emotion songs portray.)",
             "Tutorial : (Feel the music and try to figure out if it better fits the mood.)",
@@ -803,16 +822,28 @@ public class Dialogue : MonoBehaviour
             if (SceneManager.GetActiveScene().name == "Tables")
                 TableManager.inAnotherView = true;
 
+            onTutorial = true;
             SceneManager.LoadScene("Dialogue");
         }
     }
 
     public void LoadDrinkTutorial()
     {
-        if (SceneManager.GetActiveScene().name != "DrinkStation")
+        string sceneName = SceneManager.GetActiveScene().name;
+        if (sceneName != "DrinkStation")
         {
-            pauseBetweenSkips = 0.2f;
-            skip = false;
+            if (sceneName == "Tables")
+            {
+                TableManager tableManager = FindObjectOfType<TableManager>();
+                if (tableManager != null)
+                {
+                    tableManager.UpdateCleanTimerOnExit();
+                    tableManager.UpdateTrashTimerOnExit();
+                }
+            }
+
+            pauseBetweenSkips = -2f;
+            skip = true;
 
             Dialogue.nameTxt = namePanelTxt.text;
             Dialogue.dialogueTxt = dialoguePanelTxt.text;
@@ -820,13 +851,14 @@ public class Dialogue : MonoBehaviour
             if (SceneManager.GetActiveScene().name == "Tables")
                 TableManager.inAnotherView = true;
 
+            onTutorial = true;
             SceneManager.LoadScene("DrinkStation");
         }
     }
 
     public void LoadTrashTutorial()
     {
-        List<string> txtTrash = new List<string>
+        List<string> txtTrash = new()
         {
             "Tutorial: (It is also possible to increase your trash bin’s capacity on the upgrades’ store.)",
             "Tutorial: (Just drag the trash bag to the correspondent and correct trash can, " +
@@ -845,42 +877,62 @@ public class Dialogue : MonoBehaviour
         }
         lineIndex++;
 
-        if (SceneManager.GetActiveScene().name != "Tables")
+        string sceneName = SceneManager.GetActiveScene().name;
+        if (sceneName != "Tables")
         {
+            if (sceneName == "DrinkStation")
+            {
+                DrinkManager drinkManager = FindObjectOfType<DrinkManager>();
+                if (drinkManager != null)
+                    drinkManager.UpdateDrinkTimerOnExit();
+            }
+
             pauseBetweenSkips = 0.2f;
             skip = false;
 
             Dialogue.nameTxt = namePanelTxt.text;
             Dialogue.dialogueTxt = dialoguePanelTxt.text;
 
+            onTutorial = true;
             SceneManager.LoadScene("Tables");
         }
     }
     public void LoadTableTutorial()
     {
-        List<string> txtTable = new List<string>
+        List<string> txtTable = new()
         {
             "Tutorial: (Bigger cloth sizes are available in the upgrades store.)",
-            "Tutorial: (Just click and drag the mouse on top of the stains on top of the table to clean them.",
+            "Tutorial: (Just click and drag the mouse on top of the stains on top of the table to clean them.)",
             "Tutorial: (You have limited time to do it, and not being able to do it in time will result" +
-            " in losing points which will affect the final score and character’s ending!",
+            " in losing points which will affect the final score and character’s ending!)",
             "Tutorial: (As the task of cleaning a table appears on the notification’s tab, hurry to the table" +
             " section to clean the table that’s dirty.)"
         };
 
+        lineIndex--;
         foreach (var txt in txtTable)
         {
             InsertAtIndex(txt, lineIndex + 1);
         }
+        lineIndex++;
 
-        if (SceneManager.GetActiveScene().name != "Tables")
+        string sceneName = SceneManager.GetActiveScene().name;
+        if (sceneName != "Tables")
         {
+            if (sceneName == "DrinkStation")
+            {
+                DrinkManager drinkManager = FindObjectOfType<DrinkManager>();
+                if (drinkManager != null)
+                    drinkManager.UpdateDrinkTimerOnExit();
+            }
+
             pauseBetweenSkips = 0.2f;
             skip = false;
 
             Dialogue.nameTxt = namePanelTxt.text;
             Dialogue.dialogueTxt = dialoguePanelTxt.text;
 
+            onTutorial = true;
             SceneManager.LoadScene("Tables");
         }
     }

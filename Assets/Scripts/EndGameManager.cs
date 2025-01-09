@@ -16,9 +16,9 @@ public class EndGameManager : MonoBehaviour
     [SerializeField] private GameObject ending;
     [SerializeField] private Text endingTxt;
     [SerializeField] private GameObject finalParent;
-    [SerializeField] private GameObject txtExt;
+    [SerializeField] private TextMeshProUGUI txtExt;
 
-    public Image image;
+    public RawImage image;
     private const float fadeSpeed = 0.5f;
 
     private void Awake()
@@ -30,10 +30,6 @@ public class EndGameManager : MonoBehaviour
         }
         else
             Destroy(gameObject);
-    }
-    private void Start()
-    {
-        image = GetComponent<Image>();
     }
 
     public Coroutine StartEndGameCoroutine()
@@ -57,16 +53,16 @@ public class EndGameManager : MonoBehaviour
         if (finalTypeDetermined is FinalType finalType)
         {
             finalParent.SetActive(true);
-            txtExt.SetActive(true);
+            txtExt.enabled = true;
             string name = GameManager.startDayNum == 2 ? "ALYIA" : Dialogue.GetMostFavoredCharacter()?.ToUpper() ?? "RONNIE";
 
             var finalData = Finals.finalsList.FirstOrDefault(f => f.finalType == finalType && f.clientName == name);
             if (finalData != null)
-                txtExt.GetComponent<TextMeshProUGUI>().text = finalData.finalTxt;
+                txtExt.text = finalData.finalTxt;
         }
 
         //pause for some seconds
-        float waitingTime = dialogueManager.EstimateSpeakingTimeSecs(txtExt.GetComponent<TextMeshProUGUI>().text) + 1;
+        float waitingTime = dialogueManager.EstimateSpeakingTimeSecs(txtExt.text) + 1;
         yield return Wait(waitingTime);
 
         //fade in
@@ -90,7 +86,7 @@ public class EndGameManager : MonoBehaviour
             else if (finalParent.activeSelf && image.color.a > 0.55f)
             {
                 finalParent.SetActive(false);
-                txtExt.SetActive(false);
+                txtExt.enabled = false;
             }
             yield return null;
         }
@@ -113,6 +109,16 @@ public class EndGameManager : MonoBehaviour
             yield return null;
         }
         image.enabled = false;
+        
+        ActivateAllButtons();
+    }
+
+    public static void ActivateAllButtons()
+    {
+        GameObject[] allObjects = FindObjectsOfType<GameObject>();
+        foreach (GameObject obj in allObjects)
+            if (obj.name.ToLower().Contains("btn"))
+                obj.SetActive(true);
     }
 
     public static void DeactivateAllButtons()

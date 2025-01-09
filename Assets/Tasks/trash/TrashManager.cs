@@ -12,8 +12,8 @@ public class TrashManager : MonoBehaviour
     public static TrashType currTrashType = TrashType.Default;
     private Vector2 initTrashPos;
     private const float finalTrashYPos = -0.2f;
-    public static int trashMaxQty = 3;
-    [SerializeField] public static int currTrashQty = 0;
+    public static int trashMaxQty = 10;
+    public static int currTrashQty = 0;
 
     public static int taskTimer = 23;
 
@@ -26,6 +26,11 @@ public class TrashManager : MonoBehaviour
     }
 
     private void OnEnable()
+    {
+        SetRecicleBins();
+    }
+
+    public void SetRecicleBins()
     {
         foreach (var bin in recicleBins)
             bin.SetActive(TrashDrag.readyToRemoveTrash);
@@ -40,7 +45,7 @@ public class TrashManager : MonoBehaviour
 
         if (currTrashQty >= trashMaxQty && !TrashDrag.readyToRemoveTrash)
         {
-            MainCoffeeManager.activeTasks.Add(new(TrashManager.taskTimer, TaskType.Trash));
+            MainCoffeeManager.activeTasks.Add(new(!Dialogue.isTrashTutDoneVar ? 99 : TrashManager.taskTimer, TaskType.Trash));
             currTrashQty = trashMaxQty;
             TrashDrag.readyToRemoveTrash = true;
         }
@@ -80,15 +85,16 @@ public class TrashManager : MonoBehaviour
     {
         currTrashQty = 0;
         trash.transform.position = initTrashPos;
+        
         Sprite defaultTrashSprite = Resources.Load<Sprite>("Trash/Lixo_Default");
         trash.gameObject.GetComponent<SpriteRenderer>().sprite = defaultTrashSprite;
         currTrashType = TrashType.Default;
+        
         trash.gameObject.SetActive(false);
-
-        foreach (var bin in recicleBins)
-            bin.SetActive(false);
-
+        
         TrashDrag.readyToRemoveTrash = false;
+        
+        SetRecicleBins();
 
         MainCoffeeManager.RemoveTask(TaskType.Trash);
 
