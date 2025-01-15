@@ -189,6 +189,7 @@ public class SaveSystem : MonoBehaviour
 
         // Load characters data
         Dialogue.characters = new() {
+        new Character(name: "ETHAN"),
         new Character(name: "ALYIA", patience: 2, hateMusicTxt: "\"Can you put another music plz, i don't really vibe with this one.\""),
         new Character(name: "RONNIE", patience: 4,  hateMusicTxt: "\"I hate this music, can you put another.\""),
         new Character(name : "JASPER", patience: 3,  hateMusicTxt: "\"Ca...c..can you change the music plz.\""),

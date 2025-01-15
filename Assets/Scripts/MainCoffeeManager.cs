@@ -20,8 +20,10 @@ public class MainCoffeeManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI namePanelTxt;
     [SerializeField] private TextMeshProUGUI dialoguePanelTxt;
 
-    [SerializeField] private Text skipBtnText;
-    [SerializeField] private Text playBtnText;
+    [SerializeField] private Button playBtnImg;
+    [SerializeField] private SpriteRenderer skipSpriteRndrImg;
+    [SerializeField] private Sprite autoSprite;
+    [SerializeField] private Sprite manualSprite;
 
     [Header("Tasks Tab")]
     [SerializeField] private RawImage tasksOpenMenuBtnImg;
@@ -56,7 +58,7 @@ public class MainCoffeeManager : MonoBehaviour
     private void Update()
     {
         if (Input.GetKeyUp(KeyCode.Space))
-            Dialogue.skip = !Dialogue.skip;
+            OnClickSkipBtn();
 
         if (Input.GetKeyUp(KeyCode.Escape))
             SceneManager.LoadScene("SaveLoadData");
@@ -78,9 +80,9 @@ public class MainCoffeeManager : MonoBehaviour
     {
         Dialogue.skip = !Dialogue.skip;
         if (Dialogue.skip)
-            skipBtnText.text = "Stop";
+            skipSpriteRndrImg.sprite = manualSprite;
         else
-            skipBtnText.text = "Skip";
+            skipSpriteRndrImg.sprite = autoSprite;
 
     }
 
@@ -90,12 +92,16 @@ public class MainCoffeeManager : MonoBehaviour
         if (Dialogue.skip)
         {
             Dialogue.pauseBetweenSkips = -2f;
-            playBtnText.text = "Pause";
+            var colours = playBtnImg.colors;
+            colours.normalColor = new(200, 200, 200);
+            playBtnImg.colors = colours;
         }
         else
         {
             Dialogue.pauseBetweenSkips = Dialogue.defaultTimeBetweenSkips;
-            playBtnText.text = "Play";
+            var colours = playBtnImg.colors;
+            colours.normalColor = Color.white;
+            playBtnImg.colors = colours;
         }
     }
 

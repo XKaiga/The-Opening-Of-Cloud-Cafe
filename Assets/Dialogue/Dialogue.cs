@@ -36,7 +36,6 @@ public class Dialogue : MonoBehaviour
     public static bool charAnswering = false;
     private static int backToDialogueIndex = -1;
 
-
     public static bool isMusicDoneVar = false;
     public static bool isTrashTutDoneVar = false;
 
@@ -155,6 +154,8 @@ public class Dialogue : MonoBehaviour
     public bool waitingForDialogue = false;
     void Update()
     {
+        Debug.Log("count: " +characters.Count);
+
         if (!startingNewDay)
         {
             string sceneName = SceneManager.GetActiveScene().name;
