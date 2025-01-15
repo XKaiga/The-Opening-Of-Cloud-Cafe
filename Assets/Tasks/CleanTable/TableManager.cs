@@ -38,11 +38,38 @@ public class TableManager : MonoBehaviour
     {
         inAnotherView = false;
 
-        tables.SetActive(true);
-        trash.SetActive(true);
-        tableBg.SetActive(false);
-        dirtyTable.SetActive(false);
-        cleanTable.SetActive(false);
+        if (SceneManager.GetActiveScene().name == "Tables")
+        {
+            tables.SetActive(true);
+            tableBg.SetActive(false);
+            dirtyTable.SetActive(false);
+            cleanTable.SetActive(false);
+
+            if (CleanManager.clean)
+                return;
+
+            int rndTable = Random.Range(0, 3);
+            switch (rndTable)
+            {
+                case 0:
+                    dirtyTableName = "left";
+                    break;
+                case 1:
+                    dirtyTableName = "center";
+                    break;
+                case 2:
+                    dirtyTableName = "right";
+                    break;
+            }
+
+            float cleanStartTime = MainCoffeeManager.activeTasks.Find(t => t.type == TaskType.Clean).timer;
+            cleanTimer.taskType = TaskType.Clean;
+            cleanTimer.StartTimer(cleanStartTime);
+        }
+        else
+        {
+            trash.SetActive(true);
+        }
 
         if (TrashDrag.readyToRemoveTrash)
         {
@@ -50,27 +77,6 @@ public class TableManager : MonoBehaviour
             trashTimer.taskType = TaskType.Trash;
             trashTimer.StartTimer(trashStartTime);
         }
-
-        if (CleanManager.clean)
-            return;
-
-        int rndTable = Random.Range(0, 3);
-        switch (rndTable)
-        {
-            case 0:
-                dirtyTableName = "left";
-                break;
-            case 1:
-                dirtyTableName = "center";
-                break;
-            case 2:
-                dirtyTableName = "right";
-                break;
-        }
-
-        float cleanStartTime = MainCoffeeManager.activeTasks.Find(t => t.type == TaskType.Clean).timer;
-        cleanTimer.taskType = TaskType.Clean;
-        cleanTimer.StartTimer(cleanStartTime);
     }
 
     public void OnClick(InputAction.CallbackContext context)
@@ -97,11 +103,31 @@ public class TableManager : MonoBehaviour
                     inAnotherView = true;
                     Dialogue.pauseBetweenSkips = 0.2f;
                     Dialogue.skip = false;
+
+                    Dialogue.nameTxtTemp = Dialogue.nameTxt;
+                    Dialogue.dialogueTxtTemp = Dialogue.dialogueTxt;
+
                     Dialogue.nameTxt = namePanelTxt.text;
                     Dialogue.dialogueTxt = dialoguePanelTxt.text;
 
                     SceneManager.LoadScene("Dialogue");
                 }
+            }
+            else if (colliderName.Contains("trash"))
+            {
+                inAnotherView = true;
+                Dialogue.skip = true;
+                Dialogue.pauseBetweenSkips = -2f;
+
+                Dialogue.nameTxtTemp = Dialogue.nameTxt;
+                Dialogue.dialogueTxtTemp = Dialogue.dialogueTxt;
+
+                Dialogue.nameTxt = namePanelTxt.text;
+                Dialogue.dialogueTxt = dialoguePanelTxt.text;
+
+                UpdateTrashTimerOnExit();
+
+                SceneManager.LoadScene("Tables");
             }
             else
             {
@@ -142,6 +168,25 @@ public class TableManager : MonoBehaviour
                 cleanTable.SetActive(true);
 
             return;
+        }
+
+        if (colliderName == "trashscenebtn")
+        {
+            UpdateTrashTimerOnExit();
+
+            inAnotherView = true;
+            Dialogue.skip = true;
+            Dialogue.pauseBetweenSkips = -2f;
+
+            Dialogue.nameTxtTemp = Dialogue.nameTxt;
+            Dialogue.dialogueTxtTemp = Dialogue.dialogueTxt;
+
+            Dialogue.nameTxt = namePanelTxt.text;
+            Dialogue.dialogueTxt = dialoguePanelTxt.text;
+
+            UpdateTrashTimerOnExit();
+
+            SceneManager.LoadScene("TrashScene");
         }
     }
 

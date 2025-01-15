@@ -38,6 +38,7 @@ PLAYER: A quiet reassurance, a sense that maybe, just maybe, I made the right ch
 PLAYER: My quiet moment is interrupted by the soft jingle of the door opening, and I jump a little, startled back into reality.
 PLAYER: Lost in my own head, I hadn’t noticed someone stepping in.
 PLAYER: I turn to see a man, probably in his late forties, with warm eyes and a smile that seems like it’s seen many long days and early mornings in a place like this.
+(Show_ETHAN)
 ???: “Sorry to barge in unannounced. Didn’t mean to startle you.” 
 PLAYER: He says, chuckling softly. 
 ETHAN: “Name’s Ethan, Ethan Miller. I was the previous owner of this place.”
@@ -93,6 +94,7 @@ PLAYER: “I’ll do my best to make this place feel like it did for you.”
 ETHAN: “I’m sure you will.” 
 PLAYER: He claps a hand on my shoulder, his gaze warm and encouraging. 
 ETHAN: “Just remember, you’re here for more than serving coffee. Listen, and let them tell their stories. That’s the heart of this place.”
+(Hide_ETHAN)
 PLAYER: He gives me a final nod and heads out the door, leaving me alone in the café once more, but somehow, I don’t feel quite as alone as before.
 PLAYER: After a deep sigh, I start to work on preparing for the day, waiting for the first customer to come in.
 (ENDDay_0)

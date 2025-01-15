@@ -10,7 +10,7 @@ public class Effects : MonoBehaviour
 {
     Pride,
     Joy,
-    Anger,
+    Angry,
     Shocked,
     Laughter
 }

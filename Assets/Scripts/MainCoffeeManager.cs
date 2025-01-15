@@ -687,6 +687,22 @@ public class MainCoffeeManager : MonoBehaviour
             SceneManager.LoadScene("Tables");
         }
     }
+    public void LoadTrashScene()
+    {
+        if (!Dialogue.isChoosing && !Dialogue.startingNewDay)
+        {
+            Dialogue.skip = true;
+            Dialogue.pauseBetweenSkips = -2f;
+
+            Dialogue.nameTxtTemp = Dialogue.nameTxt;
+            Dialogue.dialogueTxtTemp = Dialogue.dialogueTxt;
+
+            Dialogue.nameTxt = namePanelTxt.text;
+            Dialogue.dialogueTxt = dialoguePanelTxt.text;
+
+            SceneManager.LoadScene("TrashScene");
+        }
+    }
 }
 
 [System.Serializable]

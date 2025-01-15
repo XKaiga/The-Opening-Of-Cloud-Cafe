@@ -12,7 +12,7 @@ public class TrashManager : MonoBehaviour
     public static TrashType currTrashType = TrashType.Default;
     private Vector2 initTrashPos;
     private const float finalTrashYPos = -0.2f;
-    public static int trashMaxQty = 10;
+    public static int trashMaxQty = 5;
     public static int currTrashQty = 0;
 
     public static int taskTimer = 23;

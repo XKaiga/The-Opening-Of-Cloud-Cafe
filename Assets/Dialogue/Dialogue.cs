@@ -11,6 +11,8 @@ using UnityEngine.SceneManagement;
 using Vector3 = UnityEngine.Vector3;
 using Quaternion = UnityEngine.Quaternion;
 using UnityEngine.EventSystems;
+using UnityEngine.TextCore.Text;
+using static Effects;
 
 public class Dialogue : MonoBehaviour
 {
@@ -33,12 +35,13 @@ public class Dialogue : MonoBehaviour
     public static bool isChoosing = false;
     public static bool charAnswering = false;
     private static int backToDialogueIndex = -1;
-    
+
 
     public static bool isMusicDoneVar = false;
     public static bool isTrashTutDoneVar = false;
 
     public static List<Character> characters = new() {
+        new Character(name: "ETHAN"),
         new Character(name: "ALYIA", patience: 2, hateMusicTxt: "\"Can you put another music plz, i don't really vibe with this one.\""),
         new Character(name: "RONNIE", patience: 4,  hateMusicTxt: "\"I hate this music, can you put another.\""),
         new Character(name : "JASPER", patience: 3,  hateMusicTxt: "\"Ca...c..can you change the music plz.\""),
@@ -336,29 +339,58 @@ public class Dialogue : MonoBehaviour
         lines = linesList.ToArray();
     }
 
+    public void UpdateCharacterNewSprite(Character character)
+    {
+        if (CharacterSpaces[0] == null || character == null)
+            return;
+
+        LoadCharactersSpaces();
+
+        if (character.active)
+        {
+            RawImage currCharacterSpace = GetCharacterSpace(character);
+            if (currCharacterSpace != null)
+            {
+                currCharacterSpace.texture = character.sprite;
+                currCharacterSpace.gameObject.SetActive(true);
+            }
+        }
+    }
+
+    private RawImage GetCharacterSpace(Character character)
+    {
+        RawImage currCharacterSpace = null;
+
+        foreach (var space in CharacterSpaces)
+        {
+            Text textData = space.GetComponentInChildren<Text>(true);
+            if (textData != null && textData.text == character.name)
+            {
+                currCharacterSpace = space;
+                break;
+            }
+        }
+
+        return currCharacterSpace;
+    }
+    private void LoadCharactersSpaces()
+    {
+        for (int i = 0; i < charsPosData.Count; i++)
+            CharacterSpaces[i].GetComponentInChildren<Text>(true).text = charsPosData[i];
+    }
+
     private void UpdateCharacters()
     {
         if (CharacterSpaces[0] == null)
             return;
 
-        for (int i = 0; i < charsPosData.Count; i++)
-            CharacterSpaces[i].GetComponentInChildren<Text>(true).text = charsPosData[i];
+        LoadCharactersSpaces();
 
         foreach (var character in characters)
         {
             bool toShowCharacter = character.active;
 
-            RawImage currCharacterSpace = null;
-
-            foreach (var space in CharacterSpaces)
-            {
-                Text textData = space.GetComponentInChildren<Text>(true);
-                if (textData != null && textData.text == character.name)
-                {
-                    currCharacterSpace = space;
-                    break;
-                }
-            }
+            RawImage currCharacterSpace = GetCharacterSpace(character);
 
             if (toShowCharacter && currCharacterSpace != null && currCharacterSpace.texture == null)
             {
@@ -616,7 +648,17 @@ public class Dialogue : MonoBehaviour
                 if (musicEmoDetermined is EmotionEnum emotion)
                 {
                     Character characterPartEmo = Character.DetermineCharacter(emoParts[1]);
+
+                    EmotionEnum previousEmotion = characterPartEmo.currentEmotion;
+
                     characterPartEmo.currentEmotion = emotion;
+
+                    if (SceneManager.GetActiveScene().name == "Dialogue")
+                    {
+                        string emoString = GameManager.GetEmoStringForSprite(characterPartEmo, previousEmotion);
+
+                        GameManager.UpdateCharacterSprite(characterPartEmo, emoString);
+                    }
                 }
                 NextLine();
                 break;
@@ -663,79 +705,107 @@ public class Dialogue : MonoBehaviour
 
             case "effect":
 
-            Debug.Log("reconheceu a palavra effect");
+                Debug.Log("reconheceu a palavra effect");
 
-            if (SceneManager.GetActiveScene().name != "Dialogue")
-            break;
-
-            Debug.Log("reconheceu que a cena e dialogue");
-
-
-            string[] effectParts = TrimSplitDialogueCode(line);
-
-            Debug.Log("dividiu o a linha em partes");
-
-            var effectDetermined = Effects.DetermineEffect(effectParts[2]);
-
-            Debug.Log("determinou o efeito");
-
-            if (effectDetermined == null){
-
-                Debug.Log("o effeito deu null");
+                if (SceneManager.GetActiveScene().name != "Dialogue")
                     break;
-            }
-                    Debug.Log("o efeito nao e nulo");
+
+                Debug.Log("reconheceu que a cena e dialogue");
+
+
+                string[] effectParts = TrimSplitDialogueCode(line);
+
+                Debug.Log("dividiu o a linha em partes");
+
+                var effectDetermined = Effects.DetermineEffect(effectParts[2]);
+
+                Debug.Log("determinou o efeito");
+
+                if (effectDetermined == null)
+                {
+
+                    Debug.Log($"o effeito {effectParts[2]} deu null");
+                    break;
+                }
+                Debug.Log("o efeito nao e nulo");
 
                 //if (effectDetermined is Effects effect)
                 //{
-                    Debug.Log("entrou no if");
+                Debug.Log("entrou no if");
 
-                    Character characterPartEffect = Character.DetermineCharacter(effectParts[1]);
+                Character characterPartEffect = Character.DetermineCharacter(effectParts[1]);
+                if (characterPartEffect == null)
+                    return;
 
-                    Debug.Log("determinou a personagem objetivo");
+                Debug.Log("determinou a personagem objetivo");
 
-                
-                    foreach(RawImage CharacterSpace in CharacterSpaces){
 
-                        Text nameCharacter = CharacterSpace.GetComponentInChildren<Text>();
+                foreach (RawImage CharacterSpace in CharacterSpaces)
+                {
 
-                        Debug.Log("obteve o nome da personagem");
+                    Text nameCharacter = CharacterSpace.GetComponentInChildren<Text>();
 
-                        Vector3 position = CharacterSpace.gameObject.transform.position; 
+                    Debug.Log("obteve o nome da personagem");
 
-                        if(characterPartEffect.name == nameCharacter.text){
+                    Vector3 position = CharacterSpace.gameObject.transform.position;
+                    string charSpaceGOName = CharacterSpace.gameObject.name.ToLower();
+                    bool left = charSpaceGOName.Contains("left");
+                    bool right = charSpaceGOName.Contains("right");
 
-                            Debug.Log("viu a personagem presente");
+                    if (left)
+                        position.x = -6;
+                    position.y = 1.8f;
 
-                            foreach (GameObject effectPrebab in effectsPrefabs){
+                    if (characterPartEffect.name == nameCharacter.text)
+                    {
 
-                                if (effectDetermined is Effects.EffectType tipo){
+                        Debug.Log("viu a personagem presente");
 
-                                    Debug.Log("reconheceu a o tipo de efeito");
- 
-                                    if (effectPrebab.GetComponent<Effects>().type == tipo){
+                        foreach (GameObject effectPrebab in effectsPrefabs)
+                        {
 
-                                        Debug.Log("instanciou");
-                                        Instantiate(effectPrebab, position, Quaternion.identity);
-                                         break;
-                                    }
+                            if (effectDetermined is Effects.EffectType tipo)
+                            {
+
+                                Debug.Log("reconheceu a o tipo de efeito");
+
+                                if (effectPrebab.GetComponent<Effects>().type == tipo)
+                                {
+
+                                    Debug.Log("instanciou");
+                                    Instantiate(effectPrebab, position, Quaternion.identity);
+
+                                    EmotionEnum previousEmotion = characterPartEffect.currentEmotion;
+
+                                    characterPartEffect.currentEmotion = GameManager.GetEmotionForEffect(tipo);
+
+                                    string emoString = "";
+                                    bool charSuprised = tipo == EffectType.Shocked;
+                                    if (charSuprised)
+                                        emoString = "_Suprised";
+                                    else
+                                        emoString = GameManager.GetEmoStringForSprite(characterPartEffect, previousEmotion);
+
+                                    GameManager.UpdateCharacterSprite(characterPartEffect, emoString);
+                                    break;
                                 }
-
                             }
-                             break;
+
                         }
+                        break;
                     }
+                }
 
                 //}
-            
+
                 NextLine();
 
-            break;
+                break;
         }
     }
 
     private IEnumerator HandleNewDay()
-    {   
+    {
         namePanelTxt.text = lineName = "";
         dialoguePanelTxt.text = "";
         lineDialogue = "A few days later....";
@@ -980,7 +1050,7 @@ public class Dialogue : MonoBehaviour
             nameTxt = namePanelTxt.text;
             dialogueTxt = dialoguePanelTxt.text;
 
-            if (SceneManager.GetActiveScene().name == "Tables")
+            if (SceneManager.GetActiveScene().name == "TrashScene")
                 TableManager.inAnotherView = true;
 
             onTutorial = true;
@@ -993,12 +1063,16 @@ public class Dialogue : MonoBehaviour
         string sceneName = SceneManager.GetActiveScene().name;
         if (sceneName != "DrinkStation")
         {
-            if (sceneName == "Tables")
+            if (sceneName == "Tables" || sceneName == "TrashScene")
             {
                 TableManager tableManager = FindObjectOfType<TableManager>();
                 if (tableManager != null)
                 {
-                    tableManager.UpdateCleanTimerOnExit();
+                    if (sceneName != "TrashScene")
+                        tableManager.UpdateCleanTimerOnExit();
+                    else
+                        TableManager.inAnotherView = true;
+
                     tableManager.UpdateTrashTimerOnExit();
                 }
             }
@@ -1009,9 +1083,6 @@ public class Dialogue : MonoBehaviour
             Dialogue.nameTxt = namePanelTxt.text;
             Dialogue.dialogueTxt = dialoguePanelTxt.text;
 
-            if (SceneManager.GetActiveScene().name == "Tables")
-                TableManager.inAnotherView = true;
-
             onTutorial = true;
             SceneManager.LoadScene("DrinkStation");
         }
@@ -1021,14 +1092,14 @@ public class Dialogue : MonoBehaviour
     {
         List<string> txtTrash = new()
         {
-            "Tutorial: (It is also possible to increase your trash bin�s capacity on the upgrades� store.)",
+            "Tutorial: (It is also possible to increase your trash bin's capacity on the upgrades' store.)",
             "Tutorial: (Just drag the trash bag to the correspondent and correct trash can, " +
                 "and the trash will be dealt with. Throwing it on the wrong trash can will deduct points " +
                 "from your score too.)",
-            "Tutorial: (Trash can�t be accumulated at the Caf�, so to get rid of it is of" +
+            "Tutorial: (Trash can't be accumulated at the Café, so to get rid of it is of" +
                 " upmost importance, otherwise points will be deducted from the final score and" +
                 " character ending.)",
-            "Tutorial: (When there�s trash to be taken out, hurry up! )"
+            "Tutorial: (When there's trash to be taken out, hurry up! )"
         };
 
         lineIndex--;
@@ -1039,13 +1110,20 @@ public class Dialogue : MonoBehaviour
         lineIndex++;
 
         string sceneName = SceneManager.GetActiveScene().name;
-        if (sceneName != "Tables")
+        if (sceneName != "TrashScene")
         {
+            TableManager.inAnotherView = true;
             if (sceneName == "DrinkStation")
             {
                 DrinkManager drinkManager = FindObjectOfType<DrinkManager>();
                 if (drinkManager != null)
                     drinkManager.UpdateDrinkTimerOnExit();
+            }
+            else if (sceneName == "Tables")
+            {
+                TableManager tableManager = FindObjectOfType<TableManager>();
+                if (tableManager != null)
+                    tableManager.UpdateTrashTimerOnExit();
             }
 
             pauseBetweenSkips = 0.2f;
@@ -1055,7 +1133,7 @@ public class Dialogue : MonoBehaviour
             Dialogue.dialogueTxt = dialoguePanelTxt.text;
 
             onTutorial = true;
-            SceneManager.LoadScene("Tables");
+            SceneManager.LoadScene("TrashScene");
         }
     }
     public void LoadTableTutorial()
@@ -1085,6 +1163,13 @@ public class Dialogue : MonoBehaviour
                 DrinkManager drinkManager = FindObjectOfType<DrinkManager>();
                 if (drinkManager != null)
                     drinkManager.UpdateDrinkTimerOnExit();
+            }
+            else if (sceneName == "TrashScene")
+            {
+                TableManager.inAnotherView = true;
+                TableManager tableManager = FindObjectOfType<TableManager>();
+                if (tableManager != null)
+                    tableManager.UpdateTrashTimerOnExit();
             }
 
             pauseBetweenSkips = 0.2f;
