@@ -1,5 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 public class BlobManager : MonoBehaviour
@@ -127,7 +128,10 @@ public class BlobManager : MonoBehaviour
 
     public void RemoveBlobs()
     {
-        trashManager.ShowTrash(blobs.Length);
+        if (SceneManager.GetActiveScene().name == "TrashScene")
+            trashManager.ShowTrash(blobs.Length);
+        else
+            TrashManager.FillTrash(blobs.Length);
 
         foreach (var blob in blobs)
             Destroy(blob.GameObject());

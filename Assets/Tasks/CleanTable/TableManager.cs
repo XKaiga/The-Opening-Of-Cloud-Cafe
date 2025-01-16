@@ -131,11 +131,15 @@ public class TableManager : MonoBehaviour
             }
             else
             {
-                tables.SetActive(true);
-                trash.SetActive(true);
-                tableBg.SetActive(false);
-                dirtyTable.SetActive(false);
-                cleanTable.SetActive(false);
+                if (SceneManager.GetActiveScene().name == "Tables")
+                {
+                    tables.SetActive(true);
+                    tableBg.SetActive(false);
+                    dirtyTable.SetActive(false);
+                    cleanTable.SetActive(false);
+                }
+                else
+                    trash.SetActive(true);
 
                 if (TrashDrag.readyToRemoveTrash)
                 {
@@ -145,9 +149,6 @@ public class TableManager : MonoBehaviour
                 }
 
                 inAnotherView = false;
-
-                //if (TrashDrag.readyToRemoveTrash && CleanManager.clean && Timer.timeStart != (CleanManager.taskTimer + TrashManager.taskTimer))
-                //    Timer.timeStart = TrashManager.taskTimer;
             }
 
             return;
@@ -159,7 +160,8 @@ public class TableManager : MonoBehaviour
             inAnotherView = true;
 
             tables.SetActive(false);
-            trash.SetActive(false);
+            if (SceneManager.GetActiveScene().name != "Tables")
+                trash.SetActive(false);
             tableBg.SetActive(true);
 
             if (colliderName.Contains(dirtyTableName))

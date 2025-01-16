@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,12 +17,16 @@ public class CartManager : MonoBehaviour
 
     [SerializeField] private GameObject ingrdItemPrefab;
 
+    [SerializeField] private TextMeshProUGUI playerMoneyTxt;
+    [SerializeField] private TextMeshProUGUI cartMoneyTxt;
+
     public static List<Ingredient> ingredientsToBuy = new();
 
     private void OnEnable()
     {
         LoadCart();
         UpdateMoneyText();
+        UpdateCartMoneyText();
     }
 
     private void LoadCart()
@@ -41,15 +46,20 @@ public class CartManager : MonoBehaviour
             ingrdInstance.GetComponentInChildren<TextMeshProUGUI>().text = qtyBuying.ToString();
 
             //change logo
-            Transform GOLogo = ingrdInstance.transform.Find("Logo");
-            if (GOLogo != null)
-                if (GOLogo.TryGetComponent<Image>(out var image))
-                    image.sprite = Ingredient.FindIngrdSprite(ingrd.ingrdType.ToString(), ingrd.name);
+            Transform GOLogoBg = ingrdInstance.transform.Find("LogoBg");
+            if (GOLogoBg != null)
+            {
+                Transform GOLogo = GOLogoBg.Find("Logo");
+                if (GOLogo != null)
+                    if (GOLogo.TryGetComponent<Image>(out var image))
+                        image.sprite = Ingredient.FindIngrdSprite(ingrd.ingrdType.ToString(), ingrd.name);
+            }
 
             //iniciate buttons
             Transform GOPlus = ingrdInstance.transform.Find("Plus");
             if (GOPlus != null)
                 GOPlus.GetComponent<Button>().onClick.AddListener(() => Add(ingrd));
+
             Transform GOMinus = ingrdInstance.transform.Find("Minus");
             if (GOMinus != null)
                 GOMinus.GetComponent<Button>().onClick.AddListener(() => Subtract(ingrd));
@@ -106,8 +116,29 @@ public class CartManager : MonoBehaviour
 
     private void UpdateMoneyText()
     {
-        Transform GOMoney = transform.Find("MoneyBg");
-        GOMoney.GetComponentInChildren<Text>().text = Money.playerMoney.ToString();
+        playerMoneyTxt.text = Money.playerMoney.ToString();
+    }
+
+    private void UpdateCartMoneyText()
+    {
+        if (cartMoneyTxt == null)
+            return;
+
+        float totalCost = 0f;
+        List<Ingredient> ingrdsChecked = new();
+        foreach (var ingrd in ingredientsToBuy)
+        {
+            if (!ingrdsChecked.Contains(ingrd))
+            {
+                int qtyBuying = ingredientsToBuy.Count(ingrdToBuy => ingrdToBuy == ingrd);
+
+                totalCost += qtyBuying * ingrd.price;
+
+                ingrdsChecked.Add(ingrd);
+            }
+        }
+
+        cartMoneyTxt.text = totalCost.ToString();
     }
 
     private void Add(Ingredient ingrd)
@@ -126,18 +157,23 @@ public class CartManager : MonoBehaviour
     {
         foreach (Transform trans in contentPanel)
         {
-            Transform GOLogo = trans.Find("Logo");
-            if (GOLogo != null)
-                if (GOLogo.TryGetComponent<Image>(out var image))
-                    if (image.sprite.name.ToLower() == ingrd.name.ToLower())
-                    {
-                        int qtyBuying = ingredientsToBuy.Count(ingrdToBuy => ingrdToBuy == ingrd);
-                        trans.GetComponentInChildren<TextMeshProUGUI>().text = qtyBuying.ToString();
+            Transform GOLogoBg = trans.transform.Find("LogoBg");
+            if (GOLogoBg != null)
+            {
+                Transform GOLogo = GOLogoBg.Find("Logo");
+                if (GOLogo != null)
+                    if (GOLogo.TryGetComponent<Image>(out var image))
+                        if (image.sprite.name.ToLower() == ingrd.name.ToLower())
+                        {
+                            int qtyBuying = ingredientsToBuy.Count(ingrdToBuy => ingrdToBuy == ingrd);
+                            trans.GetComponentInChildren<TextMeshProUGUI>().text = qtyBuying.ToString();
 
-                        if (qtyBuying == 0)
-                            Destroy(trans.gameObject);
-                    }
+                            if (qtyBuying == 0)
+                                Destroy(trans.gameObject);
+                        }
+            }
         }
+        UpdateCartMoneyText();
     }
 
     public void ClearCart(bool clearList)
@@ -147,6 +183,8 @@ public class CartManager : MonoBehaviour
 
         if (clearList)
             ingredientsToBuy.Clear();
+
+        UpdateCartMoneyText();
     }
 
     public void CloseCart()

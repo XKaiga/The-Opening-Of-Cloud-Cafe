@@ -42,7 +42,7 @@ Material:
     - _Scale: 0
     m_Colors:
     - _Color: {r: 0.93962264, g: 0.8326033, b: 0.14005686, a: 0}
-    - _Height: {r: 0, g: 0.7, b: 0, a: 0}
+    - _Height: {r: 0, g: 0.6, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &8881483092218709348
 MonoBehaviour:

@@ -55,5 +55,5 @@ Material:
     - _Scale: 0
     m_Colors:
     - _Color: {r: 0.9245283, g: 0.8346598, b: 0.17269477, a: 0}
-    - _Height: {r: 0, g: 0.35, b: 0, a: 0}
+    - _Height: {r: 0, g: 0.2, b: 0, a: 0}
   m_BuildTextureStacks: []

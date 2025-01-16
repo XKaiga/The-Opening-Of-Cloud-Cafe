@@ -126,8 +126,6 @@ public class GameManager : MonoBehaviour
         else if (emoString == "")
             emoString = "_Default";
 
-        Debug.Log(emoString);
-
         Texture newCharacterTex = Resources.Load<Texture>("Characters/" + character.name + emoString);
         if (newCharacterTex == null)
             newCharacterTex = Resources.Load<Texture>("Characters/" + character.name + "_Default");

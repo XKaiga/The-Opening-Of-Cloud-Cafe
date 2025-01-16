@@ -580,7 +580,7 @@ public class Drink
     public int drinkNumberOfClient;
     public int dayOfTheDrink;
 
-    public string scndOrderNum;
+    public string scndOrder;
 
     public Drink(BaseFlavour baseFlavour = BaseFlavour.None, TopFlavour topFlavour = TopFlavour.None, SyrupFlavour syrupFlavour = SyrupFlavour.None,
                 string client = null, int drinkNumberOfClient = 0, int dayOfTheDrink = 0, string scndOrder = null)
@@ -591,7 +591,7 @@ public class Drink
         this.client = client;
         this.drinkNumberOfClient = drinkNumberOfClient;
         this.dayOfTheDrink = dayOfTheDrink;
-        this.scndOrderNum = scndOrder;
+        this.scndOrder = scndOrder;
     }
 
     public bool IsReady() => syrupFlavour != SyrupFlavour.None && topFlavour != TopFlavour.None && baseFlavour != BaseFlavour.None;

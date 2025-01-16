@@ -74,11 +74,10 @@ public class Dialogue : MonoBehaviour
     private void Awake()
     {
         EndGameManager endManager = FindObjectOfType<EndGameManager>();
-        if (endGameManager != null)
+        if (endManager != null)
         {
             endGameManager = endManager;
             EndGameImage = endManager.image;
-            Debug.Log("Success");
         }
         else
             Debug.Log("Failed");
@@ -154,8 +153,6 @@ public class Dialogue : MonoBehaviour
     public bool waitingForDialogue = false;
     void Update()
     {
-        Debug.Log("count: " +characters.Count);
-
         if (!startingNewDay)
         {
             string sceneName = SceneManager.GetActiveScene().name;
@@ -492,8 +489,12 @@ public class Dialogue : MonoBehaviour
             dialogueTxt = string.Empty;
     }
 
+    private static bool isProcessingLine = false;
     private void NextLine()
     {
+        if (isProcessingLine) return; // Prevent recursion
+        isProcessingLine = true;
+
         if (isChoosing)
         {
             ShowOptions();
@@ -511,7 +512,8 @@ public class Dialogue : MonoBehaviour
         if (charAnswering && responseIndex < dialogueOptions[optionIndex].Responses.Count)
         {
             string lineShowing = namePanelTxt.text.ToLower() + ": " + dialoguePanelTxt.text.ToLower();
-            if (responseIndex == 0 || lineShowing == dialogueOptions[optionIndex].Responses[responseIndex - 1].ToLower())
+            string response = responseIndex != 0 ? dialogueOptions[optionIndex].Responses[responseIndex - 1].ToLower() : "";
+            if (responseIndex == 0 || lineShowing == response || GetTypeOfText(response) != "conversation")
             {
                 line = dialogueOptions[optionIndex].Responses[responseIndex];
                 responseIndex++;
@@ -538,6 +540,8 @@ public class Dialogue : MonoBehaviour
         }
 
         IdentifyAndExecuteTypeOfText(line);
+
+        isProcessingLine = false;
     }
 
     private void IdentifyAndExecuteTypeOfText(string line = "")
@@ -547,6 +551,7 @@ public class Dialogue : MonoBehaviour
             line = lines[lineIndex];
             line = FormatItalic(line);
         }
+        Debug.Log(lineIndex + " : " + line);
 
         onTutorial = line.Contains("Tutorial");
 
@@ -587,6 +592,9 @@ public class Dialogue : MonoBehaviour
                 {
                     DrinkManager.isDrinkTutorialDone = true;
 
+                    if (SceneManager.GetActiveScene().name == "DrinkStation")
+                        lineIndex--;
+
                     LoadDrinkTutorial();
                     return;
                 }
@@ -622,8 +630,10 @@ public class Dialogue : MonoBehaviour
                     //    ScndNPCs.secondariesDrinksToServe.Add(secDrink)
                     if (!MainCoffeeManager.activeTasks.Any(task => task.type == TaskType.NPCOrder)) //!!! temp until having more than 1 npc works
                     {
-                        ScndNPCs.secondariesDrinksToServe.Add(ScndNPCs.GenerateRandomScndDrink());
+                        Drink newDrink = ScndNPCs.GenerateRandomScndDrink();
+                        ScndNPCs.secondariesDrinksToServe.Add(newDrink);
                         MainCoffeeManager.activeTasks.Add(new(Drink.drinkTaskTimer, TaskType.NPCOrder));
+                        InsertAtIndex(newDrink.scndOrder, lineIndex + 2);
                     }
                 }
 
@@ -693,6 +703,15 @@ public class Dialogue : MonoBehaviour
 
                 EndGameManager.DeactivateAllButtons();
 
+                if (EndGameImage == null)
+                {
+                    EndGameManager endManager = FindObjectOfType<EndGameManager>();
+                    if (endManager != null)
+                    {
+                        endGameManager = endManager;
+                        EndGameImage = endManager.image;
+                    }
+                }
                 EndGameImage.enabled = true;
 
                 skip = false;
@@ -705,75 +724,49 @@ public class Dialogue : MonoBehaviour
 
 
             case "effect":
-
-                Debug.Log("reconheceu a palavra effect");
-
                 if (SceneManager.GetActiveScene().name != "Dialogue")
                     break;
 
-                Debug.Log("reconheceu que a cena e dialogue");
-
-
                 string[] effectParts = TrimSplitDialogueCode(line);
-
-                Debug.Log("dividiu o a linha em partes");
 
                 var effectDetermined = Effects.DetermineEffect(effectParts[2]);
 
-                Debug.Log("determinou o efeito");
-
                 if (effectDetermined == null)
                 {
-
                     Debug.Log($"o effeito {effectParts[2]} deu null");
                     break;
                 }
-                Debug.Log("o efeito nao e nulo");
-
-                //if (effectDetermined is Effects effect)
-                //{
-                Debug.Log("entrou no if");
 
                 Character characterPartEffect = Character.DetermineCharacter(effectParts[1]);
                 if (characterPartEffect == null)
                     return;
 
-                Debug.Log("determinou a personagem objetivo");
-
-
                 foreach (RawImage CharacterSpace in CharacterSpaces)
                 {
-
                     Text nameCharacter = CharacterSpace.GetComponentInChildren<Text>();
-
-                    Debug.Log("obteve o nome da personagem");
+                    if (nameCharacter == null)
+                        continue;
 
                     Vector3 position = CharacterSpace.gameObject.transform.position;
+                    position.y = 1.8f;
+
                     string charSpaceGOName = CharacterSpace.gameObject.name.ToLower();
                     bool left = charSpaceGOName.Contains("left");
                     bool right = charSpaceGOName.Contains("right");
 
                     if (left)
                         position.x = -6;
-                    position.y = 1.8f;
+                    else if (!right)
+                        position.x = -1.4f;
 
                     if (characterPartEffect.name == nameCharacter.text)
                     {
-
-                        Debug.Log("viu a personagem presente");
-
                         foreach (GameObject effectPrebab in effectsPrefabs)
                         {
-
                             if (effectDetermined is Effects.EffectType tipo)
                             {
-
-                                Debug.Log("reconheceu a o tipo de efeito");
-
                                 if (effectPrebab.GetComponent<Effects>().type == tipo)
                                 {
-
-                                    Debug.Log("instanciou");
                                     Instantiate(effectPrebab, position, Quaternion.identity);
 
                                     EmotionEnum previousEmotion = characterPartEffect.currentEmotion;
@@ -797,12 +790,17 @@ public class Dialogue : MonoBehaviour
                     }
                 }
 
-                //}
-
                 NextLine();
 
                 break;
         }
+    }
+
+    private IEnumerator WaitAndProceedToNextLine(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        NextLine();
+        isProcessingLine = false;
     }
 
     private IEnumerator HandleNewDay()
@@ -834,6 +832,10 @@ public class Dialogue : MonoBehaviour
 
         startingNewDay = false;
         OnClickDialogue();
+
+        EndGameManager.ActivateAllButtons();
+
+        EndGameImage.enabled = false;
     }
 
     public static string[] TrimSplitDialogueCode(string line)
@@ -1028,7 +1030,7 @@ public class Dialogue : MonoBehaviour
     {
         List<string> txtMusic = new()
         {
-            "Tutorial : (Upgrades can be bought at the upgrades store so you�re able to see which emotion songs portray.)",
+            "Tutorial : (Upgrades can be bought at the upgrades store so you're able to see which emotion songs portray.)",
             "Tutorial : (Feel the music and try to figure out if it better fits the mood.)",
             "Tutorial : (Go on the music tab to change your caf�s tune when the " +
             "customers complain, and find a better fitting choice so you can carry out " +
@@ -1036,7 +1038,7 @@ public class Dialogue : MonoBehaviour
             "Tutorial : (However, as conversations with customers shift and mood changes," +
             " the music has to be changed as well. No one likes to hear happy music while having" +
             " a sad conversation, or, at the very least, your customers don�t.)",
-            "Tutorial : (Like any Caf�, Cloud Caf� has background music playing.)"
+            "Tutorial : (Like any Café, Cloud Café has background music playing.)"
         };
 
         foreach (var txt in txtMusic)
@@ -1062,29 +1064,29 @@ public class Dialogue : MonoBehaviour
     public void LoadDrinkTutorial()
     {
         string sceneName = SceneManager.GetActiveScene().name;
+        if (sceneName == "Tables" || sceneName == "TrashScene")
+        {
+            TableManager tableManager = FindObjectOfType<TableManager>();
+            if (tableManager != null)
+            {
+                if (sceneName != "TrashScene")
+                    tableManager.UpdateCleanTimerOnExit();
+                else
+                    TableManager.inAnotherView = true;
+
+                tableManager.UpdateTrashTimerOnExit();
+            }
+        }
+
+        pauseBetweenSkips = -2f;
+        skip = true;
+        onTutorial = true;
+
         if (sceneName != "DrinkStation")
         {
-            if (sceneName == "Tables" || sceneName == "TrashScene")
-            {
-                TableManager tableManager = FindObjectOfType<TableManager>();
-                if (tableManager != null)
-                {
-                    if (sceneName != "TrashScene")
-                        tableManager.UpdateCleanTimerOnExit();
-                    else
-                        TableManager.inAnotherView = true;
-
-                    tableManager.UpdateTrashTimerOnExit();
-                }
-            }
-
-            pauseBetweenSkips = -2f;
-            skip = true;
-
             Dialogue.nameTxt = namePanelTxt.text;
             Dialogue.dialogueTxt = dialoguePanelTxt.text;
 
-            onTutorial = true;
             SceneManager.LoadScene("DrinkStation");
         }
     }

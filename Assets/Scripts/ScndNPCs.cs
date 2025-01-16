@@ -58,7 +58,7 @@ public class ScndNPCs
         int newDrinkNumber = 1;
         if (secondariesDrinksToServe.Count > 0)
             newDrinkNumber = secondariesDrinksToServe[secondariesDrinksToServe.Count - 1].drinkNumberOfClient + 1;
-        if (newDrinkNumber > 100)
+        if (newDrinkNumber > 99)
             newDrinkNumber = 1;
 
         return new Drink(rndBase, rndTopg, rndSyrp, drinkNumberOfClient: newDrinkNumber, scndOrder: $"Client: \"I want {rndTopg} on top of {rndBase}, and with a little bit of {rndSyrp}\"");
